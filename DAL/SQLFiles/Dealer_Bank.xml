@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SQLCommands>
+  <sql ID="sqlstr1">
+    --总账查询
+    select BankName,DealerName,BrandName
+    ,CarAllCount=(
+    select count(1) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) <> 6 --6表示状态为“出库处理”
+    )	--车辆库存台数（状态为“非出库”）
+    ,CarAllMoney=(
+    ISNULL(
+    (select sum(cl.CarCost) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) <> 6) --6表示状态为“出库处理”
+    ,0.00)
+    )	--车辆库存金额
+    ,CarILCount=(
+    select count(1) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 3 --3表示状态为“在库”
+    )	--在库车辆台数（状态为“在库”）
+    ,CarILMoney=(
+    ISNULL(
+    (select SUM(cl.CarCost) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 3) --3表示状态为“在库”
+    ,0.00)
+    )	--在库车辆金额（状态为“在库”）
+    ,CarITCount=(
+    select count(1) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 1 --1表示状态为“在库”
+    )	--在途车辆数量（状态为“在途”）
+    ,CarITMoney=(
+    ISNULL(
+    (select SUM(cl.CarCost) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 1) --1表示状态为“在库”
+    ,0.00)
+    )	--在途车辆金额（状态为“在途”）
+    ,CarMoveCount=(
+    select count(1) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 4 --4表示状态为“在库”
+    )	--移动车辆数量（状态为“移动”）
+    ,CarMoveMoney=(
+    ISNULL(
+    (select SUM(cl.CarCost) from tb_Car_List cl where cl.DraftNo in
+    (select DraftNo from tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (select cs.StatusType from tb_Car_Status cs where cs.Vin=cl.Vin) = 4) --4表示状态为“在库”
+    ,0.00)
+    )	--移动车辆金额（状态为“移动”）
+    from tb_Dealer_Bank_List T
+  </sql>
+  <sql ID="sqlstr2">
+    select BankName,DealerName,BrandName,CarAllCount=0,CarAllMoney=0.00,CarILCount=0,CarILMoney=0.00,CarITCount=0,CarITMoney=0.00,CarMoveCount=0,CarMoveMoney=0.00 from tb_Dealer_Bank_List
+  </sql>
+</SQLCommands>

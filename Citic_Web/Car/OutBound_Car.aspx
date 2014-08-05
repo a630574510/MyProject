@@ -59,7 +59,7 @@
                     <x:Grid ID="G_Car_Removal" runat="server" EnableCheckBoxSelect="true" CheckBoxSelectOnly="true"
                         AutoScroll="true" EnableRowNumber="true" PageSize="15" AllowPaging="true" Title="车辆详细信息"
                         EnableBackgroundColor="true" DataKeyNames="Vin" OnPageIndexChange="G_Car_Removal_Page"
-                        EnableTextSelection="true" AllowCellEditing="true" ClicksToEdit="1">
+                        EnableTextSelection="true" AllowCellEditing="true" ClicksToEdit="1" IsDatabasePaging="true">
                         <Toolbars>
                             <x:Toolbar ID="Toolbar2" runat="server">
                                 <Items>
@@ -97,8 +97,16 @@
                                 TextAlign="Center" Hidden="true" />
                             <x:BoundField HeaderText="车辆金额(元)" DataField="CarCost" Width="110px" ColumnID="CarCost"
                                 TextAlign="Center" />
-                            <x:BoundField HeaderText="备注" DataField="Remarks" Width="110px" ColumnID="Remarks"
-                                TextAlign="Center" />
+                            <x:RenderField HeaderText="备注" ColumnID="Remarks" DataField="Remarks"
+                                Width="100px" TextAlign="Center">
+                                <Editor>
+                                    <x:TextArea ID="txt_Remarks" runat="server" Height="80px" Label="Label" Text="">
+                                    </x:TextArea>
+                                </Editor>
+                            </x:RenderField>
+                            <%--<x:BoundField HeaderText="备注" DataField="Remarks" Width="110px" ColumnID="Remarks"
+                                TextAlign="Center" />--%>
+                            <x:BoundField HeaderText="状态" DataField="Statu" Hidden="true" />
                         </Columns>
                     </x:Grid>
                 </Items>

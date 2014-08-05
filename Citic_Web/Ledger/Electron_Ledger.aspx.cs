@@ -11,6 +11,7 @@ using System.Configuration;
 using FineUI;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using NPOI.SS.UserModel;
 
 namespace Citic_Web.Ledger
 {
@@ -88,10 +89,17 @@ namespace Citic_Web.Ledger
             int pageSize = grid_List.PageSize;
             int rowbegin = pageIndex * pageSize + 1;
             int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = CarBll.GetListByPage(where, string.Empty, rowbegin, rowend, tableName, Server.MapPath(path), commandStr).Tables[0];
+            try
+            {
+                DataTable dt = CarBll.GetListByPage(where, string.Empty, rowbegin, rowend, tableName, Server.MapPath(path), commandStr).Tables[0];
 
-            grid_List.DataSource = dt;
-            grid_List.DataBind();
+                grid_List.DataSource = dt;
+                grid_List.DataBind();
+            }
+            catch (Exception ex)
+            {
+                AlertShow(ex.Message);
+            }
         }
 
 
@@ -141,45 +149,12 @@ namespace Citic_Web.Ledger
         }
         #endregion
 
-        #region 导出Excel--乔春羽(2013.7.19)
-        protected void btn_BuildExcel_Click(object sender, EventArgs e)
-        {
-            //得到经销商名
-            string DealerName = DealerBll.GetModel(DealerID).DealerName;
-            //保存Excel文件
-            string sheetName = string.Format("{0}_质押物明细", DealerName);
-
-            //保存所有的数据
-            ExcelEditHelper.Create();
-            ExcelEditHelper.AddSheet(sheetName);
-            DataTable dt;
-            dt = CarBll.GetAllListByProcess(string.Empty, "tb_Car_" + BankID + "_" + DealerID).Tables[0];
-
-            ModifyTableHeaderByGrid(grid_List, dt);
-
-            string fileName = sheetName + this.ConvertLongDateTimeToUI(DateTime.Now) + ".xls";//客户端保存的文件名
-            ExcelEditHelper.DataTableAdd2Excel(dt, sheetName);
-
-            string filePath = "~/DownExcel/" + fileName;
-            bool flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
-
-            //释放ExcelEditHelper
-            CloseExcelEditHelper();
-
-            //下载Excel文件
-            if (flag)
-            {
-                hl_ExportExcel.NavigateUrl = filePath;
-            }
-        }
-        #endregion
-
         #region 数据行绑定事件--乔春羽(2013.7.19)
         protected void grid_List_RowDataBound(object sender, GridRowEventArgs e)
         {
             if (e.RowIndex >= 0 || e.DataItem != null)
             {
-                int index = 18;
+                int index = 19;
                 int type = Convert.ToInt32(e.Values[index]);
                 switch (type)
                 {
@@ -203,6 +178,60 @@ namespace Citic_Web.Ledger
                         break;
                 }
             }
+        }
+        #endregion
+
+        #region 导出Excel--乔春羽(2013.7.19)
+        protected void btn_BuildExcel_Click(object sender, EventArgs e)
+        {
+            //得到经销商名
+            string DealerName = DealerBll.GetModel(DealerID).DealerName;
+            //保存Excel文件
+            //string sheetName = string.Format("总账", DealerName);
+            string sheetName = string.Format("{0}_质押物明细", DealerName);
+            string fileName = sheetName + this.ConvertLongDateTimeToUI(DateTime.Now) + ".xlsx";//客户端保存的文件名
+            string filePath = "~/DownExcel/" + fileName;
+
+            DataTable dt = CarBll.GetAllListByProcess(string.Empty, "tb_Car_" + BankID + "_" + DealerID).Tables[0];
+
+            string[] headers = { "质押号", "保险金账号", "票号", "开票日期", "到期日期", "开票金额", "合格证发证日期", "车辆型号", "车辆分类", "排量", "颜色", "发动机号", "车架号", "合格证号", "钥匙号", "车辆金额", "明细接收日期", "入库日期", "车辆状态", "释放日期", "移动日期", "备注" };
+
+            NPOIHelper npoi = new NPOIHelper();
+            npoi.Create(sheetName);
+
+            //创建一行，并设定了行高
+            IRow irow = npoi.CreateRow((short)60);
+            //========================创建样式与字体================================
+            //创建一个样式headerCellStyle
+            //大标题样式
+            string headerCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式headerCellStyle附加字体对象
+            npoi.CreateFont(headerCellStyle, 40, "黑体", NPOIFontBoldWeight.Bold, false, false);
+            //创建了一个样式contentCellStyle。
+            //表头样式
+            string contentCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式contentCellStyle附加了一个字体对象
+            npoi.CreateFont(contentCellStyle, 10, "微软雅黑", NPOIFontBoldWeight.Bold, false, false);
+            //内容样式
+            string contentStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            npoi.CreateFont(contentStyle, 10, "微软雅黑", NPOIFontBoldWeight.Normal, false, false);
+            //========================创建样式与字体================================
+            //表头大标题
+            npoi.CreateCells(headers.Length, irow, headerCellStyle);
+            npoi.SetCellValue(irow, 0, sheetName);
+            npoi.SetCellRangeAddress(0, 0, 0, headers.Length - 1);
+            //表头小标题
+            IRow rowHeader = npoi.CreateRow();
+            npoi.CreateCells(headers, rowHeader, contentCellStyle);
+
+            string[] columns = { "PledgeNo", "GuaranteeNo", "DraftNo", "BeginTime", "EndTime", "DarftMoney", "QualifiedNoDate", "CarModel", "CarClass", "Displacement", "CarColor", "EngineNo", "Vin", "QualifiedNo", "KeyNumber", "CarCost", "CreateTime", "TransitTime", "Statu", "OutTime", "MoveTime", "Remarks" };
+            npoi.DataTableToExcel(dt, columns, contentStyle);
+
+            //保存文件
+            npoi.Save(Server.MapPath(filePath));
+
+            //显示下载地址
+            hl_ExportExcel.NavigateUrl = filePath;
         }
         #endregion
     }

@@ -25,12 +25,6 @@ namespace Citic_Web
                 DepartmentBll = new Citic.BLL.Department();
             }
             DataSet ds = DepartmentBll.GetList(" PDID=0 and Type<>0");
-            //ddlDept.DataSource = ds.Tables[0];
-            //ddlDept.DataValueField = "ID";
-            //ddlDept.DataTextField = "DName";
-            //ddlDept.DataBind();
-            //ListItem Drl = new ListItem("请选择", "0");
-            //ddlDept.Items.Insert(0, Drl);
 
             rbl_Dept.DataSource = ds.Tables[0];
             rbl_Dept.DataTextField = "DName";
@@ -47,13 +41,15 @@ namespace Citic_Web
             if (Dept > 0)
             {
                 bool persist = true;
-                if (AuthProcess.AuthenticateUser(NAME, PWD, Dept, Request.UserHostAddress.ToString(), persist))
+
+                string result = AuthProcess.AuthenticateUser(NAME, PWD, Dept, Request.UserHostAddress.ToString(), persist);
+                if (string.IsNullOrEmpty(result))
                 {
                     Response.Redirect("Main.aspx");
                 }
                 else
                 {
-                    Response.Write("<script> alert('用户名或密码输入错误'); </script>");
+                    Response.Write("<script> alert('" + result + "'); </script>");
                 }
             }
             else

@@ -18,7 +18,7 @@ namespace Citic_Web.ProjectTracking.rcquesbyday
             {
                 //设置筛选时间，开始时间默认为三天前，结束时间默认为三天后
                 this.dp_Start.SelectedDate = DateTime.Now.AddDays(-3).Date;
-                this.dp_End.SelectedDate = DateTime.Now.AddDays(3).Date;
+                this.dp_End.SelectedDate = DateTime.Now.Date;
                 AreaBind();
                 RoleValidate();
                 btn_Verify.OnClientClick = grid_List.GetNoSelectionAlertReference("未选择数据！");

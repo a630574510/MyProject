@@ -175,33 +175,6 @@ namespace Citic_Web.Ledger {
         protected global::FineUI.HyperLink hl_ExportExcel;
         
         /// <summary>
-        /// ToolbarSeparator1 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator1;
-        
-        /// <summary>
-        /// TtxtPage 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.ToolbarText TtxtPage;
-        
-        /// <summary>
-        /// ddlPageSize 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.DropDownList ddlPageSize;
-        
-        /// <summary>
         /// hfSelectedIDS 控件。
         /// </summary>
         /// <remarks>

@@ -31,6 +31,24 @@ namespace Citic_Web.ProjectTracking.rcquesbyday {
         protected global::FineUI.PageManager PageManager1;
         
         /// <summary>
+        /// hf_BrandID 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.HiddenField hf_BrandID;
+        
+        /// <summary>
+        /// hf_BrandName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.HiddenField hf_BrandName;
+        
+        /// <summary>
         /// Panel1 控件。
         /// </summary>
         /// <remarks>
@@ -74,6 +92,24 @@ namespace Citic_Web.ProjectTracking.rcquesbyday {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.TextBox txt_Dealer;
+        
+        /// <summary>
+        /// Label2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label2;
+        
+        /// <summary>
+        /// ddl_Bank 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.DropDownList ddl_Bank;
         
         /// <summary>
         /// grid_List 控件。
@@ -175,13 +211,13 @@ namespace Citic_Web.ProjectTracking.rcquesbyday {
         protected global::FineUI.TextBox txt_DealerName;
         
         /// <summary>
-        /// ddl_Bank 控件。
+        /// txt_BankName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.DropDownList ddl_Bank;
+        protected global::FineUI.TextBox txt_BankName;
         
         /// <summary>
         /// txt_BrandName 控件。

@@ -328,22 +328,13 @@ namespace Citic_Web.Car {
         protected global::FineUI.Grid G_Car_Detail;
         
         /// <summary>
-        /// dpIssueDate 控件。
+        /// txtIssueDate 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.DatePicker dpIssueDate;
-        
-        /// <summary>
-        /// txtCarClass 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextBox txtCarClass;
+        protected global::FineUI.TextBox txtIssueDate;
         
         /// <summary>
         /// txtCarModel 控件。
@@ -353,6 +344,15 @@ namespace Citic_Web.Car {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.TextBox txtCarModel;
+        
+        /// <summary>
+        /// txtCarClass 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextBox txtCarClass;
         
         /// <summary>
         /// txtDisplacement 控件。

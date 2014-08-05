@@ -61,7 +61,7 @@
                     <x:Grid ID="G_Car_Move" runat="server" AutoScroll="true" PageSize="15" AllowPaging="true"
                         EnableRowNumber="true" Title="车辆详细信息" EnableBackgroundColor="true" DataKeyNames="Vin"
                         OnPageIndexChange="G_Car_Move_Page" EnableTextSelection="true" AllowCellEditing="true"
-                        ClicksToEdit="1">
+                        IsDatabasePaging="true" ClicksToEdit="1">
                         <Toolbars>
                             <x:Toolbar ID="Toolbar2" runat="server">
                                 <Items>
@@ -102,8 +102,16 @@
                             </x:RenderField>
                             <x:BoundField HeaderText="钥匙号" DataField="KeyNumber" Width="110px" ColumnID="KeyNumber"
                                 TextAlign="Center" Hidden="true" />
-                            <x:BoundField HeaderText="备注" DataField="Remarks" Width="110px" ColumnID="Remarks"
-                                TextAlign="Center" />
+                            <x:RenderField HeaderText="备注" ColumnID="Remarks" DataField="Remarks"
+                                Width="100px" TextAlign="Center">
+                                <Editor>
+                                    <x:TextArea ID="txt_Remarks" runat="server" Height="80px" Label="Label" Text="">
+                                    </x:TextArea>
+                                </Editor>
+                            </x:RenderField>
+                            <%--<x:BoundField HeaderText="备注" DataField="Remarks" Width="110px" ColumnID="Remarks"
+                                TextAlign="Center" />--%>
+                            <x:BoundField HeaderText="状态" DataField="Statu" Width="50px" Hidden="true" />
                         </Columns>
                     </x:Grid>
                 </Items>

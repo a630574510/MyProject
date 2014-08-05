@@ -45,7 +45,7 @@ namespace Citic_Web.DealerManagement.StopCoopDInfo
             int pageSize = grid_List.PageSize;
             int rowbegin = pageIndex * pageSize + 1;
             int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = Dealer_BankBll.GetListByPage(where, "BankID,DealerID,BrandID", rowbegin, rowend).Tables[0];
+            DataTable dt = Dealer_BankBll.GetListByPage(where, "ID DESC", rowbegin, rowend).Tables[0];
 
             grid_List.DataSource = dt;
             grid_List.DataBind();
@@ -67,7 +67,74 @@ namespace Citic_Web.DealerManagement.StopCoopDInfo
         private string ConditionInit()
         {
             string dealerName = this.txt_DealerName.Text;
-            StringBuilder where = new StringBuilder("T.IsDelete=0 and T.CollaborateType=0");
+            StringBuilder where = new StringBuilder(" T.IsDelete=0 and T.CollaborateType=0");
+            string[] dealerIDs = null;
+            //权限过滤
+            int roleID = this.CurrentUser.RoleId;
+            switch (roleID)
+            {
+                case 10:    //监管员
+                    //根据监管员ID，查询其所监管的经销商
+                    dealerIDs = new string[0];
+                    dealerIDs = this.DealerBll.GetDealerIDsBySupervisorID(this.CurrentUser.RelationID.Value);
+                    if (dealerIDs != null && dealerIDs.Length > 0)
+                    {
+                        where.AppendFormat(" and T.DealerID in ({0}) ", string.Join(",", dealerIDs));
+                    }
+                    else
+                    {
+                        where.Append(" and T.DealerID in (0) ");
+                    }
+                    break;
+
+                case 8:     //银行
+                    //合作行的过滤条件
+                    dealerIDs = new string[0];
+                    DataSet ds = this.UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId));
+                    int bankID = 0;
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        DataTable dt = ds.Tables[0];
+                        bankID = Convert.ToInt32(dt.Rows[0]["MappingID"].ToString());
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            where.AppendFormat(" And T.BankID = '{0}' ", bankID);
+                        }
+                        else
+                        {
+                            where.Append(" And T.BankID = '0' ");
+                        }
+                    }
+                    
+                    break;
+                case 5:     //市场专员
+                case 6:     //品牌专员
+                    StringBuilder ids = new StringBuilder(string.Empty);
+                    ids.Append(" T.BankID in (");
+                    DataTable _dt = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId)).Tables[0];
+                    if (_dt != null && _dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in _dt.Rows)
+                        {
+                            ids.AppendFormat("{0},", row["MappingID"].ToString());
+                        }
+                        ids.Remove(ids.Length - 1, 1);
+                    }
+                    else
+                    {
+                        ids.Append("0");
+                    }
+                    ids.Append(")");
+
+                    if (ids != null && ids.Length != 0)
+                    {
+                        where.AppendFormat(" AND {0}", ids.ToString());
+                    }
+                    break;
+                case 9:     //厂家
+                    break;
+            }
+
             if (dealerName != string.Empty)
             {
                 where.AppendFormat(" and T.DealerName like '%{0}%'", dealerName);
@@ -117,7 +184,7 @@ namespace Citic_Web.DealerManagement.StopCoopDInfo
             grid_List.PageIndex = e.NewPageIndex;
 
             GridBind();
-            
+
             UpdateSelectedRowIndexArray(grid_List, hfSelectedIDS);
         }
         #endregion
@@ -143,25 +210,6 @@ namespace Citic_Web.DealerManagement.StopCoopDInfo
                         e.Values[3] = "巡库模式";
                         break;
                 }
-
-                //融资模式
-                if (financingMode.Contains("1"))
-                {
-                    financingMode = financingMode.Replace("1", "承兑汇票");
-                }
-                if (financingMode.Contains("2"))
-                {
-                    financingMode = financingMode.Replace("2", "法人透支");
-                }
-                if (financingMode.Contains("3"))
-                {
-                    financingMode = financingMode.Replace("3", "流动贷款");
-                }
-                if (financingMode.Contains("4"))
-                {
-                    financingMode = financingMode.Replace("4", "信用证");
-                }
-                e.Values[7] = financingMode;
 
                 //付费周期
                 int paymentCycle = Convert.ToInt32(e.Values[6]);

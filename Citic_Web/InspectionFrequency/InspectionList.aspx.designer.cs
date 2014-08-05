@@ -40,13 +40,13 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.Panel Panel1;
         
         /// <summary>
-        /// Panel2 控件。
+        /// Panel4 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Panel Panel2;
+        protected global::FineUI.Panel Panel4;
         
         /// <summary>
         /// Form2 控件。
@@ -58,6 +58,15 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.Form Form2;
         
         /// <summary>
+        /// Toolbar1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Toolbar Toolbar1;
+        
+        /// <summary>
         /// Btn_Search 控件。
         /// </summary>
         /// <remarks>
@@ -65,6 +74,24 @@ namespace Citic_Web.InspectionFrequency {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.Button Btn_Search;
+        
+        /// <summary>
+        /// Btn_Generate 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button Btn_Generate;
+        
+        /// <summary>
+        /// hl_ExportExcel 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.HyperLink hl_ExportExcel;
         
         /// <summary>
         /// FormRow1 控件。
@@ -103,13 +130,13 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.TextBox txt_BrandName;
         
         /// <summary>
-        /// txt_CreateName 控件。
+        /// txt_Rummager 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox txt_CreateName;
+        protected global::FineUI.TextBox txt_Rummager;
         
         /// <summary>
         /// FormRow2 控件。
@@ -148,193 +175,22 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.TextBox txt_DealerName;
         
         /// <summary>
-        /// Panel3 控件。
+        /// txt_SupervisorName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Panel Panel3;
+        protected global::FineUI.TextBox txt_SupervisorName;
         
         /// <summary>
-        /// TabStrip1 控件。
+        /// Panel2 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TabStrip TabStrip1;
-        
-        /// <summary>
-        /// T_InspectionFrequency 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Tab T_InspectionFrequency;
-        
-        /// <summary>
-        /// Panel6 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Panel Panel6;
-        
-        /// <summary>
-        /// Btn_InspectionFrequency_Update 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button Btn_InspectionFrequency_Update;
-        
-        /// <summary>
-        /// G_InspectionFrequency 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Grid G_InspectionFrequency;
-        
-        /// <summary>
-        /// txt_MainProblem 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_MainProblem;
-        
-        /// <summary>
-        /// txt_MainProblem_1_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_MainProblem_1_Results;
-        
-        /// <summary>
-        /// txt_MainProblem_2_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_MainProblem_2_Results;
-        
-        /// <summary>
-        /// txt_MainProblem_3_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_MainProblem_3_Results;
-        
-        /// <summary>
-        /// T_QuartersLedger 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Tab T_QuartersLedger;
-        
-        /// <summary>
-        /// Panel4 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Panel Panel4;
-        
-        /// <summary>
-        /// Toolbar1 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Toolbar Toolbar1;
-        
-        /// <summary>
-        /// Btn_QuartersLedger_Update 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button Btn_QuartersLedger_Update;
-        
-        /// <summary>
-        /// G_QuartersLedger 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Grid G_QuartersLedger;
-        
-        /// <summary>
-        /// txt_QuartersLedger 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_QuartersLedger;
-        
-        /// <summary>
-        /// txt_QuartersLedger_1_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_QuartersLedger_1_Results;
-        
-        /// <summary>
-        /// txt_QuartersLedger_2_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_QuartersLedger_2_Results;
-        
-        /// <summary>
-        /// txt_QuartersLedger_3_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_QuartersLedger_3_Results;
-        
-        /// <summary>
-        /// T_ContinuousTracking 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Tab T_ContinuousTracking;
-        
-        /// <summary>
-        /// Panel5 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Panel Panel5;
+        protected global::FineUI.Panel Panel2;
         
         /// <summary>
         /// Toolbar2 控件。
@@ -346,66 +202,48 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.Toolbar Toolbar2;
         
         /// <summary>
-        /// Btn_ContinuousTracking_Update 控件。
+        /// TT_Day 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Button Btn_ContinuousTracking_Update;
+        protected global::FineUI.ToolbarText TT_Day;
         
         /// <summary>
-        /// G_ContinuousTracking 控件。
+        /// G_DayInspection 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Grid G_ContinuousTracking;
+        protected global::FineUI.Grid G_DayInspection;
         
         /// <summary>
-        /// txt_CheckProblem 控件。
+        /// Panel3 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_CheckProblem;
+        protected global::FineUI.Panel Panel3;
         
         /// <summary>
-        /// txt_Continue_1_Results 控件。
+        /// G_DayTabel 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_Continue_1_Results;
+        protected global::FineUI.Grid G_DayTabel;
         
         /// <summary>
-        /// txt_Continue_2_Results 控件。
+        /// DayUpdate 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_Continue_2_Results;
-        
-        /// <summary>
-        /// txt_Continue_3_Results 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_Continue_3_Results;
-        
-        /// <summary>
-        /// InspectionUpdate 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Window InspectionUpdate;
+        protected global::FineUI.Window DayUpdate;
     }
 }

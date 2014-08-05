@@ -46,8 +46,8 @@
                                 <x:TextBox ID="txtMobileNo" runat="server" Label="手机" Text="" Width="200px">
                                 </x:TextBox>
                                 <x:RadioButtonList ID="rbUserType" Label="状态" runat="server" Width="100px">
-                                    <x:RadioItem Text="启用" Value="1" />
-                                    <x:RadioItem Text="停用" Value="0" Selected="true" />
+                                    <x:RadioItem Text="启用" Value="1" Selected="true" />
+                                    <x:RadioItem Text="停用" Value="0" />
                                 </x:RadioButtonList>
                             </Items>
                         </x:SimpleForm>

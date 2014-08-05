@@ -26,38 +26,40 @@
                 <Items>
                     <x:Label ID="lbl_Dealer" runat="server" Label="经销商名称" Text="" Width="200">
                     </x:Label>
-                    <x:DropDownList ID="ddl_DraftNo" runat="server" Label="汇票号" Width="300">
+                    <x:DropDownList ID="ddl_DraftNo" runat="server" Label="汇票号" Width="300" Readonly="true">
                     </x:DropDownList>
+                    <x:Label ID="lbl_DraftNo" runat="server" Label="汇票号" Text="" Width="200" Hidden="true">
+                    </x:Label>
                     <x:TextBox ID="txt_Vin" runat="server" Label="车架号" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_CarModel" runat="server" Label="车辆型号" Text="" Width="200">
+                    <x:TextBox ID="txt_CarModel" runat="server" Label="车辆型号" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_CarColor" runat="server" Label="颜色" Text="" Width="200">
+                    <x:TextBox ID="txt_CarColor" runat="server" Label="颜色" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_EngineNo" runat="server" Label="发动机号" Text="" Width="200">
+                    <x:TextBox ID="txt_EngineNo" runat="server" Label="发动机号" Text="" Width="200" Enabled="false">
                     </x:TextBox>
                     <x:TextBox ID="txt_QualifiedNo" runat="server" Label="合格证" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:DatePicker ID="dpIssueDate" runat="server" Label="合格证发证日期" Text="" Width="200">
+                    <x:DatePicker ID="dpIssueDate" runat="server" Label="合格证发证日期" Text="" Width="200" Enabled="false">
                     </x:DatePicker>
-                    <x:DropDownList ID="ddl_KeyCount" runat="server" Label="钥匙数" Width="200">
+                    <x:DropDownList ID="ddl_KeyCount" runat="server" Label="钥匙数" Width="200" Readonly="true">
                         <x:ListItem Text="1" Value="1" />
                         <x:ListItem Text="2" Value="2" />
                         <x:ListItem Text="3" Value="3" />
                         <x:ListItem Text="4" Value="4" />
                         <x:ListItem Text="5" Value="5" />
                     </x:DropDownList>
-                    <x:TextBox ID="txt_KeyNumber" runat="server" Label="钥匙号" Text="" Width="200">
+                    <x:TextBox ID="txt_KeyNumber" runat="server" Label="钥匙号" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_Car_Money" runat="server" Label="车辆金额" Text="" Width="200">
+                    <x:TextBox ID="txt_Car_Money" runat="server" Label="车辆金额" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_Return_Money" runat="server" Label="回款金额" Text="" Width="200">
+                    <x:TextBox ID="txt_Return_Money" runat="server" Label="回款金额" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_Displacement" runat="server" Label="排量" Text="" Width="200">
+                    <x:TextBox ID="txt_Displacement" runat="server" Label="排量" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextBox ID="txt_CarClass" runat="server" Label="车辆分类" Text="" Width="200">
+                    <x:TextBox ID="txt_CarClass" runat="server" Label="车辆分类" Text="" Width="200" Enabled="false">
                     </x:TextBox>
-                    <x:TextArea ID="txt_OTHER" runat="server" Height="50px" Label="备注" Text="" Width="200">
+                    <x:TextArea ID="txt_OTHER" runat="server" Height="50px" Label="备注" Text="" Width="200" Enabled="false">
                     </x:TextArea>
                     <x:Label ID="lbl_ID" runat="server" Label="Label" Text="Label" Hidden="true">
                     </x:Label>

@@ -10,45 +10,162 @@ using System.Data;
 using System.Collections;
 namespace Citic_Web.SystemSet
 {
-    public partial class MenuToRole : BasePage
+    public partial class MenuToRole1 : BasePage
     {
         private static Citic.BLL.UserPermission UserPermissionBll = null;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 CBToRoleBind();
             }
         }
 
+        #region PrivateFields--乔春羽(2013.9.3)
+        private DataTable _DataSource;
+        /// <summary>
+        /// 菜单项
+        /// </summary>
+        public DataTable DataSource
+        {
+            get { return _DataSource; }
+            set { _DataSource = value; }
+        }
+
+        private DataTable dtUrls;
+
+        public DataTable DtUrls
+        {
+            get { return dtUrls; }
+            set { dtUrls = value; }
+        }
+        #endregion
+
+        #region 递归方法，加载子菜单项--乔春羽(2013.9.3)
+        private void AddByTurn(FineUI.TreeNode tn, int parentID)
+        {
+            foreach (DataRow row in DataSource.Rows)
+            {
+                if (Convert.ToInt32(row["ParentMenu"]) == parentID)
+                {
+                    FineUI.TreeNode tnode = new FineUI.TreeNode();
+                    tnode.Text = row["MenuName"].ToString();
+                    tnode.EnableCheckBox = true;
+                    //tnode.SingleClickExpand = true;
+                    tnode.Leaf = false;
+                    tnode.NodeID = row["MenuId"].ToString();
+                    tnode.AutoPostBack = true;
+                    //判断是否需要选中
+                    tnode.Checked = IsExistsRole(row["MenuId"].ToString());
+                    AddByTurn(tnode, Convert.ToInt32(row["MenuId"]));
+                    tn.Nodes.Add(tnode);
+                }
+            }
+        }
+        #endregion
+
+        #region 加载菜单项，并加载出角色应有的权限--乔春羽(2013.9.3)
         private void CBToRoleBind()
         {
-            CBToRole.DataSource = MenuBll.GetList("");
-            CBToRole.DataTextField = "MenuName";
-            CBToRole.DataValueField = "MenuId";
-            CBToRole.DataBind();
             if (UserPermissionBll == null)
             {
                 UserPermissionBll = new Citic.BLL.UserPermission();
             }
+
             int RoleId = Convert.ToInt32(Request.QueryString["RoleId"]);
-            DataSet ds = UserPermissionBll.GetList("RoleId=" + RoleId);
-            string CBToRoleList = "";
-            if (ds.Tables[0].Rows.Count > 0)
+            DataSource = MenuBll.GetAllList().Tables[0];
+            DtUrls = UserPermissionBll.GetList("RoleId=" + RoleId).Tables[0];
+            foreach (DataRow row in DataSource.Rows)
             {
-                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                if (Convert.ToInt32(row["ParentMenu"]) == 0)
                 {
-                    CBToRoleList+=ds.Tables[0].Rows[i]["MenuId"].ToString()+",";
-                }
-                if (CBToRoleList != "")
-                {
-                    CBToRoleList = CBToRoleList.Substring(0, CBToRoleList.Length - 1);
-                    CBToRole.SelectedValueArray = CBToRoleList.Split(',');
+                    FineUI.TreeNode node = new FineUI.TreeNode();
+                    node.Text = row["MenuName"].ToString();
+                    node.EnableCheckBox = true;
+                    node.SingleClickExpand = true;
+                    node.Leaf = false;
+                    node.NodeID = row["MenuId"].ToString();
+                    node.AutoPostBack = true;
+                    //判断是否需要选中
+                    node.Checked = IsExistsRole(row["MenuId"].ToString());
+                    AddByTurn(node, Convert.ToInt32(row["MenuId"]));
+                    Tree1.Nodes.Add(node);
                 }
             }
-            
 
+
+            //string CBToRoleList = "";
+            //if (DtUrls.Rows.Count > 0)
+            //{
+            //    for (int i = 0; i < DtUrls.Rows.Count; i++)
+            //    {
+            //        CBToRoleList += DtUrls.Rows[i]["MenuId"].ToString() + ",";
+            //    }
+            //    if (CBToRoleList != "")
+            //    {
+            //        CBToRoleList = CBToRoleList.Substring(0, CBToRoleList.Length - 1);
+            //        Tree1.SelectedNodeIDArray = CBToRoleList.Split(',');
+            //    }
+            //}
         }
+
+        /// <summary>
+        /// 判断用户权限是否存在
+        /// </summary>
+        /// <returns></returns>
+        private bool IsExistsRole(string menuName)
+        {
+            bool flag = false;
+            string where = string.Format("MenuId='{0}'", menuName);
+            DataRow[] rows = DtUrls.Select(where);
+            flag = rows.Length > 0;
+            return flag;
+        }
+        #endregion
+
+        #region 全选与反选--乔春羽(2013.9.3)
+        protected void Tree1_NodeCheck(object sender, TreeCheckEventArgs e)
+        {
+            if (e.Checked)
+            {
+                Tree1.CheckAllNodes(e.Node.Nodes);
+                if (e.Node.ParentNode != null)
+                {
+                    e.Node.ParentNode.Checked = true;
+                }
+            }
+            else
+            {
+
+                int num = 0;
+                if (e.Node.ParentNode != null)
+                {
+                    foreach (FineUI.TreeNode node in e.Node.ParentNode.Nodes)
+                    {
+                        if (node.Checked)
+                        {
+                            num = 1;
+                            break;
+                        }
+                    }
+                }
+                if (num > 0)
+                {
+                    Tree1.UncheckAllNodes(e.Node.Nodes);
+                }
+                else
+                {
+                    Tree1.UncheckAllNodes(e.Node.Nodes);
+                    if (e.Node.ParentNode != null)
+                    {
+                        e.Node.ParentNode.Checked = false;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 保存并关闭--乔春羽(2013.9.4)
         /// <summary>
         /// 保存并关闭
         /// </summary>
@@ -66,43 +183,28 @@ namespace Citic_Web.SystemSet
         /// </summary>
         private void SaveMenu()
         {
-            // 1. 这里放置保存窗体中数据的逻辑
-            if (UserPermissionBll == null)
+            int roleid = Convert.ToInt32(Request.QueryString["RoleId"]);
+            UserPermissionBll.Delete(string.Format(" RoleId={0} ", roleid));
+            string[] roles = Tree1.GetCheckedNodeIDs();
+            if (roles != null && roles.Length > 0)
             {
-                UserPermissionBll = new Citic.BLL.UserPermission();
-            }
-            int RoleId = Convert.ToInt32(Request.QueryString["RoleId"]);
-            UserPermissionBll.Delete("RoleId=" + RoleId);
-            string MenuList=GetCheckedValuesString(CBToRole.SelectedValueArray);
-            if (MenuList != "无")
-            {
-                string[] Menus = MenuList.Split(',');
-                for (int i = 0; i < Menus.Length; i++)
+                foreach (string role in roles)
                 {
-                    Citic.Model.UserPermission UserPermissionInfo = new Citic.Model.UserPermission();
-                    UserPermissionInfo.MenuId = Convert.ToInt32(Menus[i]);
-                    UserPermissionInfo.RoleId = RoleId;
-                    UserPermissionBll.Add(UserPermissionInfo);
+                    Citic.Model.UserPermission model = new Citic.Model.UserPermission();
+                    model.MenuId = int.Parse(role);
+                    model.RoleId = roleid;
+                    UserPermissionBll.Add(model);
                 }
             }
         }
-        private string GetCheckedValuesString(string[] array)
+        #endregion
+
+        #region 展开节点--乔春羽(2013.8.28)
+        protected void Tree1_NodeExpand(object sender, TreeExpandEventArgs e)
         {
-            if (array.Length == 0)
-            {
-                return "无";
-            }
 
-            StringBuilder sb = new StringBuilder();
-            foreach (string item in array)
-            {
-                sb.Append(item);
-                sb.Append(",");
-            }
-            return sb.ToString().TrimEnd(',');
         }
-
-
+        #endregion
 
     }
 }

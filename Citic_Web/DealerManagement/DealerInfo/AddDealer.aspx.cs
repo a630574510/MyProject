@@ -22,13 +22,12 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 //清空ViewState的值
                 ViewState.Clear();
                 DataTableInit();
-
                 WUC_Address.Init();
                 //加载内存中的数据
                 //LoadDataInViewState();
                 LoadDataInXMLDocument();
                 LoadBankInfo();
-                this.btn_ChoiseBank.CssStyle = "font-size:14px;color:red;font-weight:bold";  
+
             }
         }
 
@@ -62,6 +61,53 @@ namespace Citic_Web.DealerManagement.DealerInfo
         {
             get { return (string)ViewState["DealerName"]; }
             set { ViewState["DealerName"] = value; }
+        }
+
+        private string DealerID
+        {
+            get
+            {
+                if (ViewState["DealerID"] == null)
+                {
+                    ViewState["DealerID"] = string.Empty;
+                }
+                return (string)ViewState["DealerID"];
+            }
+            set { ViewState["DealerID"] = value; }
+        }
+
+        private string OrganizationCode
+        {
+            get
+            {
+                string value = string.Empty;
+                if (!string.IsNullOrEmpty(this.txt_OrganizationCode.Text.Trim()))
+                {
+                    value = this.txt_OrganizationCode.Text.Trim();
+
+                    if (value.Length == 10 && value.IndexOf('-') > 0 && value.IndexOf('-') == 8 && value.LastIndexOf('-') == 8)
+                    {
+                        value = this.txt_OrganizationCode.Text.Trim();
+                    }
+                    else if (value.Length == 9 && value.IndexOf('-') <= 0)
+                    {
+                        value = string.Format("{0}-{1}", value.Substring(0, 8), value.Substring(8, 1));
+                    }
+                    else { value = string.Empty; }
+                }
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// 临时数据
+        /// 在查询经销商的时候，把查询出来的经销商基本数据存入到这里边
+        /// 就一条数据
+        /// </summary>
+        private DataTable TempDealerInfoDataTable
+        {
+            get { return (DataTable)ViewState["temp"]; }
+            set { ViewState["temp"] = value; }
         }
 
         /// <summary>
@@ -317,40 +363,42 @@ namespace Citic_Web.DealerManagement.DealerInfo
         #region //保存经销商（首先保存经销商信息；其次保存合作行信息；第三保存联系人信息；第四添加一个二网信息，该二网为新添加经销商的本库）--乔春羽
         protected void btn_SaveDeader_Click(object sender, EventArgs e)
         {
-            //检查经销商名是否存在。
-            DataTable dt = DealerBll.GetList(" DealerName='" + this.txt_DealerName.Text + "' and IsDelete=0").Tables[0];
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                AlertShowInTop("该经销商名称已存在！");
-                return;
-            }
-            if (Banks == null || Banks.Count <= 0) 
+            if (Banks == null || Banks.Count <= 0)
             {
                 AlertShowInTop("请选择合作行！");
                 return;
             }
-            int DealerID = SaveDealer();
-            if (DealerID != 0)
+            if (string.IsNullOrEmpty(this.txt_DealerName.Text.Trim()))
+            {
+                AlertShowInTop("请填写经销商的名字!");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.OrganizationCode))
+            {
+                AlertShowInTop("请填写正确的组织机构代码!");
+                return;
+            }
+            //判断DealerID是否有值
+            //DealerID的值，是根据用户所填写的经销商名称与组织机构代码为条件从tb_Dealer_List中查询得出
+            //如果该值不存在则表示所输入的经销商是一个新的经销商，则tb_Dealer_List的数据需要添加
+            if (string.IsNullOrEmpty(DealerID))
+            {
+                DealerID = SaveDealer().ToString();
+            }
+            //否则，不修改该经销商的数据
+            else
+            {
+                //ModifyDealer();
+            }
+            if (!string.IsNullOrEmpty(DealerID))
             {
                 string bankMess = string.Empty;
                 string link1Mess = string.Empty;
                 string link2Mess = string.Empty;
-                int bank = SaveBank(DealerID);
-                int link1 = SaveLinkman(Convert.ToInt32(Citic_Web.Common.LinkType.DealerLinkman), DealerID);
-                int link2 = SaveLinkman(Convert.ToInt32(Citic_Web.Common.LinkType.DealerBankLinkman), DealerID);
-                //多重判断
-                //if (bank < 0 && bank == -11)
-                //{
-                //    bankMess = "合作行添加失败！";
-                //}
-                //if (link1 < 0 && link1 == -11)
-                //{
-                //    link1Mess = "企业联系人添加失败！";
-                //}
-                //if (link2 < 0 && link2 == -11)
-                //{
-                //    link2Mess = "银行客户经理联系人添加失败！";
-                //}
+                int bank = SaveBank(int.Parse(DealerID));
+                int link1 = SaveLinkman(Convert.ToInt32(Citic_Web.Common.LinkType.DealerLinkman), int.Parse(DealerID));
+                int link2 = SaveLinkman(Convert.ToInt32(Citic_Web.Common.LinkType.DealerBankLinkman), int.Parse(DealerID));
+
                 if (bank >= 0 || link1 > 0 || link2 > 0)
                 {
                     AlertShowInTop("添加成功！");
@@ -391,6 +439,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
             {
                 model.DealerID = dealerID;
                 model.DealerName = this.txt_DealerName.Text;
+                model.JC = this.txt_JC.Text;
             }
             try
             {
@@ -412,6 +461,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
             return num;
         }
 
+        #region 保存经销商
         /// <summary>
         /// 保存经销商--乔春羽
         /// </summary>
@@ -433,13 +483,13 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 model.GoffworkTime = ddl_GoffworkTime.SelectedValue;
                 model.IsDelete = false;
                 model.IsPort = false;
-                model.DealerPayCode = this.txt_DealerPayCode.Text;
+                model.DealerPayCode = this.OrganizationCode;
                 model.Remarks = this.txt_Remark.Text;
                 model.ConnectID = string.Empty;
                 model.UpdateID = 0;
                 model.DeleteID = 0;
                 model.SupervisorID = -1;
-                model.SupervisorName = "";
+                model.SupervisorName = string.Empty;
                 model.SupervisorDispatchTime = null;
                 //经销商业务章
                 model.ConnectID = this.txt_YWZ.Text;
@@ -462,7 +512,52 @@ namespace Citic_Web.DealerManagement.DealerInfo
             }
             return dealerID;
         }
+        #endregion
 
+        #region 修改经销商
+        private int ModifyDealer()
+        {
+            int result = 0;
+            DataTable dt = this.TempDealerInfoDataTable;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataRow row = dt.Rows[0];
+                Citic.Model.Dealer model = new Citic.Model.Dealer()
+                {
+                    DealerID = int.Parse(DealerID),
+                    DealerName = this.txt_DealerName.Text,
+                    SupervisorID = Convert.ToInt32(row["SupervisorID"]),
+                    SupervisorName = row["SupervisorName"].ToString(),
+                    SupervisorDispatchTime = row.IsNull("SupervisorDispatchTime") ? DateTime.Parse("1900-1-1") : Convert.ToDateTime(row["SupervisorDispatchTime"]),
+                    DealerType = string.Join(",", this.cbl_DealerType.SelectedValueArray),
+                    IsGroup = this.chk_IsGroup.Checked,
+                    HasOtherIndustries = this.txt_OtherIndustries.Text,
+                    GotoworkTime = this.ddl_GotoworkTime.SelectedValue,
+                    GoffworkTime = this.ddl_GoffworkTime.SelectedValue,
+                    Address = GetAddress(),
+                    DealerPayCode = this.OrganizationCode,
+                    Remarks = this.txt_Remark.Text,
+                    CreateID = Convert.ToInt32(row["CreateID"]),
+                    CreateTime = row.IsNull("CreateTime") ? DateTime.Parse("1900-1-1") : Convert.ToDateTime(row["CreateTime"]),
+                    UpdateID = this.CurrentUser.UserId,
+                    UpdateTime = DateTime.Now,
+                    IsDelete = false,
+                    IsPort = false,
+                    ConnectID = this.txt_YWZ.Text
+                };
+
+                try
+                {
+                    result = DealerBll.Update(model) ? 1 : 0;
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            return result;
+        }
+        #endregion
 
         /// <summary>
         /// 获取地址--乔春羽
@@ -478,29 +573,43 @@ namespace Citic_Web.DealerManagement.DealerInfo
         #region 关闭本页面，并刷新父页面--乔春羽
         protected void btn_Close_Click(object sender, EventArgs e)
         {
-            //清空Session中的存值
-            Session.Remove("BankIDs");
-            Session.Remove("BankNames");
-            Session.Remove("bank_jsons");
-            Session.Remove("dt_Brand");
-            Session.Remove("model");
-            Session.Remove(LINKMAN_DT);
+            //清空Session中的存值 
+            ClearSession();
             PageContext.RegisterStartupScript(ActiveWindow.GetHideReference());
         }
         #endregion
 
-        #region 选择银行时，保存页面数据--乔春羽
+        #region //选择银行时，保存页面数据--乔春羽
         protected void btn_ChoiseBank_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.txt_DealerName.Text))
+            if (string.IsNullOrEmpty(this.txt_DealerName.Text.Trim()))
             {
                 AlertShowInTop("请填写经销商的名字!");
                 return;
             }
-            //SaveDataInViewState(); 
+            if (string.IsNullOrEmpty(this.OrganizationCode))
+            {
+                AlertShowInTop("请填写正确的组织机构代码!");
+                return;
+            }
+
+            string strWhere = string.Format(" DealerName = '{0}' and DealerPayCode = '{1}' ", this.txt_DealerName.Text.Trim(), this.OrganizationCode);
+            DataTable dt = this.DealerBll.GetList(1, strWhere, "DealerID").Tables[0];
+            DataRow row = null;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                row = dt.Rows[0];
+                this.DealerID = row["DealerID"].ToString();
+            }
+            else
+            {
+                this.DealerID = string.Empty;
+            }
+
+            SaveDataInViewState(row);
             SaveDateInXmlDocument();
 
-            WindowShowBank.IFrameUrl = "~/DealerManagement/DealerInfo/ChoiseBank.aspx";
+            WindowShowBank.IFrameUrl = "~/DealerManagement/DealerInfo/ChoiseBank.aspx?DealerID=" + this.DealerID + "&isAdd=1";
             WindowShowBank.Hidden = false;
         }
 
@@ -510,6 +619,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
         /// </summary>
         private void SaveDateInXmlDocument()
         {
+            //单独存一个数据
+            Session["temp_Dealer"] = this.TempDealerInfoDataTable;
+
             //创建XML文档对象
             XmlDocument doc = new XmlDocument();
             //根节点
@@ -524,9 +636,20 @@ namespace Citic_Web.DealerManagement.DealerInfo
 
             //下边，添加各个子元素
             XmlElement ele_Temp = null;
+
+            //经销商ID
+            ele_Temp = doc.CreateElement("DealerID");
+            ele_Temp.InnerText = this.DealerID;
+            ele_Father.AppendChild(ele_Temp);
+
             //经销商名称
             ele_Temp = doc.CreateElement("DealerName");
             ele_Temp.InnerText = this.txt_DealerName.Text;
+            ele_Father.AppendChild(ele_Temp);
+
+            //经销商名称简称
+            ele_Temp = doc.CreateElement("JC");
+            ele_Temp.InnerText = this.txt_JC.Text;
             ele_Father.AppendChild(ele_Temp);
 
             //经销商属性
@@ -554,7 +677,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
 
             //组织机构代码
             ele_Temp = doc.CreateElement("DealerPayCode");
-            ele_Temp.InnerText = this.txt_DealerPayCode.Text;
+            ele_Temp.InnerText = this.OrganizationCode;
             ele_Father.AppendChild(ele_Temp);
 
             //经销商业务章
@@ -616,39 +739,56 @@ namespace Citic_Web.DealerManagement.DealerInfo
             //保存文件
             string fileName = string.Format("DealerTemp{0}.xml", ConvertLongDateTimeToUI(DateTime.Now));
             this.TempXMLName = fileName;
-            doc.Save("C://" + fileName);
+            try
+            {
+                doc.Save("C://" + fileName);
+            }
+            catch (Exception e)
+            {
+                AlertShowInTop(e.Message);
+                Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "SaveDateInXmlDocument()");
+            }
         }
         #endregion
 
         /// <summary>
         /// 将临时数据存到应用程序内存中
         /// </summary>
-        private void SaveDataInViewState()
+        private void SaveDataInViewState(object obj)
         {
-            Citic.Model.Dealer model = new Citic.Model.Dealer();
-            //经销商名
-            model.DealerName = this.txt_DealerName.Text;
-            //经销商打款账号
-            model.DealerPayCode = this.txt_DealerPayCode.Text;
-            //地址
-            model.Address = GetAddress();
-            //备注
-            model.Remarks = this.txt_Remark.Text;
-            //经销商属性
-            model.DealerType = string.Join(",", cbl_DealerType.SelectedValueArray);
-            //是否是集团属性
-            model.IsGroup = this.chk_IsGroup.Checked;
-            //其他产业
-            model.HasOtherIndustries = this.txt_OtherIndustries.Text;
-            //上下班时间
-            model.GotoworkTime = this.ddl_GotoworkTime.Text;
-            model.GoffworkTime = this.ddl_GoffworkTime.Text;
-            //经销商业务章
-            model.ConnectID = this.txt_YWZ.Text;
+            if (obj != null)
+            {
+                Session["model"] = obj;
+            }
+            else
+            {
+                Citic.Model.Dealer model = new Citic.Model.Dealer();
+                //经销商名
+                model.DealerName = this.txt_DealerName.Text;
+                //经销商打款账号
+                model.DealerPayCode = this.OrganizationCode;
+                //经销商简称
+                model.JC = this.txt_JC.Text;
+                ////地址
+                //model.Address = GetAddress();
+                ////备注
+                //model.Remarks = this.txt_Remark.Text;
+                ////经销商属性
+                //model.DealerType = string.Join(",", cbl_DealerType.SelectedValueArray);
+                ////是否是集团属性
+                //model.IsGroup = this.chk_IsGroup.Checked;
+                ////其他产业
+                //model.HasOtherIndustries = this.txt_OtherIndustries.Text;
+                ////上下班时间
+                //model.GotoworkTime = this.ddl_GotoworkTime.Text;
+                //model.GoffworkTime = this.ddl_GoffworkTime.Text;
+                ////经销商业务章
+                //model.ConnectID = this.txt_YWZ.Text;
 
-            Session["model"] = model;
-            //保存联系人信息
-            //Session[LINKMAN_DT] = DtLinkman;
+                Session["model"] = model;
+                //保存联系人信息
+                //Session[LINKMAN_DT] = DtLinkman;
+            }
         }
         #endregion
 
@@ -660,8 +800,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 Citic.Model.Dealer model = Session["model"] as Citic.Model.Dealer;
                 //经销商名
                 this.txt_DealerName.Text = model.DealerName;
-                //经销商打款账号
-                this.txt_DealerPayCode.Text = model.DealerPayCode;
+                //组织机构代码
+                this.txt_OrganizationCode.Text = model.DealerPayCode;
                 //地址
                 if (model.Address != null && model.Address != string.Empty)
                 {
@@ -692,7 +832,6 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 this.txt_YWZ.Text = model.ConnectID;
 
                 //加载联系人信息
-                //DtLinkman = Session[LINKMAN_DT] as DataTable;
                 LinkmanDataBind();
             }
         }
@@ -704,6 +843,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
         /// </summary>
         private void LoadDataInXMLDocument()
         {
+            //单独存一个数据
+            this.TempDealerInfoDataTable = Session["temp_Dealer"] as DataTable;
+
             string fileName = this.TempXMLName;
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -712,9 +854,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 {
                     doc.Load(string.Format("C://{0}", fileName));
                 }
-                catch 
+                catch
                 {
-                    AlertShowInTop("配置文件缺失，请刷新系统重新录入！");
                     return;
                 }
                 //开始解析存有临时数据的XML文档
@@ -727,8 +868,13 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 this.txt_OtherIndustries.Text = ele_Dealer["OtherIndustries"].InnerText;
                 this.ddl_GotoworkTime.SelectedValue = ele_Dealer["GotoworkTime"].InnerText;
                 this.ddl_GoffworkTime.SelectedValue = ele_Dealer["GoffworkTime"].InnerText;
-                this.txt_DealerPayCode.Text = ele_Dealer["DealerPayCode"].InnerText;
                 this.txt_YWZ.Text = ele_Dealer["YWZ"].InnerText;
+                this.DealerID = ele_Dealer["DealerID"].InnerText;
+                this.txt_JC.Text = ele_Dealer["JC"].InnerText;
+                //组织机构代码
+                string organizationCode = ele_Dealer["DealerPayCode"].InnerText;
+                this.txt_OrganizationCode.Text = organizationCode;
+
                 string address = ele_Dealer["Address"].InnerText;
                 if (!string.IsNullOrEmpty(address))
                 {
@@ -798,6 +944,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     case 3:
                         e.Values[index] = "巡库模式";
                         break;
+                    default:
+                        e.Values[index] = "无效";
+                        break;
                 }
 
 
@@ -818,10 +967,14 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     case 4:
                         e.Values[index] = "年";
                         break;
+                    default:
+                        e.Values[index] = "无效";
+                        break;
                 }
 
             }
         }
         #endregion
+
     }
 }

@@ -32,6 +32,7 @@
                     <Toolbars>
                         <x:Toolbar ID="ToolTop" Position="Top" runat="server">
                             <Items>
+                                <x:Label ID="lbl_UserInfo" runat="server" ShowLabel="false"></x:Label>
                                 <x:ToolbarFill ID="ToolbarFill1" runat="server">
                                 </x:ToolbarFill>
                                 <x:Button ID="Button2" EnablePostBack="false" Icon="Cog" runat="server">
@@ -66,27 +67,6 @@
                         <x:TabStrip ID="mainTabStrip" EnableTabCloseMenu="true" ShowBorder="false" runat="server">
                             <Tabs>
                                 <x:Tab Title="首页" Layout="Fit" Icon="House" runat="server">
-                                    <Toolbars>
-                                        <x:Toolbar runat="server">
-                                            <Items>
-                                                <x:ToolbarFill ID="ToolbarFill2" runat="server">
-                                                </x:ToolbarFill>
-                                                <x:Button ID="btnWaitHandle" Icon="folderbell" Text="待办项" EnablePostBack="false"
-                                                    runat="server">
-                                                </x:Button>
-                                                <x:ToolbarSeparator ID="ToolbarSeparator2" runat="server">
-                                                </x:ToolbarSeparator>
-                                                <x:Button ID="btnMessage" Icon="usercomment" Text="消息"
-                                                    EnablePostBack="false" runat="server">
-                                                </x:Button>
-                                                <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
-                                                </x:ToolbarSeparator>
-                                                <x:Button ID="btnEditUser" Icon="vcardedit" Text="个人信息修改"
-                                                    EnablePostBack="false" runat="server">
-                                                </x:Button>
-                                            </Items>
-                                        </x:Toolbar>
-                                    </Toolbars>
                                     <Items>
                                         <x:ContentPanel ID="ContentPanel2" ShowBorder="false" BodyPadding="10px" ShowHeader="false" AutoScroll="true"
                                             CssClass="intro" runat="server">
@@ -103,13 +83,13 @@
                                         <br />
                                             <br />
                                             <h2>联系方式</h2>
-                                            电话：<a id="telephone" target="_blank" href="#"></a>
+                                            电话：<span id="telephone"></span>
                                             <br />
-                                            传真：<a id="fax" target="_blank" href="#"></a>
+                                            传真：<span id="fax"></span>
                                             <br />
-                                            地址：<a id="address" target="_blank" href="#"></a>
+                                            地址：<span id="address"></span>
                                             <br />
-                                            邮编：<a id="post" target="_blank" href="#"></a>
+                                            邮编：<span id="post"></span>
                                             <br />
 
 
@@ -122,18 +102,6 @@
                 </x:Region>
             </Regions>
         </x:RegionPanel>
-        <x:Window ID="windowWaitHandle" Icon="FolderBell" Title="待办项" Popup="false" EnableIFrame="true"
-            runat="server" IsModal="true" Width="900px" Height="550px" EnableClose="true"
-            EnableMaximize="true" EnableResize="true">
-        </x:Window>
-        <x:Window ID="windowMessage" Icon="usercomment" Title="消息" Popup="false" EnableIFrame="true"
-            runat="server" IsModal="true" Width="900px" Height="550px" EnableClose="true"
-            EnableMaximize="true" EnableResize="true">
-        </x:Window>
-        <x:Window ID="windowEditUser" Icon="vcardedit" Title="个人信息修改" Popup="false" EnableIFrame="true"
-            runat="server" IsModal="true" Width="900px" Height="550px" EnableClose="true"
-            EnableMaximize="true" EnableResize="true">
-        </x:Window>
     </form>
     <script src="js/default.js" type="text/javascript"></script>
 </body>
@@ -141,7 +109,6 @@
 <script src="jqueryui/js/jquery-1.8.3.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $.get("Information.txt").success(function (content) {
-        alert(content);
         var telephone = content.substring(0, content.indexOf('\n'));
         content = content.substring(telephone.length + 1);
         var fax = content.substring(0, content.indexOf('\n'));

@@ -4,6 +4,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <style type="text/css">
+        .padding-bottom {
+            padding-bottom: 5px;
+        }
+
+        .mright {
+            margin-right: 5px;
+        }
+
+        .datecontainer .x-form-field-trigger-wrap {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -18,7 +31,7 @@
                         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="银行名："></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="银行名：" CssClass="inline"></x:Label>
                                 <x:TextBox ID="txt_Search" runat="server" Text="" Width="300px" CssStyle="padding-left:0px;height:20px;font-size:15px"></x:TextBox>
                                 <x:Button ID="btn_Search" runat="server" Text="查询" Icon="SystemSearch" Visible="false" OnClick="btn_Search_Click" CssStyle="padding-left:5px"></x:Button>
                             </Items>

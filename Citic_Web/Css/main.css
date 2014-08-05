@@ -6,7 +6,7 @@
 
 .inline
 {
-    margin-right: 5px;
+    margin-top:3px;
     float: left;
 }
 
@@ -15,26 +15,6 @@
     clear: both;
 }
 
-/*
-table.result
-{
-    margin: 0px;
-    padding: 0px;
-    width: 500px;
-}
-
-table.result th
-{
-    border-bottom: solid 1px #ccc;
-    font-weight: bold;
-    padding: 3px;
-}
-
-table.result td
-{
-    padding: 3px;
-}
-*/
 ol.result
 {
     list-style-type:decimal;

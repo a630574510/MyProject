@@ -383,7 +383,7 @@ namespace Citic.DAL
         }
 
         /// <summary>
-        /// 分页获取数据列表
+        /// 分页获取数据列表--乔春羽(2014.6.12)
         /// </summary>
         public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
         {
@@ -404,7 +404,7 @@ namespace Citic.DAL
                 strSql.Append(" WHERE " + strWhere);
             }
             strSql.Append(" ) TT");
-            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            strSql.AppendFormat(" WHERE TT.Row between {0} and {1} Order By TT.CreateTime Desc", startIndex, endIndex);
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion  BasicMethod
@@ -442,6 +442,149 @@ namespace Citic.DAL
                 throw;
             }
             return flag;
+        }
+        #endregion
+        #region 批量修改--乔春羽(2014.5.8)
+        public int UpdateRange(string ToGDMessageSQL, params Citic.Model.DBSX[] models)
+        {
+            int num = 0;
+            StringBuilder strSql = null;
+            System.Collections.Generic.List<CommandInfo> cInfos = null;
+            if (models != null && models.Length > 0)
+            {
+                cInfos = new System.Collections.Generic.List<CommandInfo>();
+                foreach (Citic.Model.DBSX model in models)
+                {
+                    strSql = new StringBuilder();
+                    strSql.Append("Update tb_DBSX_List Set ");
+                    strSql.Append("BankID=@BankID,");
+                    strSql.Append("BankName=@BankName,");
+                    strSql.Append("DealerID=@DealerID,");
+                    strSql.Append("DealerName=@DealerName,");
+                    strSql.Append("DraftNo=@DraftNo,");
+                    strSql.Append("Vin=@Vin,");
+                    strSql.Append("ReqType=@ReqType,");
+                    strSql.Append("Content=@Content,");
+                    strSql.Append("Status=@Status,");
+                    strSql.Append("IsSupervisorLook=@IsSupervisorLook,");
+                    strSql.Append("IsBMLook=@IsBMLook,");
+                    strSql.Append("CreateID=@CreateID,");
+                    strSql.Append("CreateTime=@CreateTime,");
+                    strSql.Append("OperateID=@OperateID,");
+                    strSql.Append("OperateTime=@OperateTime,");
+                    strSql.Append("TargetUser=@TargetUser,");
+                    strSql.Append("IsDelete=@IsDelete");
+                    strSql.Append(" Where ID=@ID");
+                    SqlParameter[] parameters = {
+					    new SqlParameter("@BankID", SqlDbType.Int,4),
+					    new SqlParameter("@BankName", SqlDbType.NVarChar,200),
+					    new SqlParameter("@DealerID", SqlDbType.Int,4),
+					    new SqlParameter("@DealerName", SqlDbType.NVarChar,200),
+					    new SqlParameter("@DraftNo", SqlDbType.NVarChar,50),
+					    new SqlParameter("@Vin", SqlDbType.NVarChar,50),
+					    new SqlParameter("@ReqType", SqlDbType.Int,4),
+					    new SqlParameter("@Content", SqlDbType.NVarChar,200),
+					    new SqlParameter("@Status", SqlDbType.Int,4),
+					    new SqlParameter("@IsSupervisorLook", SqlDbType.NVarChar,-1),
+					    new SqlParameter("@IsBMLook", SqlDbType.NVarChar,-1),
+					    new SqlParameter("@CreateID", SqlDbType.Int,4),
+					    new SqlParameter("@CreateTime", SqlDbType.DateTime),
+					    new SqlParameter("@OperateID", SqlDbType.Int,4),
+					    new SqlParameter("@OperateTime", SqlDbType.DateTime),
+					    new SqlParameter("@TargetUser", SqlDbType.NVarChar,20),
+					    new SqlParameter("@IsDelete", SqlDbType.Bit,1),
+					    new SqlParameter("@ID", SqlDbType.Int,4)
+                    };
+                    parameters[0].Value = model.BankID;
+                    parameters[1].Value = model.BankName;
+                    parameters[2].Value = model.DealerID;
+                    parameters[3].Value = model.DealerName;
+                    parameters[4].Value = model.DraftNo;
+                    parameters[5].Value = model.Vin;
+                    parameters[6].Value = model.ReqType;
+                    parameters[7].Value = model.Content;
+                    parameters[8].Value = model.Status;
+                    parameters[9].Value = model.IsSupervisorLook;
+                    parameters[10].Value = model.IsBMLook;
+                    parameters[11].Value = model.CreateID;
+                    parameters[12].Value = model.CreateTime;
+                    parameters[13].Value = model.OperateID;
+                    parameters[14].Value = model.OperateTime;
+                    parameters[15].Value = model.TargetUser;
+                    parameters[16].Value = model.IsDelete;
+                    parameters[17].Value = model.ID;
+
+                    cInfos.Add(new CommandInfo(strSql.ToString(), parameters));
+
+                    if (model.CarModel != null)
+                    {
+                        string tableName = string.Format("tb_Car_{0}_{1}", model.BankID, model.DealerID);
+                        if (model.Type == "move")
+                        {
+                            string update_Car = string.Format("Update {0} Set Statu=@Statu,MoveTime=@MoveTime,StorageID=@StorageID,StorageName=@StorageName,ReturnCost=@ReturnCost Where Vin=@Vin", tableName);
+                            SqlParameter[] update_CarParams =
+                                {
+                                    new SqlParameter("@Statu",model.CarModel.Statu),
+                                    new SqlParameter("@MoveTime",model.CarModel.MoveTime),
+                                    new SqlParameter("@StorageID",model.CarModel.StorageID),
+                                    new SqlParameter("@StorageName",model.CarModel.StorageName),
+                                    new SqlParameter("@ReturnCost",model.CarModel.ReturnCost),
+                                    new SqlParameter("@Vin",model.CarModel.Vin)
+                                };
+                            cInfos.Add(new CommandInfo(update_Car, update_CarParams));
+                        }
+                        else if (model.Type == "out")
+                        {
+                            string update_Car = string.Format("Update {0} Set Statu=@Statu,OutTime=@OutTime,ReturnCost=@ReturnCost Where Vin=@Vin", tableName);
+                            SqlParameter[] update_CarParams =
+                                {
+                                    new SqlParameter("@Statu",model.CarModel.Statu),
+                                    new SqlParameter("@OutTime",model.CarModel.OutTime),
+                                    new SqlParameter("@ReturnCost",model.CarModel.ReturnCost),
+                                    new SqlParameter("@Vin",model.CarModel.Vin)
+                                };
+                            cInfos.Add(new CommandInfo(update_Car, update_CarParams));
+
+                            string updateStockError = "Update tb_StockError_List Set Status=1,CarStatusOld=0,OperateID=@OperateID,OperateTime=GETDATE() Where Vin = @Vin and BankID = @BankID and DealerID = @DealerID";
+                            SqlParameter[] update_StockErrorParams =
+                                {
+                                    new SqlParameter("@OperateID",model.OperateID),
+                                    new SqlParameter("@Vin",model.CarModel.Vin),
+                                    new SqlParameter("@BankID",model.BankID),
+                                    new SqlParameter("@DealerID",model.DealerID)
+                                };
+
+                            cInfos.Add(new CommandInfo(updateStockError, update_StockErrorParams));
+                        }
+                        else if (model.Type == "ReturnBack")
+                        {
+                            string update_Car = string.Format("Update {0} Set Statu=@Statu Where Vin=@Vin", tableName);
+                            SqlParameter[] update_CarParams =
+                                {
+                                    new SqlParameter("@Statu",model.CarModel.Statu),
+                                    new SqlParameter("@Vin",model.CarModel.Vin)
+                                };
+                            cInfos.Add(new CommandInfo(update_Car, update_CarParams));
+                        }
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(ToGDMessageSQL))
+            {
+                cInfos.Add(new CommandInfo(ToGDMessageSQL, null));
+            }
+            if (cInfos != null && cInfos.Count > 0)
+            {
+                try
+                {
+                    num = DbHelperSQL.ExecuteSqlTran(cInfos);
+                }
+                catch (Exception)
+                {
+                    num = 0;
+                }
+            }
+            return num;
         }
         #endregion
         #endregion  ExtensionMethod

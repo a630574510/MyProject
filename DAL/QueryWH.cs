@@ -285,31 +285,6 @@ namespace Citic.DAL
                 return Convert.ToInt32(obj);
             }
         }
-        /// <summary>
-        /// 分页获取数据列表
-        /// </summary>
-        public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("SELECT * FROM ( ");
-            strSql.Append(" SELECT ROW_NUMBER() OVER (");
-            if (!string.IsNullOrEmpty(orderby.Trim()))
-            {
-                strSql.Append("order by T." + orderby);
-            }
-            else
-            {
-                strSql.Append("order by T.ID desc");
-            }
-            strSql.Append(")AS Row, T.*  from tb_QueryWH T ");
-            if (!string.IsNullOrEmpty(strWhere.Trim()))
-            {
-                strSql.Append(" WHERE " + strWhere);
-            }
-            strSql.Append(" ) TT");
-            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
-            return DbHelperSQL.Query(strSql.ToString());
-        }
         #endregion  BasicMethod
 
         #region  ExtensionMethod
@@ -354,6 +329,96 @@ namespace Citic.DAL
                 throw se;
             }
             return num;
+        }
+        #endregion
+
+        #region 查询数据，分页--乔春羽(2014.4.18)
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM ( ");
+            strSql.Append(" SELECT ROW_NUMBER() OVER (");
+            if (!string.IsNullOrEmpty(orderby.Trim()))
+            {
+                strSql.Append("order by T." + orderby);
+            }
+            else
+            {
+                strSql.Append("order by T.ID desc");
+            }
+            strSql.AppendLine(")AS Row, T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,Q.CheckFrequency,Q.Description,ISNULL(Q.ApplyTime,'2014-01-23') ApplyTime,Q.Remark ");
+            strSql.AppendLine("FROM tb_Dealer_Bank_List(NOLOCK) T RIGHT JOIN tb_QueryWH(NOLOCK) Q ");
+            strSql.AppendLine("ON T.DealerID=Cast(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','1') AS INT ) ");
+            strSql.AppendLine("AND T.BankID=CAST(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','2') AS INT ) ");
+            if (!string.IsNullOrEmpty(strWhere.Trim()))
+            {
+                strSql.Append(" WHERE " + strWhere);
+            }
+            strSql.AppendLine(" GROUP BY T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,Q.CheckFrequency,Q.Description,Q.ApplyTime,Q.Remark");
+            strSql.Append(" ) TT");
+            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+        #endregion
+
+        #region 查询数据数量--乔春羽(2014.4.18)
+        public int GetRecordCountBySearch(string strWhere)
+        {
+            int num = 0;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT COUNT(2) FROM ( ");
+            strSql.Append(" SELECT ROW_NUMBER() OVER (order by T.ID");
+            strSql.AppendLine(")AS Row ");
+            strSql.AppendLine("FROM tb_Dealer_Bank_List(NOLOCK) T RIGHT JOIN tb_QueryWH(NOLOCK) Q ");
+            strSql.AppendLine("ON T.DealerID=Cast(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','1') AS INT ) ");
+            strSql.AppendLine("AND T.BankID=CAST(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','2') AS INT ) ");
+            if (!string.IsNullOrEmpty(strWhere.Trim()))
+            {
+                strSql.Append(" WHERE " + strWhere);
+            }
+            strSql.AppendLine(" GROUP BY T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,Q.CheckFrequency,Q.Description,Q.ApplyTime,Q.Remark");
+            strSql.Append(" ) TT");
+            try
+            {
+                num = (int)DbHelperSQL.GetSingle(strSql.ToString());
+            }
+            catch (Exception)
+            {
+                num = 0;
+            }
+            return num;
+        }
+        #endregion
+
+        #region 查询数据，不分页--乔春羽(2014.4.21)
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere, string orderby)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT ROW_NUMBER() OVER (");
+            if (!string.IsNullOrEmpty(orderby.Trim()))
+            {
+                strSql.Append("order by T." + orderby);
+            }
+            else
+            {
+                strSql.Append("order by T.ID desc");
+            }
+            strSql.AppendLine(")AS Row, T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,T.BrandID,T.BrandName,Q.CheckFrequency,Q.Description,ISNULL(Q.ApplyTime,'2014-01-23') ApplyTime,Q.Remark ");
+            strSql.AppendLine("FROM tb_Dealer_Bank_List(NOLOCK) T RIGHT JOIN tb_QueryWH(NOLOCK) Q ");
+            strSql.AppendLine("ON T.DealerID=Cast(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','1') AS INT ) ");
+            strSql.AppendLine("AND T.BankID=CAST(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','2') AS INT ) ");
+            if (!string.IsNullOrEmpty(strWhere.Trim()))
+            {
+                strSql.Append(" WHERE " + strWhere);
+            }
+            strSql.AppendLine(" GROUP BY T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,T.BrandID,T.BrandName,Q.CheckFrequency,Q.Description,Q.ApplyTime,Q.Remark");
+            return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion
         #endregion  ExtensionMethod

@@ -38,7 +38,7 @@
                             </x:FormRow>
                             <x:FormRow ID="FormRow2" runat="server">
                                 <Items>
-                                    <x:DatePicker ID="txt_Time" runat="server" Label="检查日期" Width="200px">
+                                    <x:DatePicker ID="txt_Time" EnableEdit="false" runat="server" Label="检查日期" Width="200px">
                                     </x:DatePicker>
                                     <x:TextBox ID="txt_CreateName" runat="server" Label="检查人员" Text="" Width="200px">
                                     </x:TextBox>
@@ -53,6 +53,51 @@
             <x:Panel ID="Panel3" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false"
                 Title="Panel" Layout="Fit" BoxFlex="1">
                 <Items>
+                    <x:Grid ID="G_InspectionFrequency" runat="server" Title="Grid" EnableCheckBoxSelect="True"
+                        DataKeyNames="ID" EnableColumnLines="true">
+                        <Toolbars>
+                            <x:Toolbar runat="server">
+                                <Items>
+                                    <x:Button ID="btn_Del" runat="server" Text="删除" Icon="Delete" OnClick="btn_Del_Click">
+                                    </x:Button>
+                                </Items>
+                            </x:Toolbar>
+                        </Toolbars>
+                        <Columns>
+                            <x:BoundField HeaderText="检查人员" ColumnID="Rummager" DataField="Rummager" />
+                            <x:BoundField HeaderText="经销店名称" ColumnID="DealerName" DataField="DealerName" />
+                            <x:BoundField HeaderText="合作银行" ColumnID="Bank" DataField="Bank" />
+                            <x:BoundField HeaderText="品牌" ColumnID="BrandName" DataField="BrandName" />
+                            <x:BoundField HeaderText="监管员" ColumnID="SupervisorName" DataField="SupervisorName" />
+                            <x:BoundField HeaderText="监管模式" ColumnID="Model" DataField="Model" />
+                            <x:BoundField HeaderText="库存" ColumnID="Inventory" DataField="Inventory" />
+                            <x:BoundField HeaderText="总部总账" ColumnID="QuartersLedger" DataField="QuartersLedger" />
+                            <x:BoundField HeaderText="主要问题" ColumnID="MainProblem" DataField="MainProblem" />
+                            <%-- <x:BoundField HeaderText="视频-汽车处理人" ColumnID="MainProblem_1_People" DataField="MainProblem_1_People" />
+                            <x:BoundField HeaderText="视频-汽车处理时间" ColumnID="MainProblem_1_Date" DataField="MainProblem_1_Date" />
+                            <x:BoundField HeaderText="视频-风控处理结果" ExpandUnusedSpace="true" ColumnID="MainProblem_2_Results"
+                                DataField="MainProblem_2_Results" />
+                            <x:BoundField HeaderText="视频-风控处理人" ColumnID="MainProblem_2_People" DataField="MainProblem_2_People" />
+                            <x:BoundField HeaderText="视频-风控处理时间" ColumnID="MainProblem_2_Date" DataField="MainProblem_2_Date" />
+                            <x:BoundField HeaderText="视频-管理处理结果" ExpandUnusedSpace="true" ColumnID="MainProblem_3_Results"
+                                DataField="MainProblem_3_Results" />
+                            <x:BoundField HeaderText="视频-管理处理人" ColumnID="MainProblem_3_People" DataField="MainProblem_3_People" />
+                            <x:BoundField HeaderText="视频-管理处理时间" ColumnID="MainProblem_3_Date" DataField="MainProblem_3_Date" />
+                            <x:BoundField HeaderText="总账-汽车处理结果" ExpandUnusedSpace="true" ColumnID="QuartersLedger_1_Results"
+                                DataField="QuartersLedger_1_Results" />
+                            <x:BoundField HeaderText="总账-汽车处理人" ColumnID="QuartersLedger_1_People" DataField="QuartersLedger_1_People" />
+                            <x:BoundField HeaderText="总账-汽车处理时间" ColumnID="QuartersLedger_1_Date" DataField="QuartersLedger_1_Date" />
+                            <x:BoundField HeaderText="持续-汽车处理结果" ExpandUnusedSpace="true" ColumnID="Continue_1_Results"
+                                DataField="Continue_1_Results" />
+                            <x:BoundField HeaderText="持续-汽车处理人" ColumnID="Continue_1_People" DataField="Continue_1_People" />
+                            <x:BoundField HeaderText="持续-汽车处理时间" ColumnID="Continue_1_Date" DataField="Continue_1_Date" />--%>
+                        </Columns>
+                    </x:Grid>
+                </Items>
+            </x:Panel>
+            <%--<x:Panel ID="Panel3" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false"
+                Title="Panel" Layout="Fit" BoxFlex="1">
+                <Items>
                     <x:Grid ID="G_InspectionFrequency" runat="server" Title="" EnableRowNumber="true"
                         ShowHeader="true" ForceFitAllTime="true" EnableCheckBoxSelect="true" DataKeyNames="ID">
                         <Toolbars>
@@ -62,7 +107,7 @@
                                         OnClick="btn_InspectionFrequency_Logic_Del_Click" Hidden="true">
                                     </x:Button>
                                     <x:Button ID="btn_InspectionFrequency_Physics_Del" runat="server" Icon="Delete" Text="物理删除"
-                                        OnClick="btn_InspectionFrequency_Physics_Del_Click" >
+                                        OnClick="btn_InspectionFrequency_Physics_Del_Click">
                                     </x:Button>
                                 </Items>
                             </x:Toolbar>
@@ -93,7 +138,7 @@
                             <x:Toolbar ID="Toolbar2" runat="server">
                                 <Items>
                                     <x:Button ID="btn_QuartersLedger_Logic_Del" runat="server" Icon="Delete" Text="逻辑删除"
-                                        OnClick="btn_QuartersLedger_Logic_Del_Click"  Hidden="true">
+                                        OnClick="btn_QuartersLedger_Logic_Del_Click" Hidden="true">
                                     </x:Button>
                                     <x:Button ID="btn_QuartersLedger_Physics_Del" runat="server" Icon="Delete" Text="物理删除"
                                         OnClick="btn_QuartersLedger_Physics_Del_Click">
@@ -124,7 +169,7 @@
                             <x:Toolbar ID="Toolbar3" runat="server">
                                 <Items>
                                     <x:Button ID="btn_ContinuousTracking_Logic_Del" runat="server" Icon="Delete" Text="逻辑删除"
-                                        OnClick="btn_ContinuousTracking_Logic_Del_Click"  Hidden="true">
+                                        OnClick="btn_ContinuousTracking_Logic_Del_Click" Hidden="true">
                                     </x:Button>
                                     <x:Button ID="btn_ContinuousTrackingPhysics_Del" runat="server" Icon="Delete" Text="物理删除"
                                         OnClick="btn_ContinuousTrackingPhysics_Del_Click">
@@ -148,7 +193,7 @@
                         </Columns>
                     </x:Grid>
                 </Items>
-            </x:Panel>
+            </x:Panel>--%>
         </Items>
     </x:Panel>
     <x:Window ID="InspectionUpdate" Title="编辑" Popup="false" EnableIFrame="true" runat="server"

@@ -30,109 +30,115 @@
     <form id="form1" runat="server">
         <x:PageManager ID="PageManager1" runat="server" AutoSizePanelID="Panel1" />
         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="true" ShowHeader="true" Title="添加风险问题处理单"
-            EnableBackgroundColor="true" Layout="Fit">
+            EnableBackgroundColor="true" Layout="VBox" BoxConfigAlign="Stretch">
             <Items>
-                <x:Grid ID="grid_List" runat="server" EnableBackgroundColor="true" ShowHeader="false" ShowBorder="false" ClicksToEdit="1" AllowCellEditing="true">
+                <x:SimpleForm ID="sf_Basic" runat="server" BodyPadding="5px" ShowHeader="false" ShowBorder="false" EnableBackgroundColor="true" Height="35px" CssStyle="padding-bottom:5px; border-bottom:1px solid #99BBE8">
+                    <Items>
+                        <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
+                            CssClass="x-form-item" Layout="Column">
+                            <Items>
+                                <x:Label ID="Label1" runat="server" Text="经销商名称：" CssClass="inline"></x:Label>
+                                <x:TextBox ID="txt_Dealer" runat="server" Text="" Width="350px" EmptyText="请输入经销商" CssStyle="padding-left:0px;height:20px;font-size:15px"
+                                    AutoPostBack="true" OnTextChanged="txt_Dealer_TextChanged" Label="经销商名称" Required="true" CompareType="String" CompareValue="" CompareOperator="NotEqual">
+                                </x:TextBox>
+                                <x:Label ID="Label2" runat="server" Text="合作行：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
+                                <x:DropDownList ID="ddl_Bank" runat="server" Width="300px" Required="true" CompareType="String" CompareValue="-1" CompareOperator="NotEqual"
+                                    AutoPostBack="true" OnSelectedIndexChanged="ddl_Bank_SelectedIndexChanged" Label="合作行">
+                                </x:DropDownList>
+                                <x:Label ID="Label3" runat="server" Text="品牌：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
+                                <x:DropDownList ID="ddl_Brand" runat="server" Width="100px"></x:DropDownList>
+                            </Items>
+                        </x:Panel>
+                    </Items>
+                </x:SimpleForm>
+                <x:Grid ID="grid_List" runat="server" EnableBackgroundColor="true" ShowHeader="false" ShowBorder="false" ClicksToEdit="1"
+                    AllowCellEditing="true" BoxFlex="1">
                     <Toolbars>
                         <x:Toolbar runat="server">
                             <Items>
                                 <x:Button ID="btn_Add" OnClick="btn_Add_Click" runat="server" Text="确定添加" Icon="Add"></x:Button>
                                 <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server"></x:ToolbarSeparator>
-                                <x:Button ID="btn_Checking_Car" runat="server" Text="信息验证" Icon="ArrowRefresh" OnClick="btn_Checking_Car_Click"
-                                    Enabled="false">
-                                </x:Button>
-                                <x:ToolbarSeparator ID="ToolbarSeparator2" runat="server"></x:ToolbarSeparator>
-                                <x:Button ID="btn_Add_Table" EnablePostBack="false" runat="server" Text="添加行" Icon="TableAdd" />
+                                <x:Button ID="btn_Add_Table" EnablePostBack="true" runat="server" Text="添加行" OnClick="btn_Add_Table_Click" ValidateForms="sf_Basic" Icon="TableAdd" />
                                 <x:ToolbarSeparator ID="ToolbarSeparator3" runat="server"></x:ToolbarSeparator>
                                 <x:Button ID="btn_Delete_Table" EnablePostBack="false" runat="server" Text="删除选中行" Icon="TableDelete" />
                             </Items>
                         </x:Toolbar>
                     </Toolbars>
                     <Columns>
-                        <x:RenderField Width="260px" ColumnID="SQ_Shop" DataField="SQ_Shop" FieldType="String"
-                            HeaderText="监管店">
+                        <x:RenderField ColumnID="SQ_ShopID" DataField="SQ_ShopID" HideMode="Visibility" Hidden="true">
                             <Editor>
-                                <x:TextBox ID="SQ_Shop" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:Label ID="SQ_ShopID" runat="server"></x:Label>
+                            </Editor>
+                        </x:RenderField>
+                        <x:RenderField ColumnID="SQ_BankID" DataField="SQ_BankID" HideMode="Visibility" Hidden="true">
+                            <Editor>
+                                <x:Label ID="SQ_BankID" runat="server"></x:Label>
+                            </Editor>
+                        </x:RenderField>
+                        <x:RenderField ColumnID="SQ_BrandID" DataField="SQ_BrandID" HideMode="Visibility" Hidden="true">
+                            <Editor>
+                                <x:Label ID="SQ_BrandID" runat="server"></x:Label>
+                            </Editor>
+                        </x:RenderField>
+                        <x:RenderField Width="240px" ColumnID="SQ_Shop" DataField="SQ_Shop" HeaderText="监管店">
+                            <Editor>
+                                <x:Label ID="SQ_Shop" runat="server"></x:Label>
+                            </Editor>
+                        </x:RenderField>
+                        <x:RenderField Width="200px" ColumnID="SQ_Bank" DataField="SQ_Bank" HeaderText="合作行">
+                            <Editor>
+                                <x:Label ID="SQ_Bank" runat="server"></x:Label>
+                            </Editor>
+                        </x:RenderField>
+                        <x:RenderField Width="100px" ColumnID="SQ_Brand" DataField="SQ_Brand" HeaderText="品牌">
+                            <Editor>
+                                <x:Label ID="SQ_Brand" runat="server"></x:Label>
                             </Editor>
                         </x:RenderField>
 
-                        <%--客户投诉字段--%>
-                        <x:RenderField Width="100px" ColumnID="CC_Date" DataField="CC_Date" FieldType="Date"
+                        <x:RenderField Width="100px" ColumnID="C_Date" DataField="C_Date" FieldType="Date"
                             HeaderText="投诉时间" Renderer="Date" RendererArgument="yyyy-MM-dd">
                             <Editor>
-                                <x:DatePicker ID="CC_Date" Required="true" runat="server" EnableEdit="false">
+                                <x:DatePicker ID="C_Date" Required="true" runat="server" EnableEdit="false">
                                 </x:DatePicker>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_AP" DataField="CC_AP" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_AP" DataField="C_AP" FieldType="String"
                             HeaderText="投诉接收人">
                             <Editor>
-                                <x:TextBox ID="CC_AP" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_AP" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_Unit" DataField="CC_Unit" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_Unit" DataField="C_Unit" FieldType="String"
                             HeaderText="投诉单位">
                             <Editor>
-                                <x:TextBox ID="CC_Unit" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_Unit" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_P" DataField="CC_P" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_P" DataField="C_P" FieldType="String"
                             HeaderText="投诉人">
                             <Editor>
-                                <x:TextBox ID="CC_P" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_P" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_Post" DataField="CC_Post" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_Post" DataField="C_Post" FieldType="String"
                             HeaderText="投诉人职务">
                             <Editor>
-                                <x:TextBox ID="CC_Post" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_Post" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_PPhone" DataField="CC_PPhone" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_PPhone" DataField="C_PPhone" FieldType="String"
                             HeaderText="投诉人联系方式">
                             <Editor>
-                                <x:TextBox ID="CC_PPhone" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_PPhone" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="CC_Content" DataField="CC_Content" FieldType="String"
+                        <x:RenderField Width="100px" ColumnID="C_Content" DataField="C_Content" FieldType="String"
                             HeaderText="投诉内容">
                             <Editor>
-                                <x:TextBox ID="CC_Content" runat="server" ShowLabel="false" Text=""></x:TextBox>
+                                <x:TextBox ID="C_Content" runat="server" ShowLabel="false" Text=""></x:TextBox>
                             </Editor>
                         </x:RenderField>
-                        <%--监管员问题字段--%>
-                        <%-- 监管店的品牌与监管员是一一对应，如果该店有两个合作品牌，则取第一个。--%>
-                        <%-- <x:RenderField Width="100px" ColumnID="SQ_Brand" DataField="SQ_Brand" FieldType="String"
-                            HeaderText="监管品牌">
-                            <Editor>
-                                <x:TextBox ID="SQ_Brand" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="SQ_Name" DataField="SQ_Name" FieldType="String"
-                            HeaderText="监管员姓名">
-                            <Editor>
-                                <x:TextBox ID="SQ_Name" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="SQ_Phone" DataField="SQ_Phone" FieldType="String"
-                            HeaderText="监管员联系方式">
-                            <Editor>
-                                <x:TextBox ID="SQ_Phone" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>--%>
-                        <%-- 问题反馈人员为登录人员，联系方式亦然 --%>
-                        <%--<x:RenderField Width="100px" ColumnID="SQ_FBP" DataField="SQ_FBP" FieldType="String"
-                            HeaderText="问题反馈人员">
-                            <Editor>
-                                <x:TextBox ID="SQ_FBP" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="SQ_FBPP" DataField="SQ_FBPP" FieldType="String"
-                            HeaderText="联系方式">
-                            <Editor>
-                                <x:TextBox ID="SQ_FBPP" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>--%>
                         <x:RenderField Width="100px" ColumnID="SQ_Content" DataField="SQ_Content" FieldType="String"
                             HeaderText="问题描述">
                             <Editor>
@@ -140,71 +146,6 @@
                             </Editor>
                         </x:RenderField>
 
-
-                        <x:RenderField Width="100px" ColumnID="S_P" DataField="S_P" FieldType="String"
-                            HeaderText="调查人">
-                            <Editor>
-                                <x:TextBox ID="S_P" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-                        <%--<x:RenderField Width="100px" ColumnID="S_Phone" DataField="S_Phone" FieldType="String"
-                            HeaderText="调查人联系方式">
-                            <Editor>
-                                <x:TextBox ID="S_Phone" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>--%>
-                        <x:RenderField Width="100px" ColumnID="S_Result" DataField="S_Result" FieldType="String"
-                            HeaderText="调查结果">
-                            <Editor>
-                                <x:TextArea ID="S_Result" runat="server" Height="50px" Label="Label" Text=""></x:TextArea>
-                            </Editor>
-                        </x:RenderField>
-
-                        <x:RenderField Width="100px" ColumnID="GD" DataField="GD" FieldType="String"
-                            HeaderText="违反的规定">
-                            <Editor>
-                                <x:TextBox ID="GD" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-
-                        <%--<x:RenderField Width="100px" ColumnID="WTCLBF" DataField="WTCLBF" FieldType="String"
-                            HeaderText="问题处理办法">
-                            <Editor>
-                                <x:TextArea ID="WTCLBF" runat="server" Height="50px" Label="Label" Text=""></x:TextArea>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="FXWTBMQZ" DataField="FXWTBMQZ" FieldType="String"
-                            HeaderText="发现问题部门签字">
-                            <Editor>
-                                <x:TextBox ID="FXWTBMQZ" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-
-                        <x:RenderField Width="100px" ColumnID="QCJRZXYJ" DataField="QCJRZXYJ" FieldType="String"
-                            HeaderText="汽车金融中心意见">
-                            <Editor>
-                                <x:TextArea ID="QCJRZXYJ" runat="server" Height="50px" Label="Label" Text=""></x:TextArea>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="QCJRZXQZ" DataField="QCJRZXQZ" FieldType="String"
-                            HeaderText="汽车金融中心负责人签字">
-                            <Editor>
-                                <x:TextBox ID="QCJRZXQZ" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>
-
-                        <x:RenderField Width="100px" ColumnID="GLZXYJ" DataField="GLZXYJ" FieldType="String"
-                            HeaderText="管理中心意见">
-                            <Editor>
-                                <x:TextArea ID="GLZXYJ" runat="server" Height="50px" Label="Label" Text=""></x:TextArea>
-                            </Editor>
-                        </x:RenderField>
-                        <x:RenderField Width="100px" ColumnID="GLZXQZ" DataField="GLZXQZ" FieldType="String"
-                            HeaderText="管理中心负责人签字">
-                            <Editor>
-                                <x:TextBox ID="GLZXQZ" runat="server" ShowLabel="false" Text=""></x:TextBox>
-                            </Editor>
-                        </x:RenderField>--%>
                     </Columns>
                 </x:Grid>
             </Items>
@@ -215,15 +156,26 @@
 <script src="../../jqueryui/js/jquery-1.8.3.js" type="text/javascript"></script>
 <script src="../../jqueryui/js/jquery-ui-1.9.2.custom.js" type="text/javascript"></script>
 <script type="text/javascript">
-    function onReady() {
-
-    }
     function Init() {
         setTimeout("LoadAutoComplete()", 1000);
     }
+    function onReady() {
+        var txt_Dealer = '<%= this.txt_Dealer.ClientID %>';
+        //给URL地址追加时间戳，避免浏览器缓存。
+        var timestamp = (new Date()).valueOf();
+
+        $('#' + txt_Dealer).autocomplete({
+            source: function (request, response) {
+                var term = request.term;
+
+                $.getJSON("../../ProjectTracking/RiskControl/search.ashx?t=" + timestamp, request, function (data, status, xhr) {
+                    response(data);
+                });
+            }
+        });
+    }
     function LoadAutoComplete() {
-        var txt_Dealer = '<%= SQ_Shop.ClientID %>';
-        var cache = {};
+        var txt_Dealer = '<%= this.txt_Dealer.ClientID %>';
 
         //给URL地址追加时间戳，避免浏览器缓存。
         var timestamp = (new Date()).valueOf();
@@ -231,15 +183,19 @@
         $('#' + txt_Dealer).autocomplete({
             source: function (request, response) {
                 var term = request.term;
-                if (term in cache) {
-                    response(cache[term]);
-                    return;
-                }
 
                 $.getJSON("../../ProjectTracking/RiskControl/search.ashx?t=" + timestamp, request, function (data, status, xhr) {
-                    cache[term] = data;
                     response(data);
                 });
+            }
+        });
+
+
+        $('#' + txt_Dealer).blur(function () {
+            var val = this.value;
+            if (val.indexOf('_') > 0) {
+                dealerID = val.split('_')[1];
+                $('#' + bank).val(dealerID);
             }
         });
     }

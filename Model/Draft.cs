@@ -33,8 +33,8 @@ namespace Citic.Model
         private decimal? _carilmoney;
         private int? _caritcount;
         private decimal? _caritmoney;
-        private int? _carmovecount;
-        private decimal? _carmovemoney;
+        private decimal? _wymoney;
+        private decimal? _yymoney;
         private decimal? _hkmoney;
         private decimal? _ckmoney;
         private int? _createid;
@@ -185,7 +185,7 @@ namespace Citic.Model
             get { return _drafttype; }
         }
         /// <summary>
-        /// “非出库”汽车总数量
+        /// 
         /// </summary>
         public int? CarAllCount
         {
@@ -193,7 +193,7 @@ namespace Citic.Model
             get { return _carallcount; }
         }
         /// <summary>
-        /// “非出库”汽车总金额
+        /// 
         /// </summary>
         public decimal? CarAllMoney
         {
@@ -201,7 +201,7 @@ namespace Citic.Model
             get { return _carallmoney; }
         }
         /// <summary>
-        /// 在库车辆台数（状态为“在库”）
+        /// 
         /// </summary>
         public int? CarILCount
         {
@@ -209,7 +209,7 @@ namespace Citic.Model
             get { return _carilcount; }
         }
         /// <summary>
-        /// 在库车辆金额（状态为“在库”）
+        /// 
         /// </summary>
         public decimal? CarILMoney
         {
@@ -217,7 +217,7 @@ namespace Citic.Model
             get { return _carilmoney; }
         }
         /// <summary>
-        /// 在途车辆数量（状态为“在途”）
+        /// 
         /// </summary>
         public int? CarITCount
         {
@@ -225,7 +225,7 @@ namespace Citic.Model
             get { return _caritcount; }
         }
         /// <summary>
-        /// 在途车辆金额（状态为“在途”）
+        /// 
         /// </summary>
         public decimal? CarITMoney
         {
@@ -233,20 +233,20 @@ namespace Citic.Model
             get { return _caritmoney; }
         }
         /// <summary>
-        /// 移动车辆数量（状态为“移动”）
+        /// 未押金额
         /// </summary>
-        public int? CarMoveCount
+        public decimal? WYMoney
         {
-            set { _carmovecount = value; }
-            get { return _carmovecount; }
+            set { _wymoney = value; }
+            get { return _wymoney; }
         }
         /// <summary>
-        /// 移动车辆金额（状态为“移动”）
+        /// 已押金额
         /// </summary>
-        public decimal? CarMoveMoney
+        public decimal? YYMoney
         {
-            set { _carmovemoney = value; }
-            get { return _carmovemoney; }
+            set { _yymoney = value; }
+            get { return _yymoney; }
         }
         /// <summary>
         /// 

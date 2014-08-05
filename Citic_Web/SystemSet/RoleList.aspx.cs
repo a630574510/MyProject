@@ -205,14 +205,17 @@ namespace Citic_Web.SystemSet
             if (urls.Contains("Insert92"))
             {
                 btnAddRole.Visible = true;
+                tbs_Add.Visible = true;
             }
             if (urls.Contains("Delete92"))
             {
                 btnDeleteRole.Visible = true;
+                tbs_Delete.Visible = true;
             }
             if (urls.Contains("Modify92"))
             {
                 btn_Modify.Visible = true;
+                tbs_Modify.Visible = true;
             }
             if (urls.Contains("Excel92"))
             {
@@ -242,7 +245,7 @@ namespace Citic_Web.SystemSet
         {
             int id = Convert.ToInt32(GvRole.DataKeys[GvRole.SelectedRowIndex][0]);
             string name = GvRole.DataKeys[GvRole.SelectedRowIndex][1].ToString();
-            string path = string.Format("~/SystemSet/MenuToRole1.aspx?RoleId={0}&RoleName={1}", id, name);
+            string path = string.Format("~/SystemSet/MenuToRole.aspx?RoleId={0}&RoleName={1}", id, name);
             WindowMenuToRole.IFrameUrl = path;
             WindowMenuToRole.Hidden = false;
         }

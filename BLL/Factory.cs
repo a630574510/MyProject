@@ -188,6 +188,13 @@ namespace Citic.BLL
         //    return GetFactoryByFilter(where);
         //}
         #endregion
+
+        #region 获得厂商的所有信息，替换了所有的数字字段--乔春羽(2014.6.6)
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
+        {
+            return dal.GetAllListByProcess(where, startIndex, endIndex);
+        }
+        #endregion
         #endregion  ExtensionMethod
     }
 }

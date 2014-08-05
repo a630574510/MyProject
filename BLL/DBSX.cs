@@ -175,6 +175,13 @@ namespace Citic.BLL
             return dal.ModifyIsLook(roleId, model);
         }
         #endregion
+
+        #region 批量修改--乔春羽(2014.5.8)
+        public int UpdateRange(string ToGDMessageSQL, params Citic.Model.DBSX[] models)
+        {
+            return dal.UpdateRange(ToGDMessageSQL, models);
+        }
+        #endregion
         #endregion  ExtensionMethod
     }
 }

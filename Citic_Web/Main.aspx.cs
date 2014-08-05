@@ -107,7 +107,7 @@ namespace Citic_Web
 
             // 绑定 XML 数据源到树控件
             XmlDocument xmlDoc = new XmlDocument();
-            
+
 
             xmlDoc.LoadXml(MenuBll.GetLeftMenuForRoleId(CurrentUser.RoleId.ToString()));
             treeMenu.DataSource = xmlDoc;
@@ -137,11 +137,9 @@ namespace Citic_Web
             if (!IsPostBack)
             {
                 InitMenuStyleButton();
-                RegLeft.Title = "当前用户：" + CurrentUser.TrueName;///当前登陆用户
-                // 显示按钮
-                btnWaitHandle.OnClientClick = windowWaitHandle.GetShowReference("");
-                btnMessage.OnClientClick = windowMessage.GetShowReference("");
-                btnEditUser.OnClientClick = windowEditUser.GetShowReference("");
+                RegLeft.Title = "当前用户：";//当前登陆用户
+                this.lbl_UserInfo.Text = string.Format("<span style='color:#15428B;font-weight:bold'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[{0}][{1}]</span>", CurrentUser.Post, CurrentUser.UserName);
+                this.lbl_UserInfo.EncodeText = false;
             }
         }
 

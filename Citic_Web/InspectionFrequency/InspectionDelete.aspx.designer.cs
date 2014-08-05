@@ -166,112 +166,13 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.Grid G_InspectionFrequency;
         
         /// <summary>
-        /// btn_InspectionFrequency_Logic_Del 控件。
+        /// btn_Del 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Button btn_InspectionFrequency_Logic_Del;
-        
-        /// <summary>
-        /// btn_InspectionFrequency_Physics_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_InspectionFrequency_Physics_Del;
-        
-        /// <summary>
-        /// Panel4 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Panel Panel4;
-        
-        /// <summary>
-        /// G_QuartersLedger 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Grid G_QuartersLedger;
-        
-        /// <summary>
-        /// Toolbar2 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Toolbar Toolbar2;
-        
-        /// <summary>
-        /// btn_QuartersLedger_Logic_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_QuartersLedger_Logic_Del;
-        
-        /// <summary>
-        /// btn_QuartersLedger_Physics_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_QuartersLedger_Physics_Del;
-        
-        /// <summary>
-        /// Panel5 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Panel Panel5;
-        
-        /// <summary>
-        /// G_ContinuousTracking 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Grid G_ContinuousTracking;
-        
-        /// <summary>
-        /// Toolbar3 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Toolbar Toolbar3;
-        
-        /// <summary>
-        /// btn_ContinuousTracking_Logic_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_ContinuousTracking_Logic_Del;
-        
-        /// <summary>
-        /// btn_ContinuousTrackingPhysics_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_ContinuousTrackingPhysics_Del;
+        protected global::FineUI.Button btn_Del;
         
         /// <summary>
         /// InspectionUpdate 控件。

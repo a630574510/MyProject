@@ -28,7 +28,7 @@
                             </x:Label>--%>
                             <x:DropDownList ID="DDL_Number_Order" runat="server" Label="汇票号" ShowLabel="true"
                                 Width="230px" OnSelectedIndexChanged="DDL_DraftNo_Changed" AutoPostBack="true"
-                                Resizable="true">
+                                Resizable="true" EnableEdit="true">
                             </x:DropDownList>
                         </Items>
                     </x:FormRow>
@@ -74,23 +74,23 @@
                             </x:HyperLink>
                             <x:ToolbarFill ID="ToolbarFill2" runat="server">
                             </x:ToolbarFill>
-                            <x:ToolbarSeparator ID="ToolbarSeparator7" runat="server">
+                            <x:ToolbarSeparator ID="ToolbarSeparator7" runat="server" Hidden="true">
                             </x:ToolbarSeparator>
-                            <x:ToolbarText ID="TT_CarCountMoney" runat="server" Text="车辆总额：0">
+                            <x:ToolbarText ID="TT_CarCountMoney" runat="server" Text="车辆总额：0" Hidden="true">
                             </x:ToolbarText>
-                            <x:ToolbarSeparator ID="ToolbarSeparator6" runat="server">
+                            <x:ToolbarSeparator ID="ToolbarSeparator6" runat="server" Hidden="true">
                             </x:ToolbarSeparator>
-                            <x:ToolbarText ID="TT_DraftNotMoney" runat="server">
+                            <x:ToolbarText ID="TT_DraftNotMoney" runat="server" Hidden="true">
                             </x:ToolbarText>
-                            <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
+                            <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server" Hidden="true">
                             </x:ToolbarSeparator>
-                            <x:ToolbarText ID="TT_DraftCarCountMoney" runat="server">
+                            <x:ToolbarText ID="TT_DraftCarCountMoney" runat="server" Hidden="true">
                             </x:ToolbarText>
-                            <x:ToolbarSeparator ID="ToolbarSeparator3" runat="server">
+                            <x:ToolbarSeparator ID="ToolbarSeparator3" runat="server" Hidden="true">
                             </x:ToolbarSeparator>
-                            <x:ToolbarText ID="TT_DraftMoney" runat="server">
+                            <x:ToolbarText ID="TT_DraftMoney" runat="server" Hidden="true">
                             </x:ToolbarText>
-                            <x:ToolbarSeparator ID="ToolbarSeparator5" runat="server">
+                            <x:ToolbarSeparator ID="ToolbarSeparator5" runat="server" Hidden="true">
                             </x:ToolbarSeparator>
                             <x:DropDownList ID="dll_Add_Table_Number" runat="server" Label="行数" ShowLabel="true"
                                 Width="50px" Visible="false">
@@ -108,17 +108,12 @@
                         ClicksToEdit="1" DataKeyNames="CarCost" OnRowCommand="G_Car_Detail_RowCommand"
                         EnableColumnLines="true" EmptyText="<span style='color:Red;font-size:21px'>提示：车架号和车辆金额必须填写</br>车架号只能输入大写英文字母和数字</br>车辆金额为数字类型，输入特殊字符自动变成0</br>当出现错误提示，请检查是否输入特殊字符</span>">
                         <Columns>
-                            <x:RenderField HeaderText="合格证发证日期" DataField="IssueDate" Renderer="Date" RendererArgument="yyyy-MM-dd"
-                                FieldType="Date" Width="110px" ColumnID="IssueDate" TextAlign="Center">
+                            <x:RenderField HeaderText="合格证发证日期" DataField="IssueDate"
+                                FieldType="String" Width="110px" ColumnID="IssueDate" TextAlign="Center">
                                 <Editor>
-                                    <x:DatePicker ID="dpIssueDate" runat="server">
-                                    </x:DatePicker>
-                                </Editor>
-                            </x:RenderField>
-                            <x:RenderField HeaderText="车辆分类" FieldType="String" DataField="CarClass" Width="110px"
-                                ColumnID="CarClass" TextAlign="Center">
-                                <Editor>
-                                    <x:TextBox ID="txtCarClass" runat="server">
+                                    <%--<x:DatePicker ID="dpIssueDate" runat="server">
+                                    </x:DatePicker>--%>
+                                     <x:TextBox ID="txtIssueDate" runat="server">
                                     </x:TextBox>
                                 </Editor>
                             </x:RenderField>
@@ -126,6 +121,13 @@
                                 ColumnID="CarModel" TextAlign="Center">
                                 <Editor>
                                     <x:TextBox ID="txtCarModel" runat="server">
+                                    </x:TextBox>
+                                </Editor>
+                            </x:RenderField>
+                            <x:RenderField HeaderText="车辆分类" FieldType="String" DataField="CarClass" Width="110px"
+                                ColumnID="CarClass" TextAlign="Center">
+                                <Editor>
+                                    <x:TextBox ID="txtCarClass" runat="server">
                                     </x:TextBox>
                                 </Editor>
                             </x:RenderField>

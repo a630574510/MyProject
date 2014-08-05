@@ -67,24 +67,6 @@ namespace Citic_Web.FinanceInfo {
         protected global::FineUI.FormRow FormRow1;
         
         /// <summary>
-        /// ddl_Bank 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.DropDownList ddl_Bank;
-        
-        /// <summary>
-        /// ddl_Dealer 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.DropDownList ddl_Dealer;
-        
-        /// <summary>
         /// file_Upload 控件。
         /// </summary>
         /// <remarks>
@@ -139,15 +121,6 @@ namespace Citic_Web.FinanceInfo {
         protected global::FineUI.TextBox txt_GuaranteeNo;
         
         /// <summary>
-        /// txt_Ratio 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextBox txt_Ratio;
-        
-        /// <summary>
         /// txtEngineNo 控件。
         /// </summary>
         /// <remarks>
@@ -191,5 +164,23 @@ namespace Citic_Web.FinanceInfo {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.NumberBox num_DraftMoney;
+        
+        /// <summary>
+        /// Window_ShowMessage 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Window Window_ShowMessage;
+        
+        /// <summary>
+        /// txt_Message 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_Message;
     }
 }

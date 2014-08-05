@@ -418,28 +418,48 @@ namespace Citic.DAL
         #endregion  BasicMethod
         #region  ExtensionMethod
         #region 根据条件过滤出厂商信息--乔春羽(2013.1.14)
-//        public DataSet GetFactoryByFilter(string where) 
-//        {
-//            DataSet ds = null;
-//            StringBuilder strSql = new StringBuilder(@"SELECT * FROM tb_Factory_List(NOLOCK) 
-//WHERE FactoryID IN 
-//(SELECT FactoryID FROM tb_Brand_List WHERE BrandID IN 
-//(SELECT BrandID FROM tb_Dealer_Bank_List ");
-//            if (!string.IsNullOrEmpty(where)) 
-//            {
-//                strSql.Append(where);
-//            }
-//            strSql.Append(" GROUP BY BrandID))");
-//            try
-//            {
-//                ds = DbHelperSQL.Query(strSql.ToString());
-//            }
-//            catch (SqlException se)
-//            {
-//                throw se;
-//            }
-//            return ds;
-//        }
+        //        public DataSet GetFactoryByFilter(string where) 
+        //        {
+        //            DataSet ds = null;
+        //            StringBuilder strSql = new StringBuilder(@"SELECT * FROM tb_Factory_List(NOLOCK) 
+        //WHERE FactoryID IN 
+        //(SELECT FactoryID FROM tb_Brand_List WHERE BrandID IN 
+        //(SELECT BrandID FROM tb_Dealer_Bank_List ");
+        //            if (!string.IsNullOrEmpty(where)) 
+        //            {
+        //                strSql.Append(where);
+        //            }
+        //            strSql.Append(" GROUP BY BrandID))");
+        //            try
+        //            {
+        //                ds = DbHelperSQL.Query(strSql.ToString());
+        //            }
+        //            catch (SqlException se)
+        //            {
+        //                throw se;
+        //            }
+        //            return ds;
+        //        }
+        #endregion
+        #region 获得厂商的所有信息，替换了所有的数字字段--乔春羽(2014.6.6)
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
+        {
+            DataSet ds = null;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY FactoryID) Row,FactoryID,FactoryName,Address,CreateID,CreateName =  (SELECT UserName FROM tb_User WHERE UserId = T.CreateID),CreateTime FROM tb_Factory_List T ");
+            if (!string.IsNullOrEmpty(where))
+            {
+                strSql.AppendFormat(" WHERE {0}", where);
+            }
+            strSql.Append(")TT ");
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE TT.Row BETWEEN {0} AND {1}", startIndex, endIndex);
+            }
+
+            ds = DbHelperSQL.Query(strSql.ToString());
+            return ds;
+        }
         #endregion
         #endregion  ExtensionMethod
     }

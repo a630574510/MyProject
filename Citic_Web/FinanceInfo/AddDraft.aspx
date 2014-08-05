@@ -53,10 +53,10 @@
                             </Rows>
                         </x:Form>
                         <x:Grid ID="grid_List" runat="server" ShowHeader="false" EnableBackgroundColor="true" IsDatabasePaging="true" AutoPostBack="true"
-                            BoxFlex="1" DataKeyNames="DealerID,DealerName"
-                            OnPageIndexChange="grid_List_PageIndexChange" EnableRowNumber="True" PageSize="10"
-                            ClearSelectedRowsAfterPaging="false" AllowPaging="true"
-                            OnRowDataBound="grid_List_RowDataBound" EnableRowSelect="true" OnRowSelect="grid_List_RowSelect">
+                            BoxFlex="1" DataKeyNames="DealerID,DealerName" EnableRowNumber="True" PageSize="15" AllowPaging="true"
+                            OnPageIndexChange="grid_List_PageIndexChange" OnRowSelect="grid_List_RowSelect"
+                            ClearSelectedRowsAfterPaging="false" EnableTextSelection="true"
+                            OnRowDataBound="grid_List_RowDataBound" EnableRowSelect="true">
                             <Columns>
                                 <x:BoundField DataField="DealerName" DataFormatString="{0}" HeaderText="企业名称" Width="300px" />
                                 <x:BoundField DataField="DealerType" DataFormatString="{0}" HeaderText="企业属性" Width="100px" />
@@ -85,7 +85,7 @@
                     <Items>
                         <x:Label ID="lbl_DealerName" runat="server" Label="经销商名称" Text="" CssStyle="color:red;font-weight:bold"></x:Label>
                         <x:DropDownList ID="ddl_Bank" runat="server" Label="归属银行" Width="200px" Required="true" RequiredMessage="请选择合作银行！" CompareOperator="NotEqual" CompareType="String"
-                            CompareValue="-1">
+                            CompareValue="-1" AutoPostBack="true" OnSelectedIndexChanged="ddl_Bank_SelectedIndexChanged">
                         </x:DropDownList>
                         <x:TextBox ID="txt_DraftNo" runat="server" Label="汇票号" Text="" Width="200px" Required="true"
                             RequiredMessage="请填写汇票号！">
@@ -106,7 +106,7 @@
                         <x:Panel ID="Panel3" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Label="Label"  CssStyle="padding-right:41px" Text="保证金比例:"></x:Label>
+                                <x:Label ID="Label1" runat="server" Label="Label" CssStyle="padding-right:41px" Text="保证金比例:"></x:Label>
                                 <x:NumberBox ID="num_Ratio" runat="server" Label="保证金比例" Width="50px" DecimalPrecision="2"
                                     Required="true" RequiredMessage="请输入保证金比例！">
                                 </x:NumberBox>

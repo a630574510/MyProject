@@ -8,6 +8,25 @@
 <head id="Head1" runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
+    <link href="../../Css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../jqueryui/css/ui-lightness/jquery-ui-1.9.2.custom.min.css" />
+    <style type="text/css">
+        .padding-bottom {
+            padding-bottom: 5px;
+        }
+
+        .mright {
+            margin-right: 5px;
+        }
+
+        .datecontainer .x-form-field-trigger-wrap {
+            margin-right: 5px;
+        }
+
+        .ui-autocomplete-loading {
+            background: white url('../../Images/ui-anim_basic_16x16.gif') right center no-repeat;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -26,22 +45,23 @@
             </Toolbars>
             <Items>
                 <x:Panel ID="Panel3" EnableBackgroundColor="true" runat="server" BodyPadding="5px" TableRowspan="2" Height="540px" Width="450px"
-                    ShowHeader="true" Title="经销商信息" CssStyle="padding-right:5px" Layout="Fit" BoxConfigAlign="Stretch"
+                    ShowHeader="true" Title="经销商信息" CssStyle="padding-right:5px" Layout="Fit" BoxConfigAlign="StretchMax"
                     BoxFlex="1">
                     <Items>
                         <x:SimpleForm ID="sf_DealerInfo" runat="server" AutoScroll="true" BoxFlex="1" BodyPadding="0px" ShowBorder="false" ShowHeader="false"
-                            EnableBackgroundColor="true">
+                            EnableBackgroundColor="true" LabelWidth="120px">
                             <Items>
-                                <x:TextBox ID="txt_DealerName" Width="300px" runat="server" Label="经销商名称" Text="" ShowRedStar="true"
+                                <x:TextBox ID="txt_DealerName" Width="300px" runat="server" ShowRedStar="true" Label="经销商名称" Text=""
                                     Required="true" RequiredMessage="请输入经销商名称！">
                                 </x:TextBox>
+                                <x:TextBox ID="txt_JC" runat="server" Label="简称" Text="" Width="300px"></x:TextBox>
                                 <x:CheckBoxList ID="cbl_DealerType" runat="server" Width="300px" Label="经销商属性">
                                     <x:CheckItem Text="民营" Value="1" />
                                     <x:CheckItem Text="国营" Value="2" />
                                     <x:CheckItem Text="集团" Value="3" />
                                     <x:CheckItem Text="单店" Value="4" />
                                 </x:CheckBoxList>
-                                <x:CheckBox ID="chk_IsGroup" runat="server" Label="是否是集团性质" Text=""></x:CheckBox>
+                                <x:CheckBox ID="chk_IsGroup" runat="server" Label="是否是集团性质" Text="" Visible="false"></x:CheckBox>
                                 <x:TextBox ID="txt_OtherIndustries" runat="server" Label="其他产业" Text="" Width="300px"></x:TextBox>
                                 <x:DropDownList ID="ddl_GotoworkTime" runat="server" Label="上班时间" Width="300px">
                                     <x:ListItem Value="06:30" Text="06:30" />
@@ -54,8 +74,8 @@
                                     <x:ListItem Value="10:00" Text="10:00" />
                                 </x:DropDownList>
                                 <x:DropDownList ID="ddl_GoffworkTime" runat="server" Label="下班时间" Width="300px">
-                                    <x:ListItem Value="18:00" Text="17:00" />
-                                    <x:ListItem Value="18:00" Text="17:30" />
+                                    <x:ListItem Value="17:00" Text="17:00" />
+                                    <x:ListItem Value="17:30" Text="17:30" />
                                     <x:ListItem Value="18:00" Text="18:00" />
                                     <x:ListItem Value="18:30" Text="18:30" />
                                     <x:ListItem Value="19:00" Text="19:00" />
@@ -66,12 +86,13 @@
                                     <x:ListItem Value="21:30" Text="21:30" />
                                     <x:ListItem Value="22:00" Text="22:00" />
                                 </x:DropDownList>
-                                <x:TextBox ID="txt_DealerPayCode" runat="server" Width="300px" Label="组织机构代码" ShowRedStar="true" Text="" Required="true" RequiredMessage="组织机构代码必填！" CompareType="String" CompareValue="" CompareOperator="NotEqual" CompareMessage="请填写组织机构代码！"></x:TextBox>
+                                <x:TextBox ID="txt_OrganizationCode" runat="server" Label="组织机构代码" Width="300px" ShowRedStar="true" Text="" RequiredMessage="请填写组织机构代码！" CompareType="String" CompareValue="" CompareOperator="NotEqual" CompareMessage="请填写组织机构代码！"></x:TextBox>
+
                                 <x:TextBox ID="txt_YWZ" runat="server" Width="300px" Label="经销商业务章" Text=""></x:TextBox>
                                 <x:UserControlConnector ID="UserControlConnector1" runat="server">
                                     <uc1:WUC_Address runat="server" ID="WUC_Address" />
                                 </x:UserControlConnector>
-                                <x:TextArea ID="txt_Remark" runat="server" Height="40px" Width="300px" Label="备注"
+                                <x:TextArea ID="txt_Remark" runat="server" Height="100px" Width="300px" Label="备注"
                                     Text="">
                                 </x:TextArea>
                             </Items>
@@ -115,7 +136,7 @@
                                 </x:Toolbar>
                             </Toolbars>
                         </x:Panel>
-                        <x:Grid ID="grid_List1" runat="server" EnableRowNumber="true" BoxFlex="1"
+                        <x:Grid ID="grid_List1" runat="server" EnableRowNumber="true" BoxFlex="1" EnableTextSelection="true"
                             ShowBorder="false" ShowHeader="false" DataKeyNames="dc_ID,dc_Name,dc_Phone" IsDatabasePaging="true"
                             ClearSelectedRowsAfterPaging="false"
                             OnRowCommand="grid_List_RowCommand">
@@ -169,7 +190,7 @@
                                 </x:Toolbar>
                             </Toolbars>
                         </x:Panel>
-                        <x:Grid ID="grid_List2" runat="server" EnableRowNumber="true" BoxFlex="1"
+                        <x:Grid ID="grid_List2" runat="server" EnableRowNumber="true" BoxFlex="1" EnableTextSelection="true"
                             ShowBorder="false" ShowHeader="false" DataKeyNames="dc_ID,dc_Name,dc_Phone" IsDatabasePaging="true"
                             ClearSelectedRowsAfterPaging="false" OnRowCommand="grid_List_RowCommand">
                             <Columns>
@@ -190,7 +211,7 @@
 
                 <x:Grid ID="grid_BankList" runat="server" BoxFlex="1" Title="合作行信息" EnableBackgroundColor="true" TableColspan="2"
                     ShowHeader="true" ShowBorder="true" DataKeyNames="BankID,BankName,BrandID" Height="290px" Width="770px"
-                    AutoScroll="true" CssStyle="padding-top:5px"
+                    AutoScroll="true" CssStyle="padding-top:5px" EnableTextSelection="true"
                     OnRowDataBound="grid_BankList_RowDataBound" OnRowCommand="grid_BankList_RowCommand">
                     <Toolbars>
                         <x:Toolbar ID="Toolbar8" runat="server">

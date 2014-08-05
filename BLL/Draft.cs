@@ -47,14 +47,6 @@ namespace Citic.BLL
             return dal.Delete(ID);
         }
         /// <summary>
-        /// 删除一条数据
-        /// </summary>
-        public bool DeleteList(string IDlist)
-        {
-            return dal.DeleteList(IDlist);
-        }
-
-        /// <summary>
         /// 得到一个对象实体
         /// </summary>
         public Citic.Model.Draft GetModel(int ID)
@@ -165,15 +157,6 @@ namespace Citic.BLL
             return dal.AddRange(models);
         }
         /// <summary>
-        /// 检查多个汇票号是否存在--乔春羽
-        /// </summary>
-        /// <param name="nos"></param>
-        /// <returns></returns>
-        public bool ExistsDraftNos(string[] nos)
-        {
-            return dal.ExistsDraftNos(nos);
-        }
-        /// <summary>
         /// 得到一个对象实体，通过汇票号
         /// </summary>
         public Citic.Model.Draft GetModel(string draftNo)
@@ -189,21 +172,41 @@ namespace Citic.BLL
             return dal.DeleteListOnLogic(IDList, model);
         }
 
+        #region 物理删除，删除汇票的同时也删除该票下的质押物信息--乔春羽(2014.4.2)
+        /// <summary>
+        /// 物理删除，删除汇票的同时也删除该票下的质押物信息
+        /// </summary>
+        public bool DeleteList(List<Citic.Model.Draft> models)
+        {
+            bool flag = false;
+            if (models != null && models.Count > 0)
+            {
+                flag = dal.DeleteList(models.ToArray());
+            }
+            return flag;
+        }
+        #endregion
         #region 给汇票“清票”--乔春羽(2013.9.5)
         /// <summary>
         /// 给汇票“清票”
         /// </summary>
         /// <param name="draftNo"></param>
         /// <returns></returns>
-        public bool DraftClear(string draftNo)
+        public bool DraftClear(string[] draftNo, int userID)
         {
-            return dal.DraftClear(draftNo);
+            return dal.DraftClear(draftNo, userID);
         }
         #endregion
         #region 获得汇票的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess(string where)
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
-            return dal.GetAllListByProcess(where);
+            return dal.GetAllListByProcess(where, startIndex, endIndex);
+        }
+        #endregion
+        #region 修改汇票的回款金额、敞口金额、已押金额、未押金额--乔春羽(2014.6.9)
+        public int UpdateDraftMoney(string[] draftNos)
+        {
+            return dal.UpdateDraftMoney(draftNos);
         }
         #endregion
         #endregion  ExtensionMethod

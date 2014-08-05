@@ -26,8 +26,6 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 {
                     Session["DealerID"] = dealerIDStr;
                 }
-                //打开选择银行的页面
-                btn_ChoiseBank.OnClientClick = WindowShowBank.GetShowReference("../../DealerManagement/DealerInfo/ChoiseBank.aspx?DealerID=" + dealerIDStr);
                 //打开修改银行界面
                 btn_ModifyBank.OnClientClick = grid_BankList.GetNoSelectionAlertInParentReference("请选择一条数据！");
 
@@ -38,7 +36,6 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 LoadDataInViewState();
             }
         }
-
 
         #region PrivateFields--乔春羽
         /// <summary>
@@ -51,6 +48,28 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 return Convert.ToInt32(Session["DealerID"]);
             }
         }
+        private string OrganizationCode
+        {
+            get
+            {
+                string value = string.Empty;
+                if (!string.IsNullOrEmpty(this.txt_OrganizationCode.Text.Trim()))
+                {
+                    value = this.txt_OrganizationCode.Text.Trim();
+
+                    if (value.Length == 10 && value.IndexOf('-') > 0 && value.IndexOf('-') == 8 && value.LastIndexOf('-') == 8)
+                    {
+                        value = this.txt_OrganizationCode.Text.Trim();
+                    }
+                    else if (value.Length == 9 && value.IndexOf('-') <= 0)
+                    {
+                        value = string.Format("{0}-{1}", value.Substring(0, 8), value.Substring(8, 1));
+                    }
+                    else { value = string.Empty; }
+                }
+                return value;
+            }
+        }
         #endregion
 
         #region 显示经销商的详细信息--乔春羽
@@ -60,6 +79,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
         private void DealerDataBind()
         {
             Citic.Model.Dealer model = null;
+            Citic.Model.Dealer sessionModel = Session["model"] as Citic.Model.Dealer;
             try
             {
                 model = DealerBll.GetModel(DealerID);
@@ -67,10 +87,34 @@ namespace Citic_Web.DealerManagement.DealerInfo
             catch (Exception e) { Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "DealerDataBind()"); }
             if (model != null)
             {
-                Session.Add("model", model);
-
                 this.txt_DealerName.Text = model.DealerName;
-                this.txt_DealerPayCode.Text = model.DealerPayCode;
+
+                //显示简称
+                if (sessionModel == null)
+                {
+                    DataTable dt = this.Dealer_BankBll.GetList(1, string.Format(" DealerID = '{0}' ", model.DealerID), "DealerName").Tables[0];
+                    if (dt != null && dt.Rows.Count > 0) { model.JC = dt.Rows[0]["JC"].ToString(); }
+                    Session.Add("model", model);
+                }
+                else
+                {
+                    model.JC = sessionModel.JC;
+                    model.Address = sessionModel.Address;
+                    model.DealerPayCode = sessionModel.DealerPayCode;
+                    model.DealerName = sessionModel.DealerName;
+                    model.DealerType = sessionModel.DealerType;
+                    model.IsGroup = sessionModel.IsGroup;
+                    model.HasOtherIndustries = sessionModel.HasOtherIndustries;
+                    model.GotoworkTime = sessionModel.GotoworkTime;
+                    model.GoffworkTime = sessionModel.GoffworkTime;
+                    model.ConnectID = sessionModel.ConnectID;
+                    model.Address = sessionModel.Address;
+                    model.Remarks = sessionModel.Remarks;
+                    Session.Add("model", model);
+                }
+
+                this.txt_OrganizationCode.Text = model.DealerPayCode;
+
                 this.cbl_DealerType.SelectedValueArray = model.DealerType.Split(',');
                 this.chk_IsGroup.Checked = model.IsGroup;
                 this.txt_OtherIndustries.Text = model.HasOtherIndustries;
@@ -138,7 +182,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
         /// </summary>
         private void DealerBankDataBind()
         {
-            DataTable dt = Dealer_BankBll.GetList(string.Format(" DealerID={0} AND CollaborateType=1", DealerID)).Tables[0];
+            DataTable dt = Dealer_BankBll.GetList(string.Format(" A.DealerID={0} AND A.CollaborateType=1", DealerID)).Tables[0];
             if (dt != null)
             {
                 grid_BankList.DataSource = dt;
@@ -206,7 +250,20 @@ namespace Citic_Web.DealerManagement.DealerInfo
         #region 选择银行时，保存页面数据--乔春羽
         protected void btn_ChoiseBank_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txt_DealerName.Text.Trim()))
+            {
+                AlertShowInTop("请填写经销商的名字!");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.OrganizationCode))
+            {
+                AlertShowInTop("请填写正确的组织机构代码!");
+                return;
+            }
             SaveDataInViewState();
+
+            WindowShowBank.IFrameUrl = "~/DealerManagement/DealerInfo/ChoiseBank.aspx?DealerID=" + this.DealerID + "&isAdd=0";
+            WindowShowBank.Hidden = false;
         }
         private void SaveDataInViewState()
         {
@@ -221,8 +278,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
             }
             //经销商名
             model.DealerName = this.txt_DealerName.Text;
-            //经销商打款账号
-            model.DealerPayCode = this.txt_DealerPayCode.Text;
+            model.JC = this.txt_JC.Text;
+            //组织机构代码
+            model.DealerPayCode = this.OrganizationCode;
             //地址
             model.Address = GetAddress();
             //备注
@@ -236,6 +294,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
             //上下班时间
             model.GotoworkTime = this.ddl_GotoworkTime.Text;
             model.GoffworkTime = this.ddl_GoffworkTime.Text;
+            //经销商业务章
+            model.ConnectID = this.txt_YWZ.Text;
 
             Session["model"] = model;
         }
@@ -249,8 +309,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 Citic.Model.Dealer model = Session["model"] as Citic.Model.Dealer;
                 //经销商名
                 this.txt_DealerName.Text = model.DealerName;
-                //经销商打款账号
-                this.txt_DealerPayCode.Text = model.DealerPayCode;
+                this.txt_JC.Text = model.JC;
+                //组织机构代码
+                this.txt_OrganizationCode.Text = model.DealerPayCode;
                 //地址
                 if (model.Address != null && model.Address != string.Empty)
                 {
@@ -301,6 +362,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     case 3:
                         e.Values[index] = "巡库模式";
                         break;
+                    default:
+                        e.Values[index] = "无效";
+                        break;
                 }
 
                 //支付周期
@@ -319,6 +383,9 @@ namespace Citic_Web.DealerManagement.DealerInfo
                         break;
                     case 4:
                         e.Values[index] = "年";
+                        break;
+                    default:
+                        e.Values[index] = "无效";
                         break;
                 }
 
@@ -349,18 +416,16 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     string carTbName = string.Format("tb_Car_{0}_{1}", bankID, dealerID);
                     try
                     {
-                        int carcount = CarBll.GetRecordCount("Statu=0", carTbName);
-                        int allcount = CarBll.GetRecordCount(string.Empty, carTbName);
-                        if (carcount != allcount)
+                        //当前店的已清票的汇票的数量
+                        int clearcount = DraftBll.GetRecordCount(string.Format(" BankID = '{0}' and DealerID = '{1}' and DraftType = 0 ", bankID, dealerID));
+                        //当前店汇票的总数量
+                        int alldraftcount = DraftBll.GetRecordCount(string.Format(" BankID = '{0}' and DealerID = '{1}' ", bankID, dealerID));
+                        if (clearcount != alldraftcount)
                         {
-                            AlertShowInTop("尚有未出库的车，该店不能停止合作！");
+                            AlertShowInTop("当前店尚有未清票的汇票，不能停止合作！");
                             return;
                         }
-                        else if (carcount == 0 || allcount == 0)
-                        {
-                            AlertShowInTop("该店下没有车，不能停止合作！");
-                            return;
-                        }
+
                         int num = Dealer_BankBll.ModifyCollaborateType(new Citic.Model.Dealer_Bank() { ID = id, CollaborateType = 0, StopTime = DateTime.Now });
                         if (num > 0)
                         {
@@ -444,6 +509,16 @@ namespace Citic_Web.DealerManagement.DealerInfo
         #region 保存经销商--乔春羽
         protected void btn_SaveDeader_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txt_DealerName.Text.Trim()))
+            {
+                AlertShowInTop("请填写经销商的名字!");
+                return;
+            }
+            if (string.IsNullOrEmpty(this.OrganizationCode))
+            {
+                AlertShowInTop("请填写正确的组织机构代码!");
+                return;
+            }
             SaveDealer();
         }
 
@@ -468,11 +543,12 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 model.GoffworkTime = ddl_GoffworkTime.SelectedText;
                 model.IsDelete = false;
                 model.IsPort = false;
-                model.DealerPayCode = this.txt_DealerPayCode.Text;
+                model.DealerPayCode = this.OrganizationCode;
                 model.Remarks = this.txt_Remark.Text;
                 model.ConnectID = this.txt_YWZ.Text;
                 model.UpdateID = this.CurrentUser.UserId;
                 model.UpdateTime = DateTime.Now;
+                model.JC = this.txt_JC.Text;
                 model.DeleteID = 0;
 
                 try
@@ -539,7 +615,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
         protected void btn_ModifyBank_Click(object sender, EventArgs e)
         {
             string bankID = this.grid_BankList.Rows[this.grid_BankList.SelectedRowIndex].DataKeys[1].ToString();
-            string url = string.Format("~/DealerManagement/DealerInfo/ChoiseBank.aspx?_bankid={0}&DealerID={1}", bankID, DealerID);
+            string url = string.Format("~/DealerManagement/DealerInfo/ChoiseBank.aspx?_bankid={0}&DealerID={1}&isAdd=0", bankID, DealerID);
+            SaveDataInViewState();
             WindowShowBank.IFrameUrl = url;
             WindowShowBank.Hidden = false;
         }

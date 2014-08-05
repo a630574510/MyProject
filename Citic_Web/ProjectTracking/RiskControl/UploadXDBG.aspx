@@ -23,7 +23,7 @@
                     <Items>
                         <x:TextBox ID="txt_Dealer" runat="server" ShowLabel="true" Label="选择经销商" Width="300px" Text="" AutoPostBack="true" OnTextChanged="txt_Dealer_TextChanged"></x:TextBox>
                         <x:DropDownList ID="ddl_Bank" runat="server" ShowLabel="true" Label="选择合作行" Width="300px"></x:DropDownList>
-                        <x:DropDownList ID="ddl_Area" runat="server" ShowLabel="true" Label="选择区域" AutoPostBack="true" OnSelectedIndexChanged="dp_Time_DateSelect" Width="200px"></x:DropDownList>
+                        <x:DropDownList ID="ddl_Area" runat="server" ShowLabel="true" Label="选择部门" AutoPostBack="true" OnSelectedIndexChanged="dp_Time_DateSelect" Width="200px"></x:DropDownList>
                         <x:DatePicker ID="dp_Time" runat="server" ShowLabel="true" Label="选择巡店时间" EnableEdit="false" EnableDateSelect="true" AutoPostBack="true" OnDateSelect="dp_Time_DateSelect" Width="200px"></x:DatePicker>
                         <x:RadioButtonList ID="rbl_Type" runat="server" Label="上传类型" AutoPostBack="true" Width="200px" OnSelectedIndexChanged="rbl_Type_SelectedIndexChanged">
                             <x:RadioItem Text="新文件上传" Value="new" />

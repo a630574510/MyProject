@@ -30,7 +30,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
             Citic.Model.RiskQuestion model = RQBLL.GetModel(id);
             if (model != null) 
             {
-                ID.Value = model.ID.ToString();
+                _ID.Value = model.ID.ToString();
                 No.Text = model.No;
                 CC_AP.Value = model.CC_AP;
                 CC_Content.Value = model.CC_Content;

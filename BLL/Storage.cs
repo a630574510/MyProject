@@ -197,9 +197,9 @@ namespace Citic.BLL
         #endregion
 
         #region 获得二网的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess()
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
-            return dal.GetAllListByProcess();
+            return dal.GetAllListByProcess(where, startIndex, endIndex);
         }
         #endregion
         #endregion  ExtensionMethod

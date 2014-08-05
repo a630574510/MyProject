@@ -19,7 +19,6 @@ namespace Citic_Web.Reminds
         {
             if (!IsPostBack)
             {
-                BankDataBind();
                 ErrorOtherBind();
                 RoleValidate();
                 btn_Add.OnClientClick = WindowAdd.GetShowReference("../Reminds/AddStockError.aspx");
@@ -55,9 +54,8 @@ namespace Citic_Web.Reminds
         /// </summary>
         private string ConditionInit()
         {
-            //StringBuilder where = new StringBuilder(" (Status = 1 or Status = 3)");
             StringBuilder where = new StringBuilder(" 1=1");
-            if (this.ddl_Bank.SelectedValue != null && this.ddl_Bank.SelectedValue != "0")
+            if (this.ddl_Bank.SelectedValue != "-1")
             {
                 where.AppendFormat(" and T.BankID = {0}", ddl_Bank.SelectedValue);
             }
@@ -90,20 +88,78 @@ namespace Citic_Web.Reminds
         #region 加载合作银行信息--乔春羽
         private void BankDataBind()
         {
+            //ddl_Bank.Items.Clear();
+
+            //string dealerID = this.txt_DealerName.Text.Split('_')[1];
+            //DataTable dt = Dealer_BankBll.GetList(string.Format(" A.IsDelete=0 and A.DealerID={0}", dealerID)).Tables[0];
+            //if (dt != null && dt.Rows.Count > 0)
+            //{
+            //    ddl_Bank.DataTextField = "BankName";
+            //    ddl_Bank.DataValueField = "BankID";
+            //    ddl_Bank.DataSource = dt;
+            //    ddl_Bank.DataBind();
+            //}
+
+            //AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
             ddl_Bank.Items.Clear();
-            if (!string.IsNullOrEmpty(this.txt_DealerName.Text) && this.txt_DealerName.Text.IndexOf('_') > 0)
+            string val = this.txt_DealerName.Text;
+            DataTable dt = null;
+            if (!string.IsNullOrEmpty(val))
             {
-                string dealerID = this.txt_DealerName.Text.Split('_')[1];
-                DataTable dt = Dealer_BankBll.GetList(string.Format(" IsDelete=0 and DealerID={0}", dealerID)).Tables[0];
-                if (dt != null && dt.Rows.Count > 0)
+                if (val.IndexOf('_') >= 0)
                 {
-                    ddl_Bank.DataTextField = "BankName";
-                    ddl_Bank.DataValueField = "BankID";
-                    ddl_Bank.DataSource = dt;
-                    ddl_Bank.DataBind();
+                    val = val.Split('_')[1];
+                    //DataTable dt = Dealer_BankBll.GetDealerByBankForDataTable(int.Parse(val), string.Empty);
+                    dt = Dealer_BankBll.GetBanks(string.Format(" D.DealerID='{0}'", val)).Tables[0];
                 }
             }
-            AddItemByInsert(ddl_Bank, "请选择", "0", 0);
+            else    //如果没有选择经销商，则加载出该用户所有的“有逻辑关系”的合作行
+            {
+                StringBuilder where = new StringBuilder();
+                if (this.CurrentUser.RoleId == 10)
+                {
+                    dt = Dealer_BankBll.GetBankIDAndNameFilterRole(this.CurrentUser.RelationID.Value).Tables[0];
+                }
+                //银行
+                else if (this.CurrentUser.RoleId == 8)
+                {
+                    Citic.Model.UserMapping model = UMBLL.GetModelByCondition(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId));
+                    if (model != null)
+                    {
+                        dt = BankBll.GetList(string.Format(" BankID='{0}' ", model.MappingID.Value.ToString())).Tables[0];
+                    }
+                    else
+                    {
+                        dt = BankBll.GetList(string.Format(" BankID='0' ", model.MappingID.Value.ToString())).Tables[0];
+                    }
+                }
+                //5.市场专员，6.品牌专员
+                else if (this.CurrentUser.RoleId == 5 || this.CurrentUser.RoleId == 6)
+                {
+                    StringBuilder ids = new StringBuilder(string.Empty);
+                    DataTable _dt = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId)).Tables[0];
+                    if (_dt != null && _dt.Rows.Count > 0)
+                    {
+                        ids.Append(" T.BankID in (");
+                        foreach (DataRow row in _dt.Rows)
+                        {
+                            ids.AppendFormat("{0},", row["MappingID"].ToString());
+                        }
+                        ids.Remove(ids.Length - 1, 1);
+                        ids.Append(")");
+                        dt = BankBll.GetList(ids.ToString()).Tables[0];
+                    }
+                }
+                else
+                {
+                    dt = BankBll.GetAllList().Tables[0];
+                }
+            }
+            ddl_Bank.DataTextField = "BankName";
+            ddl_Bank.DataValueField = "BankID";
+            ddl_Bank.DataSource = dt;
+            ddl_Bank.DataBind();
+            AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
         }
         #endregion
 
@@ -269,7 +325,13 @@ namespace Citic_Web.Reminds
         #region 经销商被输入后，联动出合作行--乔春羽(2013.12.6)
         protected void txt_DealerName_TextChanged(object sender, EventArgs e)
         {
-            BankDataBind();
+            if (!string.IsNullOrEmpty(this.txt_DealerName.Text) && this.txt_DealerName.Text.IndexOf('_') > 0)
+            {
+                if (!string.IsNullOrEmpty(this.txt_DealerName.Text.Split('_')[0]) && !string.IsNullOrEmpty(this.txt_DealerName.Text.Split('_')[1]))
+                {
+                    BankDataBind();
+                }
+            }
         }
         #endregion
 
@@ -294,8 +356,13 @@ namespace Citic_Web.Reminds
             {
                 btn_Add.Visible = true;
             }
-            if (urls.Contains("Delete"))
+            if (urls.Contains("Excel14"))
             {
+                tbs_Excel.Visible = true;
+                btn_ExpendExcel.Visible = true;
+                hl_ExportExcel.Visible = true;
+                hl_ExportAll.Visible = true;
+                bl_Separator.Visible = true;
             }
             //“解除异常”
             if (urls.Contains("Remove14"))
@@ -327,6 +394,64 @@ namespace Citic_Web.Reminds
                 {
                     Alert.ShowInTop("失败！");
                 }
+            }
+        }
+        #endregion
+
+        #region 导出Excel--乔春羽
+        /// <summary>
+        /// 导出Excel
+        /// </summary>
+        protected void btn_ExpendExcel_Click(object sender, EventArgs e)
+        {
+            string where = ConditionInit();
+            //保存Excel文件
+            string sheetName = "日查库信息（当前页）_" + ConvertLongDateTimeToUI(DateTime.Now);
+            string sheetNameAll = "日查库信息（全部）_" + ConvertLongDateTimeToUI(DateTime.Now);
+            string filePath = string.Empty;
+            //保存当前页的数据
+            ExcelEditHelper.Create();
+            ExcelEditHelper.AddSheet(sheetName);
+            DataTable dt = null;
+
+            dt = GetTableForGrid(grid_List);
+
+            string fileName = sheetName + ".xls";//客户端保存的文件名
+            ExcelEditHelper.DataTableAdd2Excel(dt, sheetName);
+
+            filePath = "~/DownExcel/" + sheetName + ".xls";
+            bool flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
+
+            //释放ExcelEditHelper
+            CloseExcelEditHelper();
+
+            //下载Excel文件
+            if (flag)
+            {
+                hl_ExportExcel.NavigateUrl = filePath;
+            }
+
+            //保存所有的数据
+            ExcelEditHelper.Create();
+            ExcelEditHelper.AddSheet(sheetNameAll);
+
+            dt = StockErrorBll.GetAllProcess(where);
+
+            ModifyTableHeaderByGrid(grid_List, dt);
+
+            fileName = sheetName + ".xls";//客户端保存的文件名
+            ExcelEditHelper.DataTableAdd2Excel(dt, sheetNameAll);
+
+            filePath = "~/DownExcel/" + sheetNameAll + ".xls";
+            flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
+
+            //释放ExcelEditHelper
+            CloseExcelEditHelper();
+
+            //下载Excel文件
+            if (flag)
+            {
+                hl_ExportAll.NavigateUrl = filePath;
             }
         }
         #endregion

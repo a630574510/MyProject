@@ -94,6 +94,15 @@ namespace Citic_Web.Car {
         protected global::FineUI.DropDownList ddl_DraftNo;
         
         /// <summary>
+        /// lbl_DraftNo 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label lbl_DraftNo;
+        
+        /// <summary>
         /// txt_Vin 控件。
         /// </summary>
         /// <remarks>

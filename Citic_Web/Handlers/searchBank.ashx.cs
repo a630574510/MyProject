@@ -18,6 +18,7 @@ namespace Citic_Web.Handlers
         public void ProcessRequest(HttpContext context)
         {
             Citic.BLL.Bank BankBll = new Citic.BLL.Bank();
+            Citic.BLL.UserMapping UMBLL = new Citic.BLL.UserMapping();
             Citic.BLL.UserMapping UMBll = new Citic.BLL.UserMapping();
             Citic.Model.User user = null;
             user = AuthProcess.GetAuthenticateUser(true);
@@ -43,6 +44,21 @@ namespace Citic_Web.Handlers
                     case 10:
                         strWhere.AppendFormat(@" AND (BankID in (Select BankID From tb_Dealer_Bank_List(nolock) Where DealerID in
                         (Select DealerID From tb_Dealer_List(nolock) Where SupervisorID='{0}') GROUP BY BankID)) ", user.RelationID.Value);
+                        break;
+                    case 8:     //银行
+                        DataSet dsBank = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", user.UserId, user.RoleId));
+                        if (dsBank != null && dsBank.Tables.Count > 0)
+                        {
+                            DataTable dt = dsBank.Tables[0];
+                            if (dt != null && dt.Rows.Count > 0)
+                            {
+                                strWhere.AppendFormat(" And BankID = '{0}' ", dt.Rows[0]["MappingID"].ToString());
+                            }
+                            else
+                            {
+                                strWhere.Append(" And BankID = '0' ");
+                            }
+                        }
                         break;
                     case 5:     //市场专员
                     case 6:     //业务专员
@@ -83,7 +99,6 @@ namespace Citic_Web.Handlers
                 context.Response.Write(ja.ToString());
                 return;
             }
-            context.Response.ContentType = "text/plain";
         }
 
         public bool IsReusable

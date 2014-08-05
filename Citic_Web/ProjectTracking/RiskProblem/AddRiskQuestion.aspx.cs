@@ -19,51 +19,13 @@ namespace Citic_Web.ProjectTracking.RiskProblem
             {
                 //删除行
                 btn_Delete_Table.OnClientClick = grid_List.GetNoSelectionAlertReference("请至少选择一项！") + GetDeleteScript();
+                btn_Add.OnClientClick = grid_List.GetNoSelectionAlertReference("没有数据！");
                 //添加行
-                btn_Add_Table.OnClientClick = AddGridRows() + "; Init()";
+                //btn_Add_Table.OnClientClick = AddGridRows();
+                AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
+                AddItemByInsert(ddl_Brand, "请选择", "-1", 0);
             }
         }
-
-        #region PrivateFields--乔春羽(2013.12.9)
-        public DataTable DtSource
-        {
-            get
-            {
-                if (ViewState["DtSource"] == null)
-                {
-                    DataTable dt = new DataTable();
-                    dt.Columns.Add("CC_Date", typeof(DateTime));
-                    dt.Columns.Add("CC_AP", typeof(String));
-                    dt.Columns.Add("CC_Unit", typeof(String));
-                    dt.Columns.Add("CC_P", typeof(String));
-                    dt.Columns.Add("CC_Post", typeof(String));
-                    dt.Columns.Add("CC_PPhone", typeof(String));
-                    dt.Columns.Add("CC_Content", typeof(String));
-                    dt.Columns.Add("SQ_Shop", typeof(String));
-                    dt.Columns.Add("SQ_Brand", typeof(String));
-                    dt.Columns.Add("SQ_Name", typeof(String));
-                    dt.Columns.Add("SQ_Phone", typeof(String));
-                    dt.Columns.Add("SQ_FBP", typeof(String));
-                    dt.Columns.Add("SQ_FBPP", typeof(String));
-                    dt.Columns.Add("SQ_Content", typeof(String));
-                    dt.Columns.Add("S_P", typeof(String));
-                    dt.Columns.Add("S_Phone", typeof(String));
-                    dt.Columns.Add("S_Result", typeof(String));
-                    dt.Columns.Add("GD", typeof(String));
-                    dt.Columns.Add("WTCLBF", typeof(String));
-                    dt.Columns.Add("FXWTBMQZ", typeof(String));
-                    dt.Columns.Add("QCJRZXYJ", typeof(String));
-
-                    dt.Columns.Add("QCJRZXQZ", typeof(String));
-                    dt.Columns.Add("GLZXYJ", typeof(String));
-                    dt.Columns.Add("GLZXQZ", typeof(String));
-                    ViewState["DtSource"] = dt;
-                }
-                return ViewState["DtSource"] as DataTable;
-            }
-            set { ViewState["DtSource"] = value; }
-        }
-        #endregion
 
         #region 添加Grid行
         /// <summary>
@@ -71,28 +33,42 @@ namespace Citic_Web.ProjectTracking.RiskProblem
         /// </summary>
         private string AddGridRows()
         {
+            string dealerVal = this.txt_Dealer.Text;
+            string bankVal = this.ddl_Bank.SelectedText;
+            string brandVal = this.ddl_Brand.SelectedText;
+            if (!string.IsNullOrEmpty(dealerVal) && dealerVal.IndexOf('_') <= 0)
+            {
+                AlertShow("请重新填写经销商！");
+                return string.Empty;
+            }
+            if (bankVal != null && bankVal.Equals("请选择"))
+            {
+                AlertShow("请选择合作行！");
+                return string.Empty;
+            }
+            if (brandVal != null && brandVal.Equals("请选择"))
+            {
+                brandVal = string.Empty;
+            }
+
+            dealerVal = dealerVal.Split('_')[0];
             string GridRowsStr = string.Empty;
             JObject o = new JObject();
-            o.Add("CC_Date", DateTime.Now.ToString("yyyy-MM-dd"));
-            o.Add("CC_AP", string.Empty);
-            o.Add("CC_Unit", string.Empty);
-            o.Add("CC_P", string.Empty);
-            o.Add("CC_Post", string.Empty);
-            o.Add("CC_PPhone", string.Empty);
-            o.Add("CC_Content", string.Empty);
-            o.Add("SQ_Shop", string.Empty);
+            o.Add("C_Date", DateTime.Now.ToString("yyyy-MM-dd"));
+            o.Add("C_AP", string.Empty);
+            o.Add("C_Unit", string.Empty);
+            o.Add("C_P", string.Empty);
+            o.Add("C_Post", string.Empty);
+            o.Add("C_PPhone", string.Empty);
+            o.Add("C_Content", string.Empty);
+            o.Add("SQ_Shop", dealerVal);
+            o.Add("SQ_Bank", bankVal);
+            o.Add("SQ_Brand", brandVal);
             o.Add("SQ_Content", string.Empty);
-            o.Add("S_P", string.Empty);
-            o.Add("S_Result", string.Empty);
-            o.Add("GD", string.Empty);
-            return GridRowsStr = grid_List.GetAddNewRecordReference(o, true);
+            GridRowsStr = grid_List.GetAddNewRecordReference(o, true);
+            return GridRowsStr;
         }
         #endregion
-
-        protected void btn_Checking_Car_Click(object sender, EventArgs e)
-        {
-
-        }
 
         #region 添加数据--乔春羽(2013.12.9)
         protected void btn_Add_Click(object sender, EventArgs e)
@@ -101,138 +77,31 @@ namespace Citic_Web.ProjectTracking.RiskProblem
             //Dictionary<int, Dictionary<string, string>> modifiedDict = grid_List.GetModifiedDict();
             List<Dictionary<string, string>> modifiedDict = grid_List.GetNewAddedList();
 
-            //foreach (int rowIndex in modifiedDict.Keys)
-            //{
-            //    int rowID = Convert.ToInt32(grid_List.DataKeys[rowIndex][0]);
-            //    DataRow row = FindRowByID(rowID);
-
-            //    Dictionary<string, string> dict = modifiedDict[rowIndex];
-            //    //CC_Date 投诉时间
-            //    if (dict.ContainsKey("CC_Date"))
-            //    {
-            //        row["CC_Date"] = Convert.ToDateTime(dict["CC_Date"]);
-            //    }
-            //    //CC_AP 投诉接收人
-            //    if (dict.ContainsKey("CC_AP"))
-            //    {
-            //        row["CC_AP"] = dict["CC_AP"];
-            //    }
-            //    //CC_Unit 投诉单位
-            //    if (dict.ContainsKey("CC_Unit"))
-            //    {
-            //        row["CC_Unit"] = dict["CC_Unit"];
-            //    }
-            //    //CC_P 投诉人
-            //    if (dict.ContainsKey("CC_P"))
-            //    {
-            //        row["CC_P"] = dict["CC_P"];
-            //    }
-            //    //CC_Post 投诉人职务
-            //    if (dict.ContainsKey("CC_Post"))
-            //    {
-            //        row["CC_Post"] = dict["CC_Post"];
-            //    }
-            //    //CC_PPhone 投诉人联系方式
-            //    if (dict.ContainsKey("CC_PPhone"))
-            //    {
-            //        row["CC_PPhone"] = dict["CC_PPhone"];
-            //    }
-            //    //CC_Content 投诉内容
-            //    if (dict.ContainsKey("CC_Content"))
-            //    {
-            //        row["CC_Content"] = dict["CC_Content"];
-            //    }
-            //    //SQ_Shop 监管店
-            //    if (dict.ContainsKey("SQ_Shop"))
-            //    {
-            //        row["SQ_Shop"] = dict["SQ_Shop"];
-            //    }
-            //    string dealerName = dict["SQ_Shop"].ToString().Split('_')[0];
-            //    string dealerID = dict["SQ_Shop"].ToString().Split('_')[1];
-            //    row["SQ_ShopID"] = dealerID;
-            //    //SQ_Content 问题描述
-            //    if (dict.ContainsKey("SQ_Content"))
-            //    {
-            //        row["SQ_Content"] = dict["SQ_Content"];
-            //    }
-            //    //S_P 调查人
-            //    if (dict.ContainsKey("S_P"))
-            //    {
-            //        row["S_P"] = dict["S_P"];
-            //    }
-            //    //S_Result 调查结果
-            //    if (dict.ContainsKey("S_Result"))
-            //    {
-            //        row["S_Result"] = dict["S_Result"];
-            //    }
-            //    //GD 违反的规定
-            //    if (dict.ContainsKey("GD"))
-            //    {
-            //        row["GD"] = dict["GD"];
-            //    }
-
-            //    //根据经销商的ID，取出与该经销商合作的品牌监管员。
-            //    //先获取品牌
-            //    string path = Common.OperateConfigFile.getValue("Dealer_Bank");
-            //    DataTable dt_Data = Dealer_BankBll.GetList(1, string.Format(" DealerID={0}", dealerID), string.Empty, "BrandID", "BrandName").Tables[0];
-            //    if (dt_Data != null && dt_Data.Rows.Count > 0)
-            //    {
-            //        row["SQ_BrandID"] = Convert.ToInt32(dt_Data.Rows[0]["BrandID"]);
-            //        row["SQ_Brand"] = dt_Data.Rows[0]["BrandName"].ToString();
-            //    }
-            //    //再获取监管员的信息
-            //    string where = string.Format(" DealerID={0}", dealerID);
-            //    dt_Data = DealerBll.QuerySqlCommand(Server.MapPath(path), "RQ", where);
-            //    if (dt_Data != null && dt_Data.Rows.Count > 0)
-            //    {
-            //        row["SQ_Name"] = dt_Data.Rows[0]["SupervisorName"].ToString();
-            //        row["SQ_Phone"] = dt_Data.Rows[0]["LinkPhone"].ToString();
-            //    }
-            //    //问题反馈人员为当前登录用户
-            //    row["SQ_FBP"] = this.CurrentUser.UserName;
-            //    row["SQ_FBPP"] = this.CurrentUser.MobileNo;
-            //}
-
-            List<Citic.Model.RiskQuestion> models = new List<Citic.Model.RiskQuestion>();
+            List<Citic.Model.RisksSolveDocuments> models = new List<Citic.Model.RisksSolveDocuments>();
             //foreach (DataRow row in DtSource.Rows)
             foreach (Dictionary<string, string> row in modifiedDict)
             {
                 //根据经销商的ID，取出与该经销商合作的品牌监管员。
                 //先获取品牌
-                string dealerName = row["SQ_Shop"].ToString().Split('_')[0];
-                string dealerID = row["SQ_Shop"].ToString().Split('_')[1];
-                int brandID = 0;
-                string brandName = string.Empty;
+                string dealerName = row["SQ_Shop"];
+                string dealerID = row["SQ_ShopID"];
+                string brandID = row["SQ_BrandID"];
+                string brandName = row["SQ_Brand"];
                 string sq_Name = string.Empty;
                 string sq_Phone = string.Empty;
-                string path = Common.OperateConfigFile.getValue("Dealer_Bank");
-                DataTable dt_Data = Dealer_BankBll.GetList(1, string.Format(" DealerID={0}", dealerID), string.Empty, "BrandID", "BrandName").Tables[0];
-                if (dt_Data != null && dt_Data.Rows.Count > 0)
+
+                Citic.Model.RisksSolveDocuments model = new Citic.Model.RisksSolveDocuments()
                 {
-                    brandID = Convert.ToInt32(dt_Data.Rows[0]["BrandID"]);
-                    brandName = dt_Data.Rows[0]["BrandName"].ToString();
-                }
-                //再获取监管员的信息
-                string where = string.Format(" DealerID={0}", dealerID);
-                dt_Data = DealerBll.QuerySqlCommand(Server.MapPath(path), "RQ", where);
-                if (dt_Data != null && dt_Data.Rows.Count > 0)
-                {
-                    sq_Name = dt_Data.Rows[0]["SupervisorName"].ToString();
-                    sq_Phone = dt_Data.Rows[0]["LinkPhone"].ToString();
-                }
-                Citic.Model.RiskQuestion model = new Citic.Model.RiskQuestion()
-                {
-                    CC_AP = row["CC_AP"].ToString(),
-                    CC_Content = row["CC_Content"].ToString(),
-                    CC_Date = Convert.ToDateTime(row["CC_Date"]),
-                    CC_P = row["CC_P"].ToString(),
-                    CC_Post = row["CC_Post"].ToString(),
-                    CC_PPhone = row["CC_PPhone"].ToString(),
-                    CC_Unit = row["CC_Unit"].ToString(),
+                    C_AP = row["C_AP"].ToString(),
+                    C_Content = row["C_Content"].ToString(),
+                    C_Date = Convert.ToDateTime(row["C_Date"]),
+                    C_P = row["C_P"].ToString(),
+                    C_Post = row["C_Post"].ToString(),
+                    C_PPhone = row["C_PPhone"].ToString(),
+                    C_Unit = row["C_Unit"].ToString(),
                     CreateID = this.CurrentUser.UserId,
-                    CreateTime = DateTime.Now,
                     SQ_Brand = brandName,
-                    SQ_BrandID = brandID,
+                    SQ_BrandID = int.Parse(brandID),
                     SQ_Content = row["SQ_Content"].ToString(),
                     SQ_FBP = this.CurrentUser.UserName,
                     SQ_FBPP = this.CurrentUser.MobileNo,
@@ -240,37 +109,24 @@ namespace Citic_Web.ProjectTracking.RiskProblem
                     SQ_Phone = sq_Phone,
                     SQ_Shop = dealerName,
                     SQ_ShopID = int.Parse(dealerID),
-                    S_P = row["S_P"].ToString(),
-                    S_Result = row["S_Result"].ToString(),
-                    GD = row["GD"].ToString()
+                    SQ_Bank = row["SQ_Bank"],
+                    SQ_BankID = int.Parse(row["SQ_BankID"])
                 };
+                model.Status = 0;
                 models.Add(model);
             }
 
-            int num = RQBLL.AddRange(models.ToArray());
+            int num = this.RSDBLL.AddRange(models.ToArray());
+
             if (num > 0)
             {
-                Alert.ShowInTop("添加成功！");
-                ViewState["DtSource"] = null;
-                grid_List.SelectAllRows();
-                grid_List.DeleteSelected();
+                AlertShowInTop("添加成功！");
+                PageContext.Refresh();
             }
             else
             {
-                Alert.ShowInTop("添加失败！");
+                AlertShow("添加失败！");
             }
-        }
-
-        private DataRow FindRowByID(int rowID)
-        {
-            foreach (DataRow row in DtSource.Rows)
-            {
-                if (Convert.ToInt32(row["ID"]) == rowID)
-                {
-                    return row;
-                }
-            }
-            return null;
         }
         #endregion
 
@@ -282,5 +138,84 @@ namespace Citic_Web.ProjectTracking.RiskProblem
         }
         #endregion
 
+        #region 选择合作行之后，加载品牌--乔春羽(2014.4.22)
+        protected void ddl_Bank_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string dealerVal = this.txt_Dealer.Text;
+            if (!string.IsNullOrEmpty(dealerVal) && dealerVal.IndexOf('_') > 0)
+            {
+                ddl_Brand.Items.Clear();
+                string dealerName = dealerVal.Split('_')[0];
+                string dealerID = dealerVal.Split('_')[1];
+                string bankID = this.ddl_Bank.SelectedValue;
+                DataTable dt = this.Dealer_BankBll.GetList(string.Format(" (A.DealerID = '{0}' or A.DealerName like '%{1}%') and A.BankID = '{2}' ", dealerID, dealerName, bankID)).Tables[0];
+                this.ddl_Brand.DataTextField = "BrandName";
+                this.ddl_Brand.DataValueField = "BrandID";
+                this.ddl_Brand.DataSource = dt;
+                this.ddl_Brand.DataBind();
+
+                AddItemByInsert(ddl_Brand, "请选择", "-1", 0);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    ddl_Brand.SelectedIndex = 1;
+                }
+            }
+            else
+            {
+                AddItemByInsert(ddl_Brand, "请选择", "-1", 0);
+            }
+        }
+        #endregion
+
+        #region 输入经销商之后，加载合作行信息--乔春羽(2014.4.22)
+        protected void txt_Dealer_TextChanged(object sender, EventArgs e)
+        {
+            ddl_Bank.Items.Clear();
+            string val = this.txt_Dealer.Text;
+            if (!string.IsNullOrEmpty(val) && val.IndexOf('_') > 0)
+            {
+                string dealerName = val.Split('_')[0];
+                string dealerID = val.Split('_')[1];
+                DataTable dt = this.Dealer_BankBll.GetList(string.Format(" A.DealerID = '{0}' or A.DealerName like '%{1}%' ", dealerID, dealerName)).Tables[0];
+                ddl_Bank.DataTextField = "BankName";
+                ddl_Bank.DataValueField = "BankID";
+                ddl_Bank.DataSource = dt;
+                ddl_Bank.DataBind();
+            }
+            AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
+        }
+        #endregion
+
+        #region 添加Grid行--乔春羽(2014.4.22)
+        protected void btn_Add_Table_Click(object sender, EventArgs e)
+        {
+            string dealerVal = this.txt_Dealer.Text;
+            string bankName = this.ddl_Bank.SelectedText;
+            string bankID = this.ddl_Bank.SelectedValue;
+            string brandName = this.ddl_Brand.SelectedText;
+            string brandID = this.ddl_Brand.SelectedValue;
+            string dealerName = dealerVal.Split('_')[0];
+            string dealerID = dealerVal.Split('_')[1];
+
+            string GridRowsStr = string.Empty;
+            JObject o = new JObject();
+            o.Add("C_Date", DateTime.Now.ToString("yyyy-MM-dd"));
+            o.Add("C_AP", string.Empty);
+            o.Add("C_Unit", string.Empty);
+            o.Add("C_P", string.Empty);
+            o.Add("C_Post", string.Empty);
+            o.Add("C_PPhone", string.Empty);
+            o.Add("C_Content", string.Empty);
+            o.Add("SQ_Shop", dealerName);
+            o.Add("SQ_ShopID", dealerID);
+            o.Add("SQ_Bank", bankName);
+            o.Add("SQ_BankID", bankID);
+            o.Add("SQ_Brand", brandName);
+            o.Add("SQ_BrandID", brandID);
+            o.Add("SQ_Content", string.Empty);
+
+            grid_List.AddNewRecord(o);
+        }
+        #endregion
     }
 }

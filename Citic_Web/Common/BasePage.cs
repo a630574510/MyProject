@@ -46,6 +46,9 @@ namespace Citic_Web
 
         protected override void OnInit(EventArgs e)
         {
+            //设置网站的跟路径
+            //AuthProcess.SetRootDirectory(Server.HtmlEncode(Request.ApplicationPath));
+
             User user = null;
             user = AuthProcess.GetAuthenticateUser(true);
             CurrentUser = user;
@@ -713,6 +716,20 @@ namespace Citic_Web
             }
         }
 
+        private Citic.BLL.RisksSolveDocuments _RSDBLL;
+
+        public Citic.BLL.RisksSolveDocuments RSDBLL
+        {
+            get
+            {
+                if (_RSDBLL == null)
+                {
+                    _RSDBLL = new Citic.BLL.RisksSolveDocuments();
+                }
+                return _RSDBLL;
+            }
+        }
+
         private Citic.BLL.QueryWH _QueryWH;
         /// <summary>
         /// 查库频率--乔春羽
@@ -772,6 +789,21 @@ namespace Citic_Web
                 return _UMBLL;
             }
         }
+
+        private Citic.BLL.DeptToRole _DeptToRole = null;
+
+        public Citic.BLL.DeptToRole DeptToRole
+        {
+            get
+            {
+                if (_DeptToRole == null)
+                {
+                    _DeptToRole = new Citic.BLL.DeptToRole();
+                }
+                return _DeptToRole;
+            }
+        }
+
         #endregion
 
         #region 操作Excel文件的工具类变量--乔春羽

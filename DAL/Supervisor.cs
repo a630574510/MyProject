@@ -794,11 +794,21 @@ namespace Citic.DAL
         #endregion
 
         #region 获得监管员的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess()
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(" SELECT SupervisorID,SupervisorName,Age,CASE Gender WHEN 0 THEN '男' WHEN 1 THEN '女' END Gender,IDCard,LinkPhone,EntryTime,Education,QQ,UrgencyMan,UrgencyConnect,UrgencyPhone,WorkType,CASE WorkSource WHEN 0 THEN '属地' WHEN 1 THEN '外派' END WorkSource,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID ");
+            strSql.Append("SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY SupervisorID) Row,SupervisorID,SupervisorName,Age,CASE Gender WHEN 0 THEN '男' WHEN 1 THEN '女' END Gender,IDCard,LinkPhone,CONVERT(VARCHAR(12),EntryTime,111) EntryTime,Education,QQ,UrgencyMan,UrgencyConnect,UrgencyPhone,WorkType,CASE WorkSource WHEN 0 THEN '属地' WHEN 1 THEN '外派' END WorkSource,CreateID,CONVERT(VARCHAR(12),CreateTime,111) CreateTime,UpdateID,CONVERT(VARCHAR(12),UpdateTime,111) UpdateTime,DeleteID,CONVERT(VARCHAR(12),DeleteTime,111) DeleteTime,IsDelete,IsPort,ConnectID ");
             strSql.Append(" FROM tb_Supervisor_List ");
+            if (!string.IsNullOrEmpty(where))
+            {
+                strSql.AppendFormat(" WHERE {0}", where);
+            }
+            strSql.Append(")T ");
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE T.Row BETWEEN {0} AND {1}", startIndex, endIndex);
+            }
+
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion

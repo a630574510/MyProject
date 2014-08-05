@@ -5,3 +5,10 @@ E:\工作项目\中信二期项目\Citic_Pledge_Manage\DBUtility\bin\Debug\Syste
 E:\工作项目\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\Citic.DBUtility.dll
 E:\工作项目\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\Citic.DBUtility.pdb
 E:\工作项目\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\DBUtility.csprojResolveAssemblyReference.cache
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\bin\Debug\Citic.DBUtility.dll
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\bin\Debug\Citic.DBUtility.pdb
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\bin\Debug\MySql.Data.dll
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\bin\Debug\System.Data.SQLite.DLL
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\ResolveAssemblyReference.cache
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\Citic.DBUtility.dll
+D:\中信二期项目\Citic_Pledge_Manage\DBUtility\obj\Debug\Citic.DBUtility.pdb

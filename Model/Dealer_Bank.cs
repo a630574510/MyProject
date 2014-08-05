@@ -13,6 +13,8 @@ namespace Citic.Model
         private int _id;
         private int? _dealerid;
         private string _dealername;
+        private string _jc;
+        private int? _bc = 0;
         private int? _bankid;
         private string _bankname;
         private int? _brandid;
@@ -53,6 +55,22 @@ namespace Citic.Model
         {
             set { _dealername = value; }
             get { return _dealername; }
+        }
+        /// <summary>
+        /// 经销商名称简称
+        /// </summary>
+        public string JC
+        {
+            set { _jc = value; }
+            get { return _jc; }
+        }
+        /// <summary>
+        /// 本月业务次数
+        /// </summary>
+        public int? BC
+        {
+            set { _bc = value; }
+            get { return _bc; }
         }
         /// <summary>
         /// 银行ID
@@ -191,6 +209,10 @@ namespace Citic.Model
             get { return _zx_id; }
         }
         #endregion Model
+
+        #region 扩展字段--乔春羽(2014.5.5)
+
+        #endregion
 
         public override bool Equals(object obj)
         {

@@ -32,8 +32,8 @@ namespace Citic_Web.ProjectTracking.RiskControl
             }
             catch (Exception e)
             {
+                AlertShow(e.Message);
                 Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "BrandBind()");
-                AlertShowInTop("网络异常，请稍后再试!");
             }
             ddl_Brand.DataTextField = "BrandName";
             ddl_Brand.DataValueField = "BrandID";
@@ -64,8 +64,8 @@ namespace Citic_Web.ProjectTracking.RiskControl
                     }
                     catch (Exception e)
                     {
+                        AlertShow(e.Message);
                         Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "DealerBind()");
-                        AlertShowInTop("网络异常，请稍后再试!");
                     }
                     ddl_Dealer.DataTextField = "DealerName";
                     ddl_Dealer.DataValueField = "DealerID";
@@ -99,8 +99,8 @@ namespace Citic_Web.ProjectTracking.RiskControl
                     }
                     catch (Exception e)
                     {
+                        AlertShow(e.Message);
                         Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "BankBind()");
-                        AlertShowInTop("网络异常，请稍后再试!");
                     }
                     ddl_Bank.DataTextField = "BankName";
                     ddl_Bank.DataValueField = "BankID";
@@ -221,6 +221,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
             }
             catch (Exception e)
             {
+                AlertShow(e.Message);
                 Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "Save()");
             }
         }

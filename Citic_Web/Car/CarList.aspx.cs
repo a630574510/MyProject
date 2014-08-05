@@ -14,7 +14,7 @@ namespace Citic_Web.Car
 {
     public partial class CarList : BasePage
     {
-        string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+
         #region Load事件
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,8 +34,9 @@ namespace Citic_Web.Car
         private void dataBind(string Statu, int top)
         {
 
-            string[] tb_Name_Count = this.ddl_Dealer.SelectedValue.ToString().Split('_');
-            string tb_Name = "tb_Car_" + tb_Name_Count[0] + "_" + tb_Name_Count[1].ToString();      //获取表名
+            DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and ID='{1}'", this.ddl_Dealer.SelectedText, this.ddl_Dealer.SelectedValue));
+
+            string tb_Name = "tb_Car_" + dr[0].ItemArray[2].ToString() + "_" + dr[0].ItemArray[0].ToString();  //sql表名拼接    2014年5月14日
             string sql = string.Empty;
             if (top == 0)
             {
@@ -55,6 +56,7 @@ namespace Citic_Web.Car
         protected void grid_List_PageIndexChange(object sender, FineUI.GridPageEventArgs e)
         {
             grid_List.PageIndex = e.NewPageIndex;
+            DataBind_List();
         }
         #endregion
 
@@ -154,11 +156,25 @@ namespace Citic_Web.Car
         protected void Btn_Search_Click(object sender, EventArgs e)
         {
             ViewState.Remove("CatList");    //移除
-            string[] tb_Name_Count = this.ddl_Dealer.SelectedValue.ToString().Split('_');
-            string tb_Name = "tb_Car_" + tb_Name_Count[0] + "_" + tb_Name_Count[1].ToString();  //sql表名拼接
+            try
+            {
+                DataBind_List();
+            }
+            catch
+            {
+                //2014年5月23日
+                FineUI.Alert.ShowInTop("数据量太大,请选择条件查询", FineUI.MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void DataBind_List()
+        {
+            DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and ID='{1}'", this.ddl_Dealer.SelectedText, this.ddl_Dealer.SelectedValue));
+
+            string tb_Name = "tb_Car_" + dr[0].ItemArray[2].ToString() + "_" + dr[0].ItemArray[0].ToString();  //sql表名拼接
 
             StringBuilder sb = new StringBuilder("IsDelete=0 ");
-            //StringBuilder sb = new StringBuilder("select * from tb_Car_List where DealerID='" + ddl_Dealer.SelectedValue + "' ");
             if (!string.IsNullOrEmpty(this.txt_Vin.Text.Trim()))        //车架号
             {
                 string[] Vin = this.txt_Vin.Text.ToString().Split(',');
@@ -201,22 +217,43 @@ namespace Citic_Web.Car
             }
             if (!string.IsNullOrEmpty(this.dp_Release_Begin.Text.Trim()) && !string.IsNullOrEmpty(this.dp_Release_End.Text.Trim()))    //释放时间
             {
-                sb.Append(" and OutTime between '" + this.dp_Release_Begin.Text.Trim() + "' and '" + this.dp_Release_End.Text.Trim() + "'");
+                sb.Append(" and OutTime between '" + this.dp_Release_Begin.Text.Trim() + "' and '" + this.dp_Release_End.SelectedDate.Value.AddDays(+1).ToString("yyyy-MM-dd") + "'");
             }
             if (!string.IsNullOrEmpty(this.dp_Access_Begin.Text.Trim()) && !string.IsNullOrEmpty(this.dp_Access_End.Text.Trim()))       //入库时间
             {
-                sb.Append(" and TransitTime between '" + this.dp_Access_Begin.Text + "' and '" + this.dp_Access_End.Text + "'");
+                sb.Append(" and TransitTime between '" + this.dp_Access_Begin.Text + "' and '" + this.dp_Access_End.SelectedDate.Value.AddDays(+1).ToString("yyyy-MM-dd") + "'");
             }
             if (this.ddl_Statu.SelectedValue != "-1")
             {
                 sb.Append(" and Statu='" + ddl_Statu.SelectedValue.ToString() + "'");
             }
-            DataSet ds = new Citic.BLL.Car().GetAllList(sb.ToString(), tb_Name);
-            ViewState["CatList"] = ds;
-            this.grid_List.DataSource = ViewState["CatList"];
-            this.grid_List.DataBind();
-            this.Btn_Batch_OutBound.Enabled = false;
 
+            //指定总记录数
+            grid_List.RecordCount = CarBll.GetRecordCount(sb.ToString(), tb_Name);
+
+            if (this.grid_List.RecordCount != 0)
+            {
+                if (this.grid_List.PageCount < this.grid_List.PageIndex)
+                {
+                    this.grid_List.PageIndex = 0;
+                }
+
+                int pageIndex = grid_List.PageIndex;
+                int pageSize = grid_List.PageSize;
+                int rowbegin = pageIndex * pageSize + 1;
+                int rowend = (pageIndex + 1) * pageSize;
+                DataSet ds = CarBll.GetListByPage(sb.ToString(), "", rowbegin, rowend, tb_Name);
+                ViewState["CatList"] = ds;
+                this.grid_List.DataSource = ViewState["CatList"];
+                this.grid_List.DataBind();
+                this.Btn_Batch_OutBound.Enabled = false;
+
+            }
+            else
+            {
+                FineUI.Alert.ShowInTop("无法查询到输入条件的车辆信息", FineUI.MessageBoxIcon.Information);
+            }
+            
         }
         #endregion
 
@@ -253,29 +290,30 @@ namespace Citic_Web.Car
         {
             try
             {
-                DataSet ds = null;
                 int RoleId = this.CurrentUser.RoleId;       //获取角色id
                 switch (RoleId)
                 {
                     case 1:         //1为超级管理员
                         this.ddl_Dealer.EnableEdit = true;
-                        ds = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 order by D_L.DealerName");
+                        ViewState["DealerName"] = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 order by D_L.DealerName").Tables[0];
                         break;
                     case 2:         //2为管理员
                         break;
                     case 3:         //3为业务经理
                         this.ddl_Dealer.EnableEdit = true;
-                        ds = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 order by D_L.DealerName");
+                        ViewState["DealerName"] = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 order by D_L.DealerName").Tables[0];
                         break;
                     case 4:         //4为市场经理
                         break;
                     case 5:         //5为市场专员
+                        this.ddl_Dealer.EnableEdit = true;
                         int UserID_5 = this.CurrentUser.UserId;
-                        ds = DealerBll.GetBankID_DealerID_BankName_List("and BankID in(select MappingID from tb_UserMapping where RoleID=5 and UserID=" + UserID_5 + ")");
+                        ViewState["DealerName"] = DealerBll.GetBankID_DealerID_BankName_List("and BankID in(select MappingID from tb_UserMapping where RoleID=5 and UserID=" + UserID_5 + ")").Tables[0];
                         break;
                     case 6:         //6为品牌专员
+                        this.ddl_Dealer.EnableEdit = true;
                         int UserID_6 = this.CurrentUser.UserId;
-                        ds = DealerBll.GetBankID_DealerID_BankName_List("and BankID in(select MappingID from tb_UserMapping where RoleID=6 and UserID=" + UserID_6 + ")");
+                        ViewState["DealerName"] = DealerBll.GetBankID_DealerID_BankName_List("and BankID in(select MappingID from tb_UserMapping where RoleID=6 and UserID=" + UserID_6 + ")").Tables[0];
                         break;
                     case 7:         //7为调配专员
                         break;
@@ -285,16 +323,17 @@ namespace Citic_Web.Car
                         break;
                     case 10:         //10为监管员
                         int SupID = this.CurrentUser.RelationID.Value;
-                        ds = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 and SupervisorID='" + SupID + "' order by D_L.DealerName");
+                        ViewState["DealerName"] = DealerBll.GetBankID_DealerID_BankName_List("AND D_L.IsDelete=0 and D_B_L.IsDelete=0 and D_B_L.CollaborateType=1 and SupervisorID='" + SupID + "' order by D_L.DealerName").Tables[0];
                         break;
                 }
                 this.ddl_Dealer.DataTextField = "DealerName";
-                this.ddl_Dealer.DataValueField = "DealerID";
-                this.ddl_Dealer.DataSource = ds;
+                this.ddl_Dealer.DataValueField = "ID";
+                this.ddl_Dealer.DataSource = ((DataTable)ViewState["DealerName"]);
                 this.ddl_Dealer.DataBind();
                 this.ddl_Dealer.SelectedIndex = 0;
-                this.lbl_Cooperation_Bank.Text = this.ddl_Dealer.SelectedValue.ToString().Split('_')[2].ToString();
-                this.lbl_BrandName.Text = this.ddl_Dealer.SelectedValue.ToString().Split('_')[3].ToString();
+                DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and ID='{1}'", this.ddl_Dealer.SelectedText, this.ddl_Dealer.SelectedValue));
+                this.lbl_Cooperation_Bank.Text = dr[0].ItemArray[3].ToString();
+                this.lbl_BrandName.Text = dr[0].ItemArray[5].ToString();
             }
             catch
             {
@@ -362,9 +401,9 @@ namespace Citic_Web.Car
         /// <param name="e"></param>
         protected void ddl_Dealer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] str = ddl_Dealer.SelectedValue.Split('_');
-            this.lbl_Cooperation_Bank.Text = str[2].ToString();
-            this.lbl_BrandName.Text = str[3].ToString();
+            DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and ID='{1}'", this.ddl_Dealer.SelectedText, this.ddl_Dealer.SelectedValue));
+            this.lbl_Cooperation_Bank.Text = dr[0].ItemArray[3].ToString();
+            this.lbl_BrandName.Text = dr[0].ItemArray[5].ToString();
         }
         #endregion
     }

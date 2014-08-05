@@ -10,6 +10,7 @@ using System.Text;
 using FineUI;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using NPOI.SS.UserModel;
 
 namespace Citic_Web.DealerManagement.StorageInfo
 {
@@ -97,7 +98,20 @@ namespace Citic_Web.DealerManagement.StorageInfo
             ddl_Dealer.Items.Clear();
             if (bankIDStr != "-1")
             {
-                DataTable dt = Dealer_BankBll.GetList(string.Format(" BankID = '{0}' and IsDelete=0 ", bankIDStr)).Tables[0];
+                StringBuilder strWhere = new StringBuilder(string.Format(" A.BankID = '{0}' and A.CollaborateType = 1 and A.IsDelete=0 ", bankIDStr));
+                if (this.CurrentUser.RoleId == 10)
+                {
+                    string[] dealerIDs = this.DealerBll.GetDealerIDsBySupervisorID(this.CurrentUser.RelationID.Value);
+                    if (dealerIDs != null && dealerIDs.Length > 0)
+                    {
+                        strWhere.AppendFormat(" and A.DealerID in ({0}) ", string.Join(",", dealerIDs));
+                    }
+                    else
+                    {
+                        strWhere.Append(" and A.DealerID in (0) ");
+                    }
+                }
+                DataTable dt = Dealer_BankBll.GetList(strWhere.ToString()).Tables[0];
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     ddl_Dealer.DataTextField = "DealerName";
@@ -157,41 +171,36 @@ namespace Citic_Web.DealerManagement.StorageInfo
         private string ConditionInit()
         {
             int dealerID = int.Parse(ddl_Dealer.SelectedValue);
+            int bankID = 0;
             string storageName = this.txt_StorageName.Text;
             StringBuilder where = new StringBuilder("T.IsDelete=0");
 
             if (dealerID != -1)
             {
                 where.AppendFormat(" and T.DealerID={0}", dealerID);
+                bankID = int.Parse(ddl_Bank.SelectedValue);
             }
             if (storageName != string.Empty)
             {
                 where.AppendFormat(" and T.StorageName like '%{0}%'", storageName);
             }
-            //数据过滤，过滤出监管员可以看得数据。
-            switch (this.CurrentUser.RoleId)
+
+            if (bankID != 0)
             {
-                //表示登入人员是一个“监管员”
-                case 10:
-                    //获得经销商ID的集合
-                    string[] dealerIDs = DealerBll.GetDealerIDsBySupervisorID(this.CurrentUser.RelationID.Value);
-                    //条件为多个经销商的ID
-                    StringBuilder strDealerIDs = new StringBuilder(" and T.DealerID in (");
-                    for (int i = 0; i < dealerIDs.Length; i++)
-                    {
-                        if (i == dealerIDs.Length - 1)
-                        {
-                            strDealerIDs.AppendFormat("'{0}'", dealerIDs[i]);
-                        }
-                        else
-                        {
-                            strDealerIDs.AppendFormat("'{0}',", dealerIDs[i]);
-                        }
-                    }
-                    strDealerIDs.Append(")");
-                    where.Append(strDealerIDs.ToString());
-                    break;
+                //Citic.Model.Bank bankModel = this.BankBll.GetModel(bankID);
+                //string bankCode = bankModel.ConnectID;
+                ////如果该经销商所对应的合作行是中信银行
+                ////则要加上中信银行的直联ID作为条件
+                //if (bankCode.Equals("2000000000"))
+                //{
+                //    where.AppendFormat(" and (ConnectID <> '' or ConnectID IS NOT NULL )");
+                //}
+                //else
+                //{
+                //    where.AppendFormat(" and (ConnectID = '' or ConnectID IS NULL )");
+                //}
             }
+
             return where.ToString();
         }
         #endregion
@@ -285,7 +294,7 @@ namespace Citic_Web.DealerManagement.StorageInfo
             {
                 GridBind();
             }
-            else 
+            else
             {
                 AlertShowInTop("请选择经销商！");
             }
@@ -404,51 +413,98 @@ namespace Citic_Web.DealerManagement.StorageInfo
             //保存Excel文件
             string sheetName = "二网信息（当前页）_" + ConvertLongDateTimeToUI(DateTime.Now);
             string sheetNameAll = "二网信息（全部）_" + ConvertLongDateTimeToUI(DateTime.Now);
+            string[] headers = { "二网名称", "二网地址", "企业名称", "距离", "是否本库" };
+            string where = this.ConditionInit();
+            where = where.Replace("T.", string.Empty);
+            string titleName = "二网信息";
             string filePath = string.Empty;
             //保存当前页的数据
-            ExcelEditHelper.Create();
-            ExcelEditHelper.AddSheet(sheetName);
-            DataTable dt = null;
-
-            dt = GetTableForGrid(grid_List);
-
-            string fileName = sheetName + ".xls";//客户端保存的文件名
-            ExcelEditHelper.DataTableAdd2Excel(dt, sheetName);
-
             filePath = "~/DownExcel/" + sheetName + ".xls";
-            bool flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
 
-            //释放ExcelEditHelper
-            CloseExcelEditHelper();
+            NPOIHelper npoi = new NPOIHelper();
+            npoi.Create(titleName);
 
-            //下载Excel文件
-            if (flag)
-            {
-                hl_ExportExcel.NavigateUrl = filePath;
-            }
+            //创建一行，并设定了行高
+            IRow irow = npoi.CreateRow((short)60);
+            //========================创建样式与字体================================
+            //创建一个样式headerCellStyle
+            //大标题样式
+            string headerCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式headerCellStyle附加字体对象
+            npoi.CreateFont(headerCellStyle, 40, "黑体", NPOIFontBoldWeight.Bold, false, false);
+            //创建了一个样式contentCellStyle。
+            //表头样式
+            string contentCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式contentCellStyle附加了一个字体对象
+            npoi.CreateFont(contentCellStyle, 10, "微软雅黑", NPOIFontBoldWeight.Bold, false, false);
+            //内容样式
+            string contentStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            npoi.CreateFont(contentStyle, 10, "微软雅黑", NPOIFontBoldWeight.Normal, false, false);
+            //========================创建样式与字体================================
+            //表头大标题
+            npoi.CreateCells(headers.Length, irow, headerCellStyle);
+            npoi.SetCellValue(irow, 0, titleName);
+            npoi.SetCellRangeAddress(0, 0, 0, headers.Length - 1);
+            //表头小标题
+            IRow rowHeader = npoi.CreateRow();
+            npoi.CreateCells(headers, rowHeader, contentCellStyle);
+
+            int pageIndex = grid_List.PageIndex;
+            int pageSize = grid_List.PageSize;
+            int rowbegin = pageIndex * pageSize + 1;
+            int rowend = (pageIndex + 1) * pageSize;
+            DataTable dt = this.StorageBll.GetAllListByProcess(where, rowbegin, rowend).Tables[0];
+
+            string[] columns = { "StorageName", "Address", "DealerName", "Distence", "IsLocalStorage" };
+            npoi.DataTableToExcel(dt, columns, contentStyle);
+
+            //保存文件
+            filePath = "~/DownExcel/" + sheetName + ".xlsx";
+            npoi.Save(Server.MapPath(filePath));
+
+            //显示下载地址
+            hl_ExportExcel.NavigateUrl = filePath;
+
 
             //保存所有的数据
-            ExcelEditHelper.Create();
-            ExcelEditHelper.AddSheet(sheetNameAll);
+            npoi = new NPOIHelper();
+            npoi.Create(titleName);
 
-            dt = StorageBll.GetAllListByProcess().Tables[0];
+            //创建一行，并设定了行高
+            irow = npoi.CreateRow((short)60);
+            //========================创建样式与字体================================
+            //创建一个样式headerCellStyle
+            //大标题样式
+            headerCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式headerCellStyle附加字体对象
+            npoi.CreateFont(headerCellStyle, 40, "黑体", NPOIFontBoldWeight.Bold, false, false);
+            //创建了一个样式contentCellStyle。
+            //表头样式
+            contentCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式contentCellStyle附加了一个字体对象
+            npoi.CreateFont(contentCellStyle, 10, "微软雅黑", NPOIFontBoldWeight.Bold, false, false);
+            //内容样式
+            contentStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            npoi.CreateFont(contentStyle, 10, "微软雅黑", NPOIFontBoldWeight.Normal, false, false);
+            //========================创建样式与字体================================
+            //表头大标题
+            npoi.CreateCells(headers.Length, irow, headerCellStyle);
+            npoi.SetCellValue(irow, 0, titleName);
+            npoi.SetCellRangeAddress(0, 0, 0, headers.Length - 1);
+            //表头小标题
+            rowHeader = npoi.CreateRow();
+            npoi.CreateCells(headers, rowHeader, contentCellStyle);
 
-            ModifyTableHeaderByGrid(grid_List, dt);
+            dt = this.StorageBll.GetAllListByProcess(where, 0, 0).Tables[0];
 
-            fileName = sheetName + ".xls";//客户端保存的文件名
-            ExcelEditHelper.DataTableAdd2Excel(dt, sheetNameAll);
+            npoi.DataTableToExcel(dt, columns, contentStyle);
 
-            filePath = "~/DownExcel/" + sheetNameAll + ".xls";
-            flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
+            //保存文件
+            filePath = "~/DownExcel/" + sheetNameAll + ".xlsx";
+            npoi.Save(Server.MapPath(filePath));
 
-            //释放ExcelEditHelper
-            CloseExcelEditHelper();
+            hl_ExportAll.NavigateUrl = filePath;
 
-            //下载Excel文件
-            if (flag)
-            {
-                hl_ExportAll.NavigateUrl = filePath;
-            }
         }
         #endregion
     }

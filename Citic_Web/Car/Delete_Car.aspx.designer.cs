@@ -157,15 +157,6 @@ namespace Citic_Web.Car {
         protected global::FineUI.Grid G_Car_List;
         
         /// <summary>
-        /// btn_Logic_Del 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_Logic_Del;
-        
-        /// <summary>
         /// btn_Physics_Del 控件。
         /// </summary>
         /// <remarks>
@@ -173,5 +164,14 @@ namespace Citic_Web.Car {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.Button btn_Physics_Del;
+        
+        /// <summary>
+        /// btn_Del_GD 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button btn_Del_GD;
     }
 }

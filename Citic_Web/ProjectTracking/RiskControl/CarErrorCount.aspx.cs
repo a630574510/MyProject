@@ -74,14 +74,8 @@ namespace Citic_Web.ProjectTracking.RiskControl
             //where条件 
             string where = ConditionInit();
             string path = Common.OperateConfigFile.getValue("Dealer_Bank");
-            //设置表格的总数据量
-            this.grid_List.RecordCount = GetCountBySearch(where);
 
-            int pageIndex = grid_List.PageIndex;
-            int pageSize = grid_List.PageSize;
-            int rowbegin = pageIndex * pageSize + 1;
-            int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = StockErrorBll.StockErrorReportSearch(Server.MapPath(path), "ser", where, rowbegin, rowend).Tables[0];
+            DataTable dt = StockErrorBll.StockErrorReportSearch(Server.MapPath(path), "ser_like", where, 0, 0).Tables[0];
 
             grid_List.DataSource = dt;
             grid_List.DataBind();
@@ -105,7 +99,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
         /// <returns></returns>
         private int GetCountBySearch(string where)
         {
-            return StockErrorBll.GetRecordCount(where);
+            return StockErrorBll.GetStockErrorCount(where);
         }
         #endregion
 
@@ -142,41 +136,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
             GridBind();
         }
         #endregion
-
-        #region 每页显示数量改变事件--乔春羽
-        /// <summary>
-        /// 每页显示数量改变事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            grid_List.PageSize = int.Parse(ddlPageSize.SelectedValue);
-            GridBind();
-        }
-
-        #endregion
-
-        #region 翻页事件--乔春羽
-        /// <summary>
-        /// 翻页
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void grid_List_PageIndexChange(object sender, FineUI.GridPageEventArgs e)
-        {
-            SyncSelectedRowIndexArrayToHiddenField(grid_List, hfSelectedIDS);
-            grid_List.PageIndex = e.NewPageIndex;
-
-            //乔春羽
-            GridBind();
-            //乔春羽
-
-            UpdateSelectedRowIndexArray(grid_List, hfSelectedIDS);
-        }
-
-        #endregion
-
+        
         #region 判断登陆角色，显示不同的按钮--乔春羽(2013.9.3)
         /// <summary>
         /// 按钮权限过滤
@@ -202,6 +162,10 @@ namespace Citic_Web.ProjectTracking.RiskControl
             {
                 btn_ExpendExcel.Visible = true;
                 hl_ExportExcel.Visible = true;
+            }
+            if (urls.Contains("ExcelAll73"))
+            {
+                btn_ExpendExcel.Visible = true;
                 hl_ExportAll.Visible = true;
                 bl_Separator.Visible = true;
             }

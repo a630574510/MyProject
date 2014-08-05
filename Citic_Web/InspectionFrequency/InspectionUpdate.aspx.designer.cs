@@ -76,15 +76,6 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.Button btn_Update;
         
         /// <summary>
-        /// txt_Area 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextBox txt_Area;
-        
-        /// <summary>
         /// txt_DealerName 控件。
         /// </summary>
         /// <remarks>
@@ -121,40 +112,22 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.TextBox txt_SupervisorName;
         
         /// <summary>
-        /// txt_CheckProblem 控件。
+        /// txt_Model 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_CheckProblem;
+        protected global::FineUI.DropDownList txt_Model;
         
         /// <summary>
-        /// txt_FinancialCenter1 控件。
+        /// txt_Inventory 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_FinancialCenter1;
-        
-        /// <summary>
-        /// txt_RiskControl 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_RiskControl;
-        
-        /// <summary>
-        /// txt_AdminDepartment 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.TextArea txt_AdminDepartment;
+        protected global::FineUI.NumberBox txt_Inventory;
         
         /// <summary>
         /// txt_QuartersLedger 控件。
@@ -166,21 +139,66 @@ namespace Citic_Web.InspectionFrequency {
         protected global::FineUI.TextArea txt_QuartersLedger;
         
         /// <summary>
-        /// txt_FinancialCenter 控件。
+        /// cb_QuartersLedger 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea txt_FinancialCenter;
+        protected global::FineUI.CheckBox cb_QuartersLedger;
         
         /// <summary>
-        /// txt_HistoryTime 控件。
+        /// txt_MainProblem 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.DatePicker txt_HistoryTime;
+        protected global::FineUI.TextArea txt_MainProblem;
+        
+        /// <summary>
+        /// cb_MainProblem 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.CheckBox cb_MainProblem;
+        
+        /// <summary>
+        /// DP_HistoryDate 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.DatePicker DP_HistoryDate;
+        
+        /// <summary>
+        /// cb_HistoryDate 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.CheckBox cb_HistoryDate;
+        
+        /// <summary>
+        /// txt_Remark 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_Remark;
+        
+        /// <summary>
+        /// txt_Area 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_Area;
     }
 }

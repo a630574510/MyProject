@@ -20,18 +20,19 @@
                 </x:Toolbar>
             </Toolbars>
             <Items>
-                <x:Grid ID="grid_List" runat="server" EnableCheckBoxSelect="true" EnableRowNumber="true" EnableBackgroundColor="true"
+                <x:Grid ID="grid_List" runat="server" EnableCheckBoxSelect="false" EnableRowNumber="false" EnableBackgroundColor="true"
                     ShowHeader="false" AllowPaging="true" EnableTextSelection="true" IsDatabasePaging="true" PageIndex="0" PageSize="20"
                     OnRowDataBound="grid_List_RowDataBound" OnPageIndexChange="grid_List_PageIndexChange" DataKeyNames="DraftNo,Vin">
                     <Columns>
+                        <x:BoundField HeaderText="序号" DataField="row" ColumnID="row" Width="40px" />
                         <x:BoundField HeaderText="质押号" DataField="PledgeNo" ColumnID="PledgeNo" />
                         <x:BoundField HeaderText="保险金账号" DataField="GuaranteeNo" Width="150px" ColumnID="GuaranteeNo" />
                         <x:BoundField HeaderText="票号" DataField="DraftNo" ColumnID="DraftNo" />
-                        <x:BoundField HeaderText="开票日期" DataField="BeginTime" Width="120px" ColumnID="BeginTime" />
-                        <x:BoundField HeaderText="到期日期" DataField="EndTime" Width="120px" ColumnID="EndTime" />
-                        <x:BoundField HeaderText="开票金额" DataField="DarftMoney" Width="60px" ColumnID="DarftMoney" />
+                        <x:BoundField HeaderText="开票日期" DataField="BeginTime" Width="80px" ColumnID="BeginTime" />
+                        <x:BoundField HeaderText="到期日期" DataField="EndTime" Width="80px" ColumnID="EndTime" />
+                        <x:BoundField HeaderText="开票金额" DataField="DarftMoney" Width="70px" ColumnID="DarftMoney" />
                         <x:BoundField HeaderText="合格证发证日期" DataField="QualifiedNoDate" Width="100px" ColumnID="QualifiedNoDate" />
-                        <x:BoundField HeaderText="车辆型号" DataField="CarModel" Width="100px" ColumnID="CarModel" />
+                        <x:BoundField HeaderText="车辆型号" DataField="CarModel" Width="70px" ColumnID="CarModel" />
                         <x:BoundField HeaderText="车辆分类" DataField="CarClass" Width="80px" ColumnID="CarClass" />
                         <x:BoundField HeaderText="排量" DataField="Displacement" Width="80px" ColumnID="Displacement" />
                         <x:BoundField HeaderText="颜色" DataField="CarColor" Width="50px" ColumnID="CarColor" />
@@ -40,8 +41,8 @@
                         <x:BoundField HeaderText="合格证号" DataField="QualifiedNo" Width="150px" ColumnID="QualifiedNo" />
                         <x:BoundField HeaderText="钥匙号" DataField="KeyNumber" Width="150px" ColumnID="KeyNumber" />
                         <x:BoundField HeaderText="车辆金额" DataField="CarCost" Width="60px" ColumnID="CarCost" />
-                        <x:BoundField HeaderText="明细接收日期" DataField="CreateTime" Width="120px" ColumnID="CreateTime" />
-                        <x:BoundField HeaderText="入库日期" DataField="TransitTime" Width="120px" ColumnID="TransitTime" />
+                        <x:BoundField HeaderText="明细接收日期" DataField="CreateTime" Width="85px" ColumnID="CreateTime" />
+                        <x:BoundField HeaderText="入库日期" DataField="TransitTime" Width="80px" ColumnID="TransitTime" />
                         <x:BoundField HeaderText="车辆状态" DataField="Statu" Width="60px" ColumnID="Statu" />
                         <x:BoundField HeaderText="释放日期" DataField="OutTime" Width="120px" ColumnID="OutTime" />
                         <x:BoundField HeaderText="移动日期" DataField="MoveTime" Width="120px" ColumnID="MoveTime" />

@@ -59,15 +59,14 @@
                 Title="Panel" Layout="Fit" BoxFlex="2">
                 <Items>
                     <x:Grid ID="G_Car_List" Title="表格" ShowBorder="false" ShowHeader="false" AutoHeight="false"
-                        SortDirection="ASC" runat="server" DataKeyNames="Vin,DraftNo" EnableRowNumber="true"
+                        SortDirection="ASC" runat="server" DataKeyNames="Vin,ID,DraftNo" EnableRowNumber="true"
                         EnableCheckBoxSelect="true" OnRowDataBound="G_Car_List_RowDataBound" EnableTextSelection="true">
                         <Toolbars>
                             <x:Toolbar runat="server">
                                 <Items>
-                                    <x:Button ID="btn_Logic_Del" runat="server" Icon="Delete" Text="逻辑删除" OnClick="btn_Logic_Del_Click"
-                                        Visible="false">
-                                    </x:Button>
                                     <x:Button ID="btn_Physics_Del" runat="server" Icon="Delete" Text="物理删除" OnClick="btn_Physics_Del_Click">
+                                    </x:Button>
+                                    <x:Button ID="btn_Del_GD" runat="server" Icon="Delete" Text="接口删除" OnClick="btn_Del_GD_Click">
                                     </x:Button>
                                 </Items>
                             </x:Toolbar>

@@ -174,6 +174,23 @@ namespace Citic.Model
         }
         #endregion Model
 
+        #region 扩展属性
+        private Citic.Model.Car _CarModel;
+
+        public Citic.Model.Car CarModel
+        {
+            get { return _CarModel; }
+            set { _CarModel = value; }
+        }
+
+        private string _Type;
+
+        public string Type
+        {
+            get { return _Type; }
+            set { _Type = value; }
+        }
+        #endregion
     }
 }
 

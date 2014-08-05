@@ -21,7 +21,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
                 //ID为文档的主键，如果ID不为空，则更新数据，否则新建一条记录
                 string ID = Request.Params["ID"];
                 string DocID = string.Empty, DocTitle = string.Empty, DocType = string.Empty, DocPath = string.Empty;
-                if (ID == null || ID == "")
+                if (ID != null || !string.IsNullOrEmpty(ID))
                 {
                     DocID = DateTime.Now.ToString("yyyyMMddhhmmss");
                     DocTitle = Server.UrlDecode(Request.Params["DocTitle"]);
@@ -29,7 +29,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
                     DocPath = Server.MapPath(FilePath + "/" + DocTitle);
                 }
 
-                DocType = DocType.Substring(0, 3);
+                //DocType = DocType.Substring(0, 3);
                 if (Request.Files.Count > 0 && !string.IsNullOrEmpty(DocPath))
                 {
                     HttpPostedFile upPhoto = Request.Files[0];

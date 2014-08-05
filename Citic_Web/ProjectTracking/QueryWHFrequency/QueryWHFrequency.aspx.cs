@@ -16,29 +16,17 @@ namespace Citic_Web.ProjectTracking.RiskControl
         {
             if (!IsPostBack)
             {
-                //btn_Add.OnClientClick = WindowAdd.GetShowReference("../../ProjectTracking/QueryWHFrequency/AddQueryWH.aspx");
                 AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
                 RoleValidate();
+                this.btn_Save.Enabled = false;
             }
         }
 
         #region PrivateFields--乔春羽(2013.12.6)
-        private DataTable _dtSource = null;
-
         public DataTable DtSource
         {
-            get
-            {
-                if (ViewState["DtSource"] == null)
-                {
-                    if (_dtSource == null)
-                    {
-                        _dtSource = new DataTable();
-                    }
-                    ViewState["DtSource"] = _dtSource;
-                }
-                return ViewState["DtSource"] as DataTable;
-            }
+            get { return ViewState["DtSource"] as DataTable; }
+            set { ViewState["DtSource"] = value; }
         }
         #endregion
 
@@ -50,31 +38,27 @@ namespace Citic_Web.ProjectTracking.RiskControl
         {
             //where条件
             string where = ConditionInit();
-            string path = Common.OperateConfigFile.getValue("Dealer_Bank");
-
-            //设置表格的总数据量
-            this.grid_List.RecordCount = GetCountBySearch(where);
-
-            if (!string.IsNullOrEmpty(this.txt_cf.Text))
+            try
             {
-                where += string.Format(" and CheckFrequency like '%{0}%'", this.txt_cf.Text);
-            }
+                DtSource = QueryWH.GetList(where, "ID").Tables[0];
 
-            if (this.grid_List.PageCount < this.grid_List.PageIndex)
+                grid_List.DataSource = DtSource;
+                grid_List.DataBind();
+                if (DtSource != null && DtSource.Rows.Count > 0)
+                {
+                    this.btn_Save.Enabled = true;
+                }
+                else
+                {
+                    this.btn_Save.Enabled = false;
+                }
+            }
+            catch (Exception ex)
             {
-                this.grid_List.PageIndex = 0;
+                AlertShow(ex.Message);
+                Logging.WriteLog(ex, HttpContext.Current.Request.Url.AbsolutePath, "GridBind()");
             }
-
-            int pageIndex = grid_List.PageIndex;
-            int pageSize = grid_List.PageSize;
-            int rowbegin = pageIndex * pageSize + 1;
-            int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = Dealer_BankBll.GetDBInnerFrequencyBySearch(Server.MapPath(path), "dbinnerfrequency", where, "ID", rowbegin, rowend);
-            
-            grid_List.DataSource = DtSource;
-            grid_List.DataBind();
         }
-
 
         /// <summary>
         /// 获得查询后结果的总数据数量--乔春羽
@@ -83,9 +67,8 @@ namespace Citic_Web.ProjectTracking.RiskControl
         /// <returns></returns>
         private int GetCountBySearch(string where)
         {
-            return Dealer_BankBll.GetRecordCount(where);
+            return QueryWH.GetRecordCountBySearch(where);
         }
-
 
         /// <summary>
         /// 绑定银行信息--乔春羽
@@ -98,15 +81,17 @@ namespace Citic_Web.ProjectTracking.RiskControl
             {
                 if (val.IndexOf('_') >= 0)
                 {
-                    DataTable dt = Dealer_BankBll.GetList(string.Format(" DealerID='{0}' and CollaborateType=1", val.Split('_')[1])).Tables[0];
-                    if (dt != null && dt.Rows.Count > 0)
-                    {
-                        this.ddl_Bank.DataTextField = "BankName";
-                        this.ddl_Bank.DataValueField = "BankID";
-                        this.ddl_Bank.DataSource = dt;
-                        this.ddl_Bank.DataBind();
-                    }
+                    DataTable dt = Dealer_BankBll.GetList(string.Format(" ( DealerID='{0}' or DealerName like '%{1}%' )and CollaborateType=1", val.Split('_')[1], val.Split('_')[0])).Tables[0];
+
+                    this.ddl_Bank.DataTextField = "BankName";
+                    this.ddl_Bank.DataValueField = "BankID";
+                    this.ddl_Bank.DataSource = dt;
+                    this.ddl_Bank.DataBind();
                 }
+            }
+            else    //将品牌去掉
+            {
+                this.lbl_Brand.Text = string.Empty;
             }
             AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
         }
@@ -116,7 +101,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
         /// </summary>
         private string ConditionInit()
         {
-            StringBuilder where = new StringBuilder("IsDelete=0");
+            StringBuilder where = new StringBuilder(" CollaborateType = 1 ");
 
             if (!string.IsNullOrEmpty(this.txt_DealerName.Text))
             {
@@ -126,6 +111,15 @@ namespace Citic_Web.ProjectTracking.RiskControl
             {
                 where.AppendFormat(" and BankID = '{0}'", this.ddl_Bank.SelectedValue);
             }
+            if (!string.IsNullOrEmpty(this.txt_cf.Text))
+            {
+                where.AppendFormat(" and CheckFrequency like '%{0}%'", this.txt_cf.Text);
+            }
+            if (this.dp_ApplyTimeSearch.SelectedDate != null)
+            {
+                DateTime time = dp_ApplyTimeSearch.SelectedDate.Value;
+                where.AppendFormat(" and ApplyTime between '{0}' and '{1}'", time.AddDays(-1), time.AddDays(1));
+            }
             return where.ToString();
         }
         #endregion
@@ -134,36 +128,6 @@ namespace Citic_Web.ProjectTracking.RiskControl
         protected void txt_DealerName_TextChanged(object sender, EventArgs e)
         {
             BankDataBind();
-        }
-        #endregion
-
-        #region 每页显示数量改变事件--乔春羽
-        /// <summary>
-        /// 每页显示数量改变事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            grid_List.PageSize = int.Parse(ddlPageSize.SelectedValue);
-            GridBind();
-        }
-        #endregion
-
-        #region 翻页事件--乔春羽
-        /// <summary>
-        /// 翻页事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void grid_List_PageIndexChange(object sender, FineUI.GridPageEventArgs e)
-        {
-            SyncSelectedRowIndexArrayToHiddenField(grid_List, hfSelectedIDS);
-            grid_List.PageIndex = e.NewPageIndex;
-
-            GridBind();
-            
-            UpdateSelectedRowIndexArray(grid_List, hfSelectedIDS);
         }
         #endregion
 
@@ -188,52 +152,56 @@ namespace Citic_Web.ProjectTracking.RiskControl
 
             foreach (int rowIndex in modifiedDict.Keys)
             {
-                int rowID = Convert.ToInt32(grid_List.DataKeys[rowIndex][0]);
-                DataRow row = FindRowByID(rowID);
+                if (modifiedDict[rowIndex].ContainsKey("check") && modifiedDict[rowIndex]["check"].Equals("True"))
+                {
+                    int rowID = Convert.ToInt32(grid_List.DataKeys[rowIndex][0]);
+                    DataRow row = FindRowByID(rowID);
 
-                Dictionary<string, string> dict = modifiedDict[rowIndex];
-                //查库频率
-                if (dict.ContainsKey("CheckFrequency"))
-                {
-                    row["CheckFrequency"] = dict["CheckFrequency"];
+                    Dictionary<string, string> dict = modifiedDict[rowIndex];
+                    //查库频率
+                    if (dict.ContainsKey("CheckFrequency"))
+                    {
+                        row["CheckFrequency"] = dict["CheckFrequency"];
+                    }
+                    //描述
+                    if (dict.ContainsKey("Description"))
+                    {
+                        row["Description"] = dict["Description"];
+                    }
+                    //备注
+                    if (dict.ContainsKey("Remark"))
+                    {
+                        row["Remark"] = dict["Remark"];
+                    }
+                    if (dict.ContainsKey("ApplyTime"))
+                    {
+                        row["ApplyTime"] = dict["ApplyTime"];
+                    }
                 }
-                //描述
-                if (dict.ContainsKey("Description"))
-                {
-                    row["Description"] = dict["Description"];
-                }
-                //备注
-                if (dict.ContainsKey("Remark"))
-                {
-                    row["Remark"] = dict["Remark"];
-                }
-                if (dict.ContainsKey("ApplyTime"))
-                {
-                    row["ApplyTime"] = dict["ApplyTime"];
-                }
-            }
-
-            //生成实体类对象
-            List<Citic.Model.QueryWH> models = new List<Citic.Model.QueryWH>();
-            foreach (DataRow row in DtSource.Rows)
-            {
-                Citic.Model.QueryWH model = new Citic.Model.QueryWH();
-                model.CheckFrequency = row["CheckFrequency"].ToString();
-                model.DB_ID = row["BankID"] + "_" + row["DealerID"];
-                model.Description = row["Description"].ToString();
-                model.Remark = row["Remark"].ToString();
-                model.CreateID = this.CurrentUser.UserId;
-                model.CreateTime = DateTime.Now;
-                model.ApplyTime = Convert.ToDateTime(row["ApplyTime"]);
-                models.Add(model);
             }
             int num = 0;
             try
             {
+                //生成实体类对象
+                List<Citic.Model.QueryWH> models = new List<Citic.Model.QueryWH>();
+                foreach (DataRow row in DtSource.Rows)
+                {
+                    Citic.Model.QueryWH model = new Citic.Model.QueryWH();
+                    model.CheckFrequency = row["CheckFrequency"].ToString();
+                    model.DB_ID = row["DealerID"] + "_" + row["BankID"];
+                    model.Description = row["Description"].ToString();
+                    model.Remark = row["Remark"].ToString();
+                    model.CreateID = this.CurrentUser.UserId;
+                    model.CreateTime = DateTime.Now;
+                    model.ApplyTime = Convert.ToDateTime(row["ApplyTime"]);
+                    models.Add(model);
+                }
+
                 num = QueryWH.Updates(models.ToArray());
             }
             catch (Exception ex)
             {
+                AlertShow(ex.Message);
                 Logging.WriteLog(ex, HttpContext.Current.Request.Url.AbsolutePath, "btn_Add_Click()");
             }
             if (num > 0)
@@ -299,12 +267,16 @@ namespace Citic_Web.ProjectTracking.RiskControl
         #region 选择合作行，带出品牌--乔春羽(2013.12.23)
         protected void ddl_Bank_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.ddl_Bank.SelectedValue) && this.ddl_Bank.SelectedValue != "-1")
+            if (!string.IsNullOrEmpty(this.txt_DealerName.Text) && !string.IsNullOrEmpty(this.ddl_Bank.SelectedValue) && this.ddl_Bank.SelectedValue != "-1")
             {
                 DataTable dt = Dealer_BankBll.GetBrands(string.Format(" DealerID={0} and BankID='{1}' ", this.txt_DealerName.Text.Split('_')[1], this.ddl_Bank.SelectedValue)).Tables[0];
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     this.lbl_Brand.Text = dt.Rows[0]["BrandName"].ToString();
+                }
+                else
+                {
+                    this.lbl_Brand.Text = "无";
                 }
             }
         }

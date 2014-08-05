@@ -30,18 +30,16 @@
     <form id="form1" runat="server">
         <x:PageManager ID="PageManager1" runat="server" AutoSizePanelID="Panel1" />
         <x:Panel ID="Panel1" runat="server" BodyPadding="5px" ShowBorder="true" ShowHeader="true"
-            Title="质押监管车辆汇总" EnableBackgroundColor="true" Layout="VBox" BoxConfigAlign="Stretch" BoxConfigPosition="Start">
+            Title="总账" EnableBackgroundColor="true" Layout="VBox" BoxConfigAlign="Stretch" BoxConfigPosition="Start">
             <Items>
                 <x:SimpleForm ID="SimpleForm2" runat="server" BodyPadding="5px" Title="查询条件" Height="90px" LabelWidth="60px" AutoHeight="true" BoxFlex="1" EnableBackgroundColor="true">
                     <Items>
                         <x:Panel ID="Panel2" AutoWidth="true" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column">
                             <Items>
                                 <x:Label ID="Label1" runat="server" Label="Label" Text="合作行：" CssClass="inline"></x:Label>
-                                
                                 <x:TextBox ID="txt_Bank" runat="server" Text="" CssStyle="font-size:15px" Width="300px" Height="25px"></x:TextBox>
                                 <x:Label ID="Label2" runat="server" Label="Label" Text="经销商：" CssClass="mleft"></x:Label>
-                                
-                                <x:TextBox ID="txt_DealerName" runat="server" Width="350px" Height="25px" Text="" CssStyle="font-size:15px" CssClass="mright"></x:TextBox>
+                                <x:TextBox ID="txt_DealerName" runat="server" Width="350px" Height="25px" Text="" EmptyText="请输入经销商" CssStyle="font-size:15px" CssClass="mright"></x:TextBox>
                             </Items>
                         </x:Panel>
                         <x:Panel ID="Panel3" AutoWidth="true" runat="server" BodyPadding="0px" CssStyle="margin-top:5px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column">
@@ -56,10 +54,9 @@
                 </x:SimpleForm>
             </Items>
             <Items>
-                <x:Grid ID="grid_List" runat="server" EnableCheckBoxSelect="true" EnableRowNumber="true" IsDatabasePaging="true"
-                    Title="具体信息" EnableBackgroundColor="true" CssStyle="padding-top:5px" BoxFlex="2" PageSize="15" AllowPaging="true"
-                    ClearSelectedRowsAfterPaging="false"
-                    OnPageIndexChange="grid_List_PageIndexChange" DataKeyNames="BankID,DealerID" EnableTextSelection="true">
+                <x:Grid ID="grid_List" runat="server" EnableCheckBoxSelect="false" EnableRowNumber="true"
+                    Title="具体信息" ShowHeader="false" EnableBackgroundColor="true" CssStyle="padding-top:5px" BoxFlex="2" AllowPaging="false"
+                    ClearSelectedRowsAfterPaging="false" DataKeyNames="BankID,DealerID" EnableTextSelection="true">
                     <Toolbars>
                         <x:Toolbar ID="Toolbar1" runat="server">
                             <Items>
@@ -84,19 +81,6 @@
                         <x:BoundField HeaderText="移动台数" DataField="CarMoveCount" Width="60px" />
                         <x:BoundField HeaderText="移动金额" DataField="CarMoveMoney" />
                     </Columns>
-                    <PageItems>
-                        <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
-                        </x:ToolbarSeparator>
-                        <x:ToolbarText ID="TtxtPage" runat="server" Text="每页数：">
-                        </x:ToolbarText>
-                        <x:DropDownList runat="server" ID="ddlPageSize" Width="45px" AutoPostBack="true"
-                            OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
-                            <x:ListItem Text="5" Value="5" />
-                            <x:ListItem Text="10" Value="10" Selected="true" />
-                            <x:ListItem Text="15" Value="15" />
-                            <x:ListItem Text="20" Value="20" />
-                        </x:DropDownList>
-                    </PageItems>
                 </x:Grid>
             </Items>
         </x:Panel>
@@ -105,7 +89,7 @@
         </x:HiddenField>
 
         <x:Window ID="Window_CarList" Title="质押监管车辆电子总账" Popup="false" EnableIFrame="true" IFrameUrl="about:blank"
-            Target="Top" runat="server" IsModal="true" Width="1250px" Height="650px"
+            Target="Top" runat="server" IsModal="true" Width="1250px" Height="580px"
             EnableConfirmOnClose="true" EnableMaximize="false" EnableClose="true"
             EnableMinimize="false" EnableResize="false">
         </x:Window>
@@ -123,7 +107,7 @@
             source: function (request, response) {
                 var term = request.term;
 
-                $.getJSON("../Handlers/searchBank.ashx?", request, function (data, status, xhr) {
+                $.getJSON("../Handlers/searchBank.ashx", request, function (data, status, xhr) {
                     response(data);
                 });
             }
@@ -133,7 +117,7 @@
             source: function (request, response) {
                 var term = request.term;
 
-                $.getJSON("../Handlers/searchDealer.ashx?", request, function (data, status, xhr) {
+                $.getJSON("../Handlers/searchDealer.ashx?_from=Select_Ledger", request, function (data, status, xhr) {
                     response(data);
                 });
             }

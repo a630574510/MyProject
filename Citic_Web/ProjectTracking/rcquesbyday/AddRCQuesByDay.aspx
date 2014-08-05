@@ -34,13 +34,13 @@
         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="true" ShowHeader="true" Title="添加每日风控问题追踪" EnableBackgroundColor="true"
             Layout="VBox" BoxConfigAlign="Stretch">
             <Items>
-                <x:SimpleForm ID="SimpleForm1" runat="server" BodyPadding="5px" ShowHeader="false" ShowBorder="false" EnableBackgroundColor="true" BoxFlex="1" CssStyle="padding-bottom:5px" Height="35px">
+                <x:SimpleForm ID="SimpleForm1" runat="server" BodyPadding="5px" ShowHeader="false" ShowBorder="false" EnableBackgroundColor="true" BoxFlex="1" CssStyle="padding-bottom:5px;border-bottom:1px solid #99BBE8" Height="35px">
                     <Items>
                         <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column" CssClass="x-form-item">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="选择经销商："></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="选择经销商：" CssClass="inline"></x:Label>
                                 <x:TextBox ID="txt_Dealer" runat="server" ShowLabel="false" AutoPostBack="true" OnTextChanged="txt_Dealer_TextChanged" Width="300px" Text=""></x:TextBox>
-                                <x:Label ID="Label2" runat="server" Text="选择合作行：" CssStyle="padding-left:20px;padding-right:20px"></x:Label>
+                                <x:Label ID="Label2" runat="server" Text="选择合作行：" CssClass="inline" CssStyle="padding-left:20px;padding-right:20px"></x:Label>
                                 <x:DropDownList ID="ddl_Bank" runat="server" EnableEdit="false" AutoPostBack="true" OnSelectedIndexChanged="ddl_Bank_SelectedIndexChanged"></x:DropDownList>
                             </Items>
                         </x:Panel>

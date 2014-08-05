@@ -38,54 +38,64 @@ namespace Citic_Web.Car
             }
             else
             {
-                string[] tb_Name_Count = this.DDL_Bank.SelectedValue.ToString().Split('_');
-                string tb_Name = "tb_Car_" + tb_Name_Count[0] + "_" + tb_Name_Count[1].ToString();
-                StringBuilder sb = new StringBuilder("(Statu='2' or Statu='1') and  IsDelete='0' ");
-                if (!string.IsNullOrEmpty(this.txt_Vin.Text.Trim()))        //车架号
+                DataBind_Car();
+            }
+        }
+
+        private void DataBind_Car()
+        {
+            DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and BankName='{1}'", ddl_Dealer.SelectedValue.ToString(), DDL_Bank.SelectedText.ToString()));
+            string tb_Name = string.Format("tb_Car_{0}_{1}", dr[0].ItemArray[2].ToString(), dr[0].ItemArray[0].ToString());     //2014年5月14日
+            StringBuilder sb = new StringBuilder("(Statu='2' or Statu='1') and  IsDelete='0' ");
+            if (!string.IsNullOrEmpty(this.txt_Vin.Text.Trim()))        //车架号
+            {
+                string[] Vin = this.txt_Vin.Text.ToString().Split(',');
+                sb.Append(" and (Vin like '%" + Vin[0].ToString().Trim() + "%'");
+                if (Vin.Length > 1)
                 {
-                    string[] Vin = this.txt_Vin.Text.ToString().Split(',');
-                    sb.Append(" and Vin like '%" + Vin[0].ToString().Trim() + "%'");
-                    if (Vin.Length > 1)
+                    for (int i = 1; i < Vin.Length; i++)
                     {
-                        for (int i = 1; i < Vin.Length; i++)
-                        {
-                            sb.Append(" or Vin like '%" + Vin[i] + "%'");
-                        }
+                        sb.Append(" or Vin like '%" + Vin[i] + "%'");
                     }
                 }
-                else if (!string.IsNullOrEmpty(this.txt_Number_Order.Text.Trim()))      //汇票号 
+                sb.Append(")");
+            }
+            else if (!string.IsNullOrEmpty(this.txt_Number_Order.Text.Trim()))      //汇票号 
+            {
+                sb.Append(" and DraftNo like '%" + this.txt_Number_Order.Text.Trim() + "%'");
+            }
+            else if (!string.IsNullOrEmpty(this.txt_EngineNo.Text.Trim()))      //发动机
+            {
+                string[] EngineNo = this.txt_EngineNo.Text.ToString().Split(',');
+                sb.Append(" and EngineNo like '%" + EngineNo[0].ToString().Trim() + "%'");
+                if (EngineNo.Length > 1)
                 {
-                    sb.Append(" and DraftNo like '%" + this.txt_Number_Order.Text.Trim() + "%'");
-                }
-                else if (!string.IsNullOrEmpty(this.txt_EngineNo.Text.Trim()))      //发动机
-                {
-                    string[] EngineNo = this.txt_EngineNo.Text.ToString().Split(',');
-                    sb.Append(" and EngineNo like '%" + EngineNo[0].ToString().Trim() + "%'");
-                    if (EngineNo.Length > 1)
+                    for (int i = 1; i < EngineNo.Length; i++)
                     {
-                        for (int i = 1; i < EngineNo.Length; i++)
-                        {
-                            sb.Append(" or EngineNo like '%" + EngineNo[i] + "%'");
-                        }
+                        sb.Append(" or EngineNo like '%" + EngineNo[i] + "%'");
                     }
                 }
-                else if (!string.IsNullOrEmpty(this.txt_QualifiedNo.Text.Trim()))       //合格证
+            }
+            else if (!string.IsNullOrEmpty(this.txt_QualifiedNo.Text.Trim()))       //合格证
+            {
+                string[] QualifiedNo = this.txt_QualifiedNo.Text.ToString().Split(',');
+                sb.Append(" and QualifiedNo like '%" + QualifiedNo[0].ToString().Trim() + "%'");
+                if (QualifiedNo.Length > 1)
                 {
-                    string[] QualifiedNo = this.txt_QualifiedNo.Text.ToString().Split(',');
-                    sb.Append(" and QualifiedNo like '%" + QualifiedNo[0].ToString().Trim() + "%'");
-                    if (QualifiedNo.Length > 1)
+                    for (int i = 1; i < QualifiedNo.Length; i++)
                     {
-                        for (int i = 1; i < QualifiedNo.Length; i++)
-                        {
-                            sb.Append(" or QualifiedNo like '%" + QualifiedNo[i] + "%'");
-                        }
+                        sb.Append(" or QualifiedNo like '%" + QualifiedNo[i] + "%'");
                     }
                 }
-                sb.Append(" order by TransitTime desc");
-                DataSet ds = new Citic.BLL.Car().GetAllList(sb.ToString(), tb_Name);
-                ViewState["Car_Transit_List"] = ds.Tables[0];
-                this.G_Car_Removal.DataSource = (DataTable)ViewState["Car_Transit_List"];
-                this.G_Car_Removal.DataBind();
+            }
+            sb.Append(" order by TransitTime desc");
+            ViewState["Car_Transit_List"] = CarBll.GetList(sb.ToString(), tb_Name, 20).Tables[0];
+
+            this.G_Car_Removal.DataSource = (DataTable)ViewState["Car_Transit_List"];
+            this.G_Car_Removal.DataBind();
+            if (this.G_Car_Removal.Rows.Count == 0)
+            {
+                FineUI.Alert.ShowInTop("无法查询到输入条件的车辆信息", FineUI.MessageBoxIcon.Information);
             }
         }
         #endregion
@@ -170,7 +180,7 @@ namespace Citic_Web.Car
             else
             {
                 this.DDL_Bank.DataTextField = "BankName";
-                this.DDL_Bank.DataValueField = "DealerID";
+                this.DDL_Bank.DataValueField = "BankID";
                 //ViewState转换DataTable,查找经销商名称返回绑定
                 DDL_Bank.DataSource = ((DataTable)ViewState["DealerName"]).Select("DealerName='" + ddl_Dealer.SelectedValue.ToString() + "'");
                 DDL_Bank.DataBind();
@@ -184,12 +194,17 @@ namespace Citic_Web.Car
         {
             if (this.DDL_Bank.SelectedValue.ToString() != "-1")
             {
-                this.lbl_Cooperation_BrandName.Text = DDL_Bank.SelectedValue.ToString().Split('_')[3].ToString();
-                DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select("DealerName='" + ddl_Dealer.SelectedValue.ToString() + "' and BankName='" + DDL_Bank.SelectedText + "'");
-                if (dr[0].ItemArray[3].ToString().Length > 0)
+                DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and BankName='{1}'", ddl_Dealer.SelectedValue.ToString(), DDL_Bank.SelectedText.ToString()));
+                this.lbl_Cooperation_BrandName.Text = dr[0].ItemArray[5].ToString();
+                if (dr[0].ItemArray[7].ToString().Length > 0)
                 {
                     this.Btn_Up_Removal.Enabled = false;
                     this.Btn_Up_Removal.ToolTip = "<span style='color:Red'>此经销商跟光大银行合作，不能手动出库</span>";
+                }
+                else if (dr[0].ItemArray[8].ToString().Length > 0)
+                {
+                    this.Btn_Up_Removal.Enabled = false;
+                    this.Btn_Up_Removal.ToolTip = "<span style='color:Red'>此经销商跟中信银行合作，不能手动出库</span>";
                 }
                 else
                 {
@@ -197,9 +212,17 @@ namespace Citic_Web.Car
                     this.Btn_Up_Removal.ToolTip = "<span style='color:Red'>请注意填写回款金额</span>";
                 }
 
+                ViewState.Remove("Car_Transit_List");
+
+                this.G_Car_Removal.DataSource = (DataTable)ViewState["Car_Transit_List"];
+                this.G_Car_Removal.DataBind();
+
             }
             else
             {
+                ViewState.Remove("Car_Transit_List");
+                this.G_Car_Removal.DataSource = (DataTable)ViewState["Car_Transit_List"];
+                this.G_Car_Removal.DataBind();
                 FineUI.Alert.ShowInTop("请选择银行", FineUI.MessageBoxIcon.Error);
                 this.lbl_Cooperation_BrandName.Text = "";       //清空品牌文本
             }
@@ -253,19 +276,17 @@ namespace Citic_Web.Car
                 #endregion
                 //声明集合，存放需要执行的sql语句
                 List<string> list = new List<string>();
-
+                List<string> ListDraftNo = new List<string>();
                 //状态历史表sql
                 string sql_Car_Status = "insert into tb_Car_Status (Vin,StatusType,CreateID,CreateTime) ";
-
-                string[] tb_Name_Count = DDL_Bank.SelectedValue.ToString().Split('_');        //获取下拉列表集合值
-
+                DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and BankName='{1}'", ddl_Dealer.SelectedValue.ToString(), DDL_Bank.SelectedText.ToString()));
                 string ErrorTxt = string.Empty;     //记录错误信息
-                string BankID = tb_Name_Count[0].ToString();         //银行id
+                string DealerID = dr[0].ItemArray[0].ToString();              //获取经销商id
+                string BankID = dr[0].ItemArray[2].ToString();     //获取银行id
                 string BankName = DDL_Bank.SelectedText.ToString();           //银行名称
-                string DealerID = tb_Name_Count[1].ToString();           //经销商id
                 string DealerName = ddl_Dealer.SelectedText.ToString();         //经销商名称
                 string tb_Name = "tb_Car_" + BankID + "_" + DealerID;  //拼接表名
-                string CheckingCarCost = @"^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
+                string CheckingCarCost = @"^(([1-9]\d{0,9})|0)(\.\d{1,2})?$";
                 //出库sql语句
                 string OutCar = "insert into tb_DBSX_List (BankID,BankName,DealerID,DealerName,DraftNo,Vin,ReqType,Content,[Status],CreateID,CreateTime,IsDelete) ";
                 string CarListCount = string.Empty; //记录生成excel车辆信息
@@ -277,12 +298,24 @@ namespace Citic_Web.Car
                     {
                         if (Regex.IsMatch(values[8], CheckingCarCost))         //验证回款金额是否通过
                         {
-                            CarListCount += string.Format("{0},{1},{2},{3},{4},{5}|", values[3].ToString(), "", values[6].ToString(), values[7].ToString(), values[9].ToString(), values[11].ToString());
-                            list.Add(string.Format("update {0} set Statu='4',ReturnCost='{1}' where Vin='{2}'", tb_Name, Convert.ToDouble(values[8]), values[7].ToString()));
-                            sql_Car_Status += string.Format("select '{0}','4','{1}',getdate()  union all ", values[7].ToString(), CreateID);
-                            string Content = "车辆金额:" + values[11].ToString() + "，回款金额:" + values[8];
-                            OutCar += string.Format(" select '{0}','{1}','{2}','{3}','{4}','{5}','0','{6}','2','{7}',getdate(),'0' union all ", BankID, BankName, DealerID, DealerName, values[3].ToString(), values[7].ToString(), Content, CreateID);
-                            CountOut++;
+                            if (!CheckBadStr(values[12].ToString().Trim()))
+                            {
+                                //CarListCount += string.Format("{0},{1},{2},{3},{4},{5}|", values[3].ToString(), "", values[6].ToString(), values[7].ToString(), values[9].ToString(), values[11].ToString());
+                                CarListCount += string.Format("{0},{1},{2},{3},{4}|", values[9].ToString(), values[4].ToString(), values[7].ToString(), values[11].ToString(), values[3].ToString());
+                                //list.Add(string.Format("update {0} set Statu='4',ReturnCost='{1}' where Vin='{2}'", tb_Name, Convert.ToDouble(values[8]), values[7].ToString()));
+                                list.Add(string.Format("update {0} set Statu='4',Remarks='{1}' where Vin='{2}'", tb_Name, values[12].Trim(), values[7].ToString()));
+                                ListDraftNo.Add(values[3].ToString());
+                                sql_Car_Status += string.Format("select '{0}','4','{1}',getdate()  union all ", values[7].ToString(), CreateID);
+                                string Content = "出库申请--车辆金额:" + values[11].ToString() + ",回款金额:" + values[8];
+                                OutCar += string.Format(" select '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','2','{8}',getdate(),'0' union all ", BankID, BankName, DealerID, DealerName, values[3].ToString(), values[7].ToString(), values[13].ToString(), Content, CreateID);
+                                CountOut++;
+                            }
+                            else
+                            {
+                                ErrorTxt = "第" + (rowIndex + 1) + "行备注有特殊字符";
+                                break;
+                            }
+
                         }
                         else
                         {
@@ -290,11 +323,6 @@ namespace Citic_Web.Car
                             break;
                         }
                     }
-                    //else
-                    //{
-                    //    ErrorTxt = "第" + (rowIndex + 1) + "行请勾选出库";
-                    //    break;
-                    //}
                 }
                 //判断是否有错误信息
                 if (ErrorTxt.Length == 0)
@@ -306,10 +334,11 @@ namespace Citic_Web.Car
                         list.Add(OutCar.Remove(OutCar.LastIndexOf("union all")));
 
                         //list.Clear();       //清楚集合sql 2014年4月15日
-                        list.Add(string.Format(@"insert into tb_CarMasterplate (DealerID,DealerName,BankID,BankName,CarList,CountCar,CreateID,CreateName,CreateTime,TypeID,isDel) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}',getdate(),'2','0')", tb_Name_Count[1], ddl_Dealer.SelectedValue.ToString(), tb_Name_Count[0], tb_Name_Count[2], CarListCount, CountOut, CurrentUser.UserId, CurrentUser.TrueName));
+                        list.Add(string.Format(@"insert into tb_CarMasterplate (DealerID,DealerName,BankID,BankName,CarList,CountCar,CreateID,CreateName,CreateTime,TypeID,isDel) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}',getdate(),'2','0')", DealerID, ddl_Dealer.SelectedValue.ToString(), BankID, BankName, CarListCount, CountOut, CurrentUser.UserId, CurrentUser.TrueName));
                         int number = CarBll.SqlTran(list);
                         if (number > 0)
                         {
+                            DraftBll.UpdateDraftMoney(ListDraftNo.ToArray());   //汇票更新
                             FineUI.Alert.Show("申请成功！共申请" + CountOut + "台车", FineUI.MessageBoxIcon.Information);
                             ViewState.Remove("Car_Transit_List");
                             this.G_Car_Removal.DataSource = (DataTable)ViewState["Car_Transit_List"];
@@ -335,6 +364,55 @@ namespace Citic_Web.Car
                 FineUI.Alert.ShowInTop("没有选中任何行", FineUI.MessageBoxIcon.Error);
             }
 
+        }
+        #endregion
+        #region 检查是否有特殊字符
+        /// <summary>  
+        ///  判断是否有非法字符
+        /// </summary>  
+        /// <param name="strString"></param>  
+        /// <returns>返回TRUE表示有非法字符，返回FALSE表示没有非法字符。</returns>  
+        public static bool CheckBadStr(string strString)
+        {
+            bool outValue = false;
+            if (strString != null && strString.Length > 0)
+            {
+                string[] bidStrlist = new string[24];
+                bidStrlist[0] = "'";
+                bidStrlist[1] = ";";
+                bidStrlist[2] = ":";
+                bidStrlist[3] = "%";
+                bidStrlist[4] = "@";
+                bidStrlist[5] = "&";
+                bidStrlist[6] = "#";
+                bidStrlist[7] = "\"";
+                bidStrlist[8] = "net user";
+                bidStrlist[9] = "exec";
+                bidStrlist[10] = "net localgroup";
+                bidStrlist[11] = "select";
+                bidStrlist[12] = "asc";
+                bidStrlist[13] = "char";
+                bidStrlist[14] = "mid";
+                bidStrlist[15] = "insert";
+                bidStrlist[16] = "order";
+                bidStrlist[17] = "exec";
+                bidStrlist[18] = "delete";
+                bidStrlist[19] = "drop";
+                bidStrlist[20] = "truncate";
+                bidStrlist[21] = "xp_cmdshell";
+                bidStrlist[22] = "<";
+                bidStrlist[23] = ">";
+                string tempStr = strString.ToLower();
+                for (int i = 0; i < bidStrlist.Length; i++)
+                {
+                    if (tempStr.IndexOf(bidStrlist[i]) != -1)
+                    {
+                        outValue = true;
+                        break;
+                    }
+                }
+            }
+            return outValue;
         }
         #endregion
     }

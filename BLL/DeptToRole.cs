@@ -163,6 +163,20 @@ namespace Citic.BLL
         }
         #endregion
 
+        #region 获取当前登录用户角色的上级角色--乔春羽(2014.4.21)
+        public string GetBossRoleID(string roleID)
+        {
+            object obj = null;
+            string result = string.Empty;
+            if (!string.IsNullOrEmpty(roleID))
+            {
+                obj = dal.GetBossRoleID(roleID);
+                result = obj == null ? string.Empty : obj.ToString();
+            }
+            return result;
+        }
+        #endregion
+
         #endregion  ExtensionMethod
     }
 }

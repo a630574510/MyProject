@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <link href="../../Css/main.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -22,7 +23,7 @@
                 <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="true" ShowHeader="true" Title="选择合作行" Layout="VBox"
                     EnableBackgroundColor="true" Width="557px" AutoHeight="true" CssStyle="padding-right:5px">
                     <Items>
-                        <x:SimpleForm ID="SimpleForm2" runat="server" BodyPadding="5px" Title="筛选条件" ShowHeader="false" ShowBorder="false" EnableBackgroundColor="true" Height="110px" CssStyle="padding-bottom:5px">
+                        <x:SimpleForm ID="SimpleForm2" runat="server" BodyPadding="5px" Title="筛选条件" ShowHeader="false" ShowBorder="false" EnableBackgroundColor="true" Height="130px" CssStyle="padding-bottom:5px">
                             <Items>
                                 <x:Panel ID="Panel4" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                                     CssClass="x-form-item" Layout="Column">
@@ -54,13 +55,20 @@
                                 <x:Panel ID="Panel7" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                                     CssClass="x-form-item" Layout="Column">
                                     <Items>
-                                        <x:Label ID="lbl_BankInterface" runat="server" Text="是否要对接光大接口" CssStyle="padding-right:10px" Enabled="false"></x:Label>
-                                        <x:CheckBox ID="cbl_BankInterface" runat="server" Label="Label" Text="" Enabled="false" AutoPostBack="true" OnCheckedChanged="cbl_BankInterface_CheckedChanged"></x:CheckBox>
+                                        <x:Label ID="lbl_ZXInterface" runat="server" Text="是否要对接中信接口" CssClass="inline" CssStyle="padding-right:10px" Enabled="false"></x:Label>
+                                        <x:CheckBox ID="chk_ZXInterface" runat="server" Text="" Enabled="false" AutoPostBack="true" OnCheckedChanged="cbl_BankInterface_CheckedChanged"></x:CheckBox>
+                                    </Items>
+                                </x:Panel>
+                                <x:Panel ID="Panel9" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
+                                    CssClass="x-form-item" Layout="Column">
+                                    <Items>
+                                        <x:Label ID="lbl_GDInterface" runat="server" Text="是否要对接光大接口" CssClass="inline" CssStyle="padding-right:10px" Enabled="false"></x:Label>
+                                        <x:CheckBox ID="chk_GDInterface" runat="server" Text="" Enabled="false" AutoPostBack="true" OnCheckedChanged="cbl_BankInterface_CheckedChanged"></x:CheckBox>
                                     </Items>
                                 </x:Panel>
                             </Items>
                         </x:SimpleForm>
-                        <x:Grid ID="grid_List" runat="server" Title="合作行信息" EnableTextSelection="true" DataKeyNames="BankID,BankName" BoxFlex="1" Width="550px" ShowBorder="false"
+                        <x:Grid ID="grid_List" runat="server" Title="合作行信息" EnableTextSelection="true" DataKeyNames="BankID,BankName,ConnectID" BoxFlex="1" Width="550px" ShowBorder="false"
                             AllowPaging="true" EnableBackgroundColor="true" PageSize="15" OnPageIndexChange="grid_List_PageIndexChange"
                             ClearSelectedRowsAfterPaging="true" IsDatabasePaging="true" CssStyle="padding-top:5px" OnRowDataBound="grid_List_RowDataBound"
                             ForceFitAllTime="true" EnableRowSelect="true" OnRowSelect="grid_List_RowSelect">
@@ -99,17 +107,13 @@
                                 </x:DropDownList>
 
                                 <x:DropDownList ID="ddl_BusinessMode" runat="server" Width="150px" Label="业务模式" CompareType="String"
-                                    CompareOperator="NotEqual" CompareValue="0" Required="true" CompareMessage="请选择业务模式！">
+                                    CompareOperator="NotEqual" CompareValue="-1" Required="true" CompareMessage="请选择业务模式！">
                                 </x:DropDownList>
                                 <x:NumberBox ID="num_SSMoney" runat="server" Label="实收费用" Width="150px" DecimalPrecision="2" Text="0.00"></x:NumberBox>
                                 <x:NumberBox ID="num_YSMoney" runat="server" Label="应收费用" Width="150px" DecimalPrecision="2" Text="0.00"></x:NumberBox>
                                 <x:DropDownList ID="ddl_PaymentCycle" runat="server" Width="150px" Label="缴费周期" CompareType="String"
-                                    CompareOperator="NotEqual" CompareValue="0" Required="true" RequiredMessage="请选择缴费周期！">
+                                    CompareOperator="NotEqual" CompareValue="-1" Required="true" RequiredMessage="请选择缴费周期！">
                                 </x:DropDownList>
-
-                                <%--<x:CheckBoxList ID="cbl_FinancingMode" runat="server" Width="300px" Label="融资模式"
-                                    Required="true" RequiredMessage="请选择融资模式！">
-                                </x:CheckBoxList>--%>
                                 <x:DatePicker ID="dp_DispatchTime" EnableEdit="false" runat="server" Width="150px" Label="驻店日期" Required="true"
                                     RequiredMessage="请选择住店日期！">
                                 </x:DatePicker>
@@ -123,16 +127,15 @@
                             </Items>
                         </x:SimpleForm>
                         <x:Grid ID="grid_BrandList" runat="server" Title="品牌" EnableBackgroundColor="true" EnableRowNumber="true" BoxFlex="1"
-                            OnRowCommand="grid_BrandList_RowCommand" DataKeyNames="dc_ID,dc_BrandID,dc_BusinessMode,dc_PaymentCycle"
+                            OnRowCommand="grid_BrandList_RowCommand" DataKeyNames="dc_ID,dc_BrandID,dc_BusinessMode,dc_PaymentCycle,dc_BrandName"
                             EnableRowClick="true" OnRowClick="grid_BrandList_RowClick">
                             <Columns>
-                                <x:BoundField DataField="dc_BrandName" HeaderText="品牌名" DataFormatString="{0}" Width="50px" />
-                                <x:BoundField DataField="dc_BusinessModeStr" HeaderText="业务模式" DataFormatString="{0}" Width="70px" />
+                                <x:BoundField DataField="dc_BrandName" HeaderText="品牌名" DataFormatString="{0}" Width="100px" />
+                                <x:BoundField DataField="dc_BusinessModeStr" HeaderText="业务模式" DataFormatString="{0}" Width="100px" />
                                 <x:BoundField DataField="dc_SSMoney" HeaderText="实收费用" DataFormatString="{0}" Width="60px" />
                                 <x:BoundField DataField="dc_YSMoney" HeaderText="应收费用" DataFormatString="{0}" Width="60px" />
                                 <x:BoundField DataField="dc_PaymentCycleStr" HeaderText="缴费周期" DataFormatString="{0}" Width="60px" />
-                                <%--<x:BoundField DataField="dc_FinancingModeStr" HeaderText="融资模式" DataFormatString="{0}" Width="150px" />--%>
-                                <x:BoundField DataField="dc_DispatchTime" HeaderText="驻店日期" DataFormatString="{0}" Width="80px" />
+                                <x:BoundField DataField="dc_DispatchTime" HeaderText="驻店日期" DataFormatString="{0}" Width="120px" />
                                 <x:LinkButtonField Text="删除" Width="40px" HeaderText="操作" CommandName="del" ConfirmIcon="Warning" ConfirmText="你确定要删除该条品牌信息？" ConfirmTitle="系统提醒" />
                             </Columns>
                         </x:Grid>

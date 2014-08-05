@@ -2,7 +2,8 @@
 using System.Data;
 using System.Text;
 using System.Data.SqlClient;
-using Maticsoft.DBUtility;//Please add references
+using Maticsoft.DBUtility;
+using System.Collections.Generic;//Please add references
 namespace Citic.DAL
 {
     /// <summary>
@@ -37,9 +38,9 @@ namespace Citic.DAL
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into tb_Draft_List(");
-            strSql.Append("DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID)");
+            strSql.Append("DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID)");
             strSql.Append(" values (");
-            strSql.Append("@DraftNo,@BankID,@BankName,@DealerID,@DealerName,@BrandID,@BrandName,@DarftMoney,@BeginTime,@EndTime,@PledgeNo,@GuaranteeNo,@Ratio,@RGuaranteeNo,@Remarks,@DraftType,@CarAllCount,@CarAllMoney,@CarILCount,@CarILMoney,@CarITCount,@CarITMoney,@CarMoveCount,@CarMoveMoney,@HKMoney,@CKMoney,@CreateID,@CreateTime,@UpdateID,@UpdateTime,@DeleteID,@DeleteTime,@IsDelete,@IsPort,@ConnectID,@GD_ID,@ZX_ID)");
+            strSql.Append("@DraftNo,@BankID,@BankName,@DealerID,@DealerName,@BrandID,@BrandName,@DarftMoney,@BeginTime,@EndTime,@PledgeNo,@GuaranteeNo,@Ratio,@RGuaranteeNo,@Remarks,@DraftType,@CarAllCount,@CarAllMoney,@CarILCount,@CarILMoney,@CarITCount,@CarITMoney,@WYMoney,@YYMoney,@HKMoney,@CKMoney,@CreateID,@CreateTime,@UpdateID,@UpdateTime,@DeleteID,@DeleteTime,@IsDelete,@IsPort,@ConnectID,@GD_ID,@ZX_ID)");
             strSql.Append(";select @@IDENTITY");
             SqlParameter[] parameters = {
 					new SqlParameter("@DraftNo", SqlDbType.NVarChar,50),
@@ -64,8 +65,8 @@ namespace Citic.DAL
 					new SqlParameter("@CarILMoney", SqlDbType.Money,8),
 					new SqlParameter("@CarITCount", SqlDbType.Int,4),
 					new SqlParameter("@CarITMoney", SqlDbType.Money,8),
-					new SqlParameter("@CarMoveCount", SqlDbType.Int,4),
-					new SqlParameter("@CarMoveMoney", SqlDbType.Money,8),
+					new SqlParameter("@WYMoney", SqlDbType.Money,8),
+					new SqlParameter("@YYMoney", SqlDbType.Money,8),
 					new SqlParameter("@HKMoney", SqlDbType.Money,8),
 					new SqlParameter("@CKMoney", SqlDbType.Money,8),
 					new SqlParameter("@CreateID", SqlDbType.Int,4),
@@ -101,8 +102,8 @@ namespace Citic.DAL
             parameters[19].Value = model.CarILMoney;
             parameters[20].Value = model.CarITCount;
             parameters[21].Value = model.CarITMoney;
-            parameters[22].Value = model.CarMoveCount;
-            parameters[23].Value = model.CarMoveMoney;
+            parameters[22].Value = model.WYMoney;
+            parameters[23].Value = model.YYMoney;
             parameters[24].Value = model.HKMoney;
             parameters[25].Value = model.CKMoney;
             parameters[26].Value = model.CreateID;
@@ -156,8 +157,8 @@ namespace Citic.DAL
             strSql.Append("CarILMoney=@CarILMoney,");
             strSql.Append("CarITCount=@CarITCount,");
             strSql.Append("CarITMoney=@CarITMoney,");
-            strSql.Append("CarMoveCount=@CarMoveCount,");
-            strSql.Append("CarMoveMoney=@CarMoveMoney,");
+            strSql.Append("WYMoney=@WYMoney,");
+            strSql.Append("YYMoney=@YYMoney,");
             strSql.Append("HKMoney=@HKMoney,");
             strSql.Append("CKMoney=@CKMoney,");
             strSql.Append("CreateID=@CreateID,");
@@ -195,8 +196,8 @@ namespace Citic.DAL
 					new SqlParameter("@CarILMoney", SqlDbType.Money,8),
 					new SqlParameter("@CarITCount", SqlDbType.Int,4),
 					new SqlParameter("@CarITMoney", SqlDbType.Money,8),
-					new SqlParameter("@CarMoveCount", SqlDbType.Int,4),
-					new SqlParameter("@CarMoveMoney", SqlDbType.Money,8),
+					new SqlParameter("@WYMoney", SqlDbType.Money,8),
+					new SqlParameter("@YYMoney", SqlDbType.Money,8),
 					new SqlParameter("@HKMoney", SqlDbType.Money,8),
 					new SqlParameter("@CKMoney", SqlDbType.Money,8),
 					new SqlParameter("@CreateID", SqlDbType.Int,4),
@@ -233,8 +234,8 @@ namespace Citic.DAL
             parameters[19].Value = model.CarILMoney;
             parameters[20].Value = model.CarITCount;
             parameters[21].Value = model.CarITMoney;
-            parameters[22].Value = model.CarMoveCount;
-            parameters[23].Value = model.CarMoveMoney;
+            parameters[22].Value = model.WYMoney;
+            parameters[23].Value = model.YYMoney;
             parameters[24].Value = model.HKMoney;
             parameters[25].Value = model.CKMoney;
             parameters[26].Value = model.CreateID;
@@ -285,34 +286,14 @@ namespace Citic.DAL
                 return false;
             }
         }
-        /// <summary>
-        /// 批量删除数据
-        /// </summary>
-        public bool DeleteList(string IDlist)
-        {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("delete from tb_Draft_List ");
-            strSql.Append(" where ID in (" + IDlist + ")  ");
-            int rows = DbHelperSQL.ExecuteSql(strSql.ToString());
-            if (rows > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         /// <summary>
         /// 得到一个对象实体
         /// </summary>
         public Citic.Model.Draft GetModel(int ID)
         {
-
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select  top 1 ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID from tb_Draft_List ");
+            strSql.Append("select  top 1 ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID from tb_Draft_List ");
             strSql.Append(" where ID=@ID");
             SqlParameter[] parameters = {
 					new SqlParameter("@ID", SqlDbType.Int,4)
@@ -439,13 +420,13 @@ namespace Citic.DAL
                 {
                     model.CarITMoney = decimal.Parse(row["CarITMoney"].ToString());
                 }
-                if (row["CarMoveCount"] != null && row["CarMoveCount"].ToString() != "")
+                if (row["WYMoney"] != null && row["WYMoney"].ToString() != "")
                 {
-                    model.CarMoveCount = int.Parse(row["CarMoveCount"].ToString());
+                    model.WYMoney = decimal.Parse(row["WYMoney"].ToString());
                 }
-                if (row["CarMoveMoney"] != null && row["CarMoveMoney"].ToString() != "")
+                if (row["YYMoney"] != null && row["YYMoney"].ToString() != "")
                 {
-                    model.CarMoveMoney = decimal.Parse(row["CarMoveMoney"].ToString());
+                    model.YYMoney = decimal.Parse(row["YYMoney"].ToString());
                 }
                 if (row["HKMoney"] != null && row["HKMoney"].ToString() != "")
                 {
@@ -523,7 +504,7 @@ namespace Citic.DAL
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID ");
+            strSql.Append("select ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID ");
             strSql.Append(" FROM tb_Draft_List ");
             if (strWhere.Trim() != "")
             {
@@ -543,7 +524,7 @@ namespace Citic.DAL
             {
                 strSql.Append(" top " + Top.ToString());
             }
-            strSql.Append(" ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID ");
+            strSql.Append(" ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID ");
             strSql.Append(" FROM tb_Draft_List ");
             if (strWhere.Trim() != "")
             {
@@ -590,7 +571,7 @@ namespace Citic.DAL
             {
                 strSql.Append("order by T.ID desc");
             }
-            strSql.Append(")AS Row, T.*  from tb_Draft_List T ");
+            strSql.Append(")AS Row, T.*, CASE T.DraftType WHEN 0 THEN '已清票' WHEN 1 THEN '未清票' END DraftTypeName from tb_Draft_List T ");
             if (!string.IsNullOrEmpty(strWhere.Trim()))
             {
                 strSql.Append(" WHERE " + strWhere);
@@ -615,7 +596,7 @@ namespace Citic.DAL
                 StringBuilder sbuilder = new StringBuilder(@"insert into tb_Draft_List
                 (DraftNo,BankID,BankName,DealerID,DealerName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,
                 Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,
-                CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,
+                CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,
                 DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,BrandID,BrandName)");
 
                 foreach (Citic.Model.Draft model in models)
@@ -623,8 +604,8 @@ namespace Citic.DAL
                     sbuilder.AppendLine(string.Format(@"select '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}',0,getdate(),0,getdate(),0,0,'','{26}','{27}' union"
                     , model.DraftNo, model.BankID, model.BankName, model.DealerID, model.DealerName, model.DarftMoney, model.BeginTime, model.EndTime
                     , model.PledgeNo, model.GuaranteeNo, model.Ratio, model.RGuaranteeNo, model.Remarks, model.DraftType, model.CarAllCount
-                    , model.CarAllMoney, model.CarILCount, model.CarILMoney, model.CarITCount, model.CarITMoney, model.CarMoveCount
-                    , model.CarMoveMoney, model.HKMoney, model.CKMoney, model.CreateID, model.CreateTime
+                    , model.CarAllMoney, model.CarILCount, model.CarILMoney, model.CarITCount, model.CarITMoney, model.WYMoney
+                    , model.YYMoney, model.HKMoney, model.CKMoney, model.CreateID, model.CreateTime
                     , model.BrandID, model.BrandName));
                 }
                 string sql = sbuilder.ToString().Substring(0, sbuilder.ToString().LastIndexOf("union"));
@@ -633,34 +614,9 @@ namespace Citic.DAL
             }
             catch (Exception)
             {
-
                 throw;
             }
             return count;
-        }
-        #endregion
-
-        #region 检查多个汇票号是否存在--乔春羽(2013.9.5)
-        /// <summary>
-        /// 检查多个汇票号是否存在
-        /// </summary>
-        /// <param name="nos"></param>
-        /// <returns></returns>
-        public bool ExistsDraftNos(string[] nos)
-        {
-            int num = 0;
-            try
-            {
-                string draftNos = string.Join(",", nos);
-                string sql = string.Format("SELECT COUNT(1) FROM tb_Draft_List WHERE DraftNo IN ({0}) AND IsDelete=0", draftNos);
-                num = (int)DbHelperSQL.GetSingle(sql);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            return num > 0 ? true : false;
         }
         #endregion
 
@@ -723,6 +679,47 @@ namespace Citic.DAL
         }
         #endregion
 
+        #region 物理删除，删除汇票的同时也删除该票下的质押物信息--乔春羽(2014.4.2)
+        /// <summary>
+        /// 物理删除，删除汇票的同时也删除该票下的质押物信息
+        /// </summary>
+        public bool DeleteList(Citic.Model.Draft[] models)
+        {
+            StringBuilder strSql = null;
+            List<CommandInfo> cInfos = null;
+            if (models != null && models.Length > 0)
+            {
+                cInfos = new List<CommandInfo>();
+                foreach (Citic.Model.Draft model in models)
+                {
+                    strSql = new StringBuilder();
+                    strSql.AppendLine("Delete tb_Draft_List where ID=@ID");
+                    SqlParameter[] sp = null;
+                    if (model.BankID != 0 && model.DealerID != 0)
+                    {
+                        strSql.AppendLine(string.Format("Delete {0} where DraftNo=@DraftNo", string.Format("tb_Car_{0}_{1}", model.BankID, model.DealerID)));
+                        sp = new SqlParameter[] { new SqlParameter("@ID", model.ID), new SqlParameter("@DraftNo", model.DraftNo) };
+                    }
+                    else
+                    {
+                        sp = new SqlParameter[] { new SqlParameter("@ID", model.ID) };
+                    }
+                    cInfos.Add(new CommandInfo(strSql.ToString(), sp));
+                }
+            }
+            int rows = DbHelperSQL.ExecuteSqlTran(cInfos);
+            if (rows > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
         #region 得到一个对象实体，通过汇票号--乔春羽(2013.9.5)
         /// <summary>
         /// 得到一个对象实体，通过汇票号
@@ -731,8 +728,8 @@ namespace Citic.DAL
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select  top 1 ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID from tb_Draft_List ");
-            strSql.Append(" where DraftNo=@DraftNo");
+            strSql.Append("SELECT TOP 1 ID,DraftNo,BankID,BankName,DealerID,DealerName,BrandID,BrandName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,Ratio,RGuaranteeNo,Remarks,DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID,GD_ID,ZX_ID FROM tb_Draft_List ");
+            strSql.Append(" WHERE DraftNo=@DraftNo");
             SqlParameter[] parameters = {
 					new SqlParameter("@DraftNo", SqlDbType.NVarChar,50)
 			};
@@ -757,35 +754,74 @@ namespace Citic.DAL
         /// </summary>
         /// <param name="draftNo"></param>
         /// <returns></returns>
-        public bool DraftClear(string draftNo)
+        public bool DraftClear(string[] draftNo, int userID)
         {
             bool flag = false;
-            string sql = "Update tb_Draft_List set DraftType=0 where DraftNo=@DraftNo";
-            SqlParameter param = new SqlParameter("@DraftNo", draftNo);
-            try
+            if (draftNo != null && draftNo.Length > 0)
             {
-                flag = DbHelperSQL.ExecuteSql(sql, param) > 0;
-            }
-            catch (Exception)
-            {
+                StringBuilder draftNos = new StringBuilder();
+                foreach (string no in draftNo)
+                {
+                    draftNos.AppendFormat("'{0}',", no);
+                }
+                draftNos.Remove(draftNos.ToString().LastIndexOf(","), 1);
+                string sql = string.Format("Update tb_Draft_List set DraftType=0,UpdateID=" + userID + ",UpdateTime=GETDATE() where DraftNo in ({0})", draftNos.ToString());
+                try
+                {
+                    flag = DbHelperSQL.ExecuteSql(sql) > 0;
+                }
+                catch (Exception)
+                {
+                }
             }
             return flag;
         }
         #endregion
 
         #region 获得汇票的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess(string where)
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@"SELECT ID,DraftNo,BankID,BankName,DealerID,DealerName,DarftMoney,BeginTime,EndTime,PledgeNo,GuaranteeNo,
+            strSql.Append(@"SELECT * FROM (SELECT ROW_NUMBER() OVER(order by ID) Row,ID,DraftNo,BankID,BankName,DealerID,DealerName,DarftMoney,
+CONVERT(NVARCHAR(12),BeginTime,111) BeginTime,CONVERT(NVARCHAR(12),EndTime,111) EndTime,PledgeNo,GuaranteeNo,
 CAST(Ratio*100 as nvarchar(100))+'%' Ratio,RGuaranteeNo,Remarks,
-CASE DraftType WHEN 1 THEN '未清票' WHEN 0 THEN '已清票' END DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,CarMoveCount,CarMoveMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID 
-FROM tb_Draft_List");
+CASE DraftType WHEN 1 THEN '未清票' WHEN 0 THEN '已清票' END DraftType,CarAllCount,CarAllMoney,CarILCount,CarILMoney,CarITCount,CarITMoney,WYMoney,YYMoney,HKMoney,CKMoney,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID 
+FROM tb_Draft_List ");
             if (!string.IsNullOrEmpty(where))
             {
                 strSql.AppendFormat(" WHERE {0}", where);
             }
+            strSql.Append(" ) T ");
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE T.Row BETWEEN {0} AND {1} ", startIndex, endIndex);
+            }
             return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        #endregion
+
+        #region 修改汇票的回款金额、敞口金额、已押金额、未押金额--乔春羽(2014.6.9)
+        public int UpdateDraftMoney(string[] draftNos)
+        {
+            int num = 1;
+            StringBuilder proc_Name = new StringBuilder();
+            if (draftNos != null && draftNos.Length > 0)
+            {
+                foreach (string draftNo in draftNos)
+                {
+                    proc_Name.AppendLine(string.Format("exec UpdateDraftMoney '{0}' ;", draftNo));
+                }
+            }
+            try
+            {
+                DbHelperSQL.ExecuteSql(proc_Name.ToString());
+            }
+            catch
+            {
+                num = -1;
+            }
+            return num;
         }
         #endregion
         #endregion  ExtensionMethod

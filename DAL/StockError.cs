@@ -356,10 +356,13 @@ namespace Citic.DAL
         public int GetRecordCount(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select count(1) FROM tb_StockError_List T ");
+            strSql.Append(@"SELECT COUNT(1) FROM tb_StockError_List T 
+                            LEFT JOIN tb_User(NOLOCK) U ON T.CreateID=U.UserId
+                            LEFT JOIN tb_User(NOLOCK) U1 ON T.OperateID=U1.UserId
+                            LEFT JOIN tb_Brand_List(NOLOCK) B ON T.BrandID=B.BrandID ");
             if (strWhere.Trim() != "")
             {
-                strSql.Append(" where " + strWhere);
+                strSql.Append(" WHERE " + strWhere);
             }
             object obj = DbHelperSQL.GetSingle(strSql.ToString());
             if (obj == null)
@@ -397,7 +400,10 @@ namespace Citic.DAL
                 strSql.Append(" WHERE " + strWhere);
             }
             strSql.Append(" ) TT");
-            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            }
             return DbHelperSQL.Query(strSql.ToString());
         }
 
@@ -503,8 +509,6 @@ namespace Citic.DAL
             string sql = GetSQL(path, sqlstr);
             if (!string.IsNullOrEmpty(sql))
             {
-                if (sql.Contains("{Start}")) { sql = sql.Replace("{Start}", startIndex.ToString()); }
-                if (sql.Contains("{End}")) { sql = sql.Replace("{End}", endIndex.ToString()); }
                 if (sql.Contains("{Where}")) { sql = sql.Replace("{Where}", strWhere == string.Empty ? "1=1" : strWhere); }
             }
             try

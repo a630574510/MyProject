@@ -15,7 +15,7 @@ namespace Citic.DAL
         public Dealer()
         { }
         #region  BasicMethod
-       
+
 
         /// <summary>
         /// 是否存在该记录
@@ -179,7 +179,19 @@ namespace Citic.DAL
             parameters[21].Value = model.ConnectID;
             parameters[22].Value = model.DealerID;
 
-            int rows = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
+            string strSqlT = "Update tb_Dealer_Bank_List set DealerName = @DealerName,JC=@JC Where DealerID=@DealerID";
+            SqlParameter[] parametersT = new SqlParameter[]
+            {
+                new SqlParameter("@JC",model.JC),
+                new SqlParameter("@DealerName",model.DealerName),
+                new SqlParameter("@DealerID",model.DealerID)
+            };
+
+            System.Collections.Generic.List<CommandInfo> cInfos = new System.Collections.Generic.List<CommandInfo>();
+            cInfos.Add(new CommandInfo(strSql.ToString(), parameters));
+            cInfos.Add(new CommandInfo(strSqlT.ToString(), parametersT));
+
+            int rows = DbHelperSQL.ExecuteSqlTran(cInfos);
             if (rows > 0)
             {
                 return true;
@@ -481,7 +493,7 @@ namespace Citic.DAL
 
         #region  ExtensionMethod
 
-        #region 查询银行id，经销商名称，银行名称 张繁 2013年7月24日 
+        #region 查询银行id，经销商名称，银行名称 张繁 2013年7月24日
         /// <summary>
         /// 查询银行id，经销商名称，银行名称 张繁 2013年7月24日 
         /// </summary>
@@ -489,7 +501,9 @@ namespace Citic.DAL
         /// <returns></returns>
         public DataSet GetBankID_DealerID_BankName_List(string strSql)
         {
-            strSql = "select (CONVERT(nvarchar,BankID )+'_'+CONVERT(nvarchar,D_L.DealerID)+'_'+CONVERT(nvarchar,BankName)+'_'+CONVERT(nvarchar,BrandName)+'_'+CONVERT(nvarchar,BusinessMode)) as DealerID,D_L.DealerName,D_B_L.BankName,D_B_L.GD_ID,D_B_L.ZX_ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
+            //2014年5月14日 张繁 2014年6月10日
+            //strSql = "select (CONVERT(nvarchar,BankID )+'_'+CONVERT(nvarchar,D_L.DealerID)+'_'+CONVERT(nvarchar,BankName)+'_'+CONVERT(nvarchar,BrandName)+'_'+CONVERT(nvarchar,BusinessMode)) as DealerID,D_L.DealerName,D_B_L.BankName,D_B_L.GD_ID,D_B_L.ZX_ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
+            strSql = "select D_B_L.DealerID,D_L.DealerName,D_B_L.BankID,D_B_L.BankName,D_B_L.BrandID, D_B_L.BrandName,D_B_L.BusinessMode,D_B_L.GD_ID,D_B_L.ZX_ID,D_B_L.ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion
@@ -651,7 +665,7 @@ namespace Citic.DAL
             {
                 dealerID = DbHelperSQL.RunProcedure(strSql_Dealer.ToString(), params_Dealer, out returnValue);
 
-                
+
             }
             catch (Exception)
             {
@@ -664,7 +678,7 @@ namespace Citic.DAL
         #region 保存经销商（完整版）--乔春羽(2013.1.23)
         private int SaveDealer(Citic.Model.Dealer _dealer)
         {
-            int result=0;
+            int result = 0;
             StringBuilder dealer_Sql = new StringBuilder();
             dealer_Sql.AppendLine("INSERT INTO tb_Dealer_List(DealerName,SupervisorID,SupervisorName,DealerType,IsGroup,IsSingleStore,HasOtherIndustries,GotoworkTime,GoffworkTime,Address,DealerPayCode,Remarks,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID) ");
             dealer_Sql.AppendFormat("VALUES (@DealerName,0,'',@DealerType,@IsGroup,@IsSingleStore,@HasOtherIndustries,@GotoworkTime,@GoffworkTime,@Address,@DealerPayCode,@Remarks,@CreateID,@CreateTime,@UpdateID,@UpdateTime,@DeleteID,@DeleteTime,@IsDelete,@IsPort,@ConnectID)");

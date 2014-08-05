@@ -472,7 +472,7 @@ namespace Citic.DAL
                 param_Storage[9].Value = model.CreateTime;
                 param_Storage[10].Value = model.UpdateID;
                 param_Storage[11].Value = model.UpdateTime;
-                param_Storage[12].Value = model.DealerID;
+                param_Storage[12].Value = model.DeleteID;
                 param_Storage[13].Value = model.DeleteTime;
                 param_Storage[14].Value = model.IsDelete;
                 param_Storage[15].Value = model.IsPort;
@@ -570,7 +570,7 @@ namespace Citic.DAL
                 param_Storage[9].Value = model.CreateTime;
                 param_Storage[10].Value = model.UpdateID;
                 param_Storage[11].Value = model.UpdateTime;
-                param_Storage[12].Value = model.DealerID;
+                param_Storage[12].Value = model.DeleteID;
                 param_Storage[13].Value = model.DeleteTime;
                 param_Storage[14].Value = model.IsDelete;
                 param_Storage[15].Value = model.IsPort;
@@ -590,13 +590,22 @@ namespace Citic.DAL
         #endregion
 
         #region 获得二网的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess()
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(@" SELECT StorageID,StorageName,Address,DealerID,DealerName,Distence,
+            strSql.Append(@"SELECT * FROM ( SELECT ROW_NUMBER() OVER(Order By StorageID) Row, StorageID,StorageName,Address,DealerID,DealerName,ISNULL(Distence,0.00) Distence,
 CASE IsLocalStorage WHEN 0 THEN '二网' WHEN 1 THEN '本库' END IsLocalStorage,
 dbo.changeFinancingMode(StorageProp,'storage') StorageProp,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,ConnectID ");
             strSql.Append(" FROM tb_Storage_List ");
+            if (!string.IsNullOrEmpty(where))
+            {
+                strSql.AppendFormat(" WHERE {0}", where);
+            }
+            strSql.Append(" ) T");
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE T.Row BETWEEN {0} AND {1}", startIndex, endIndex);
+            }
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion

@@ -32,11 +32,11 @@
                         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false"
                             Layout="Column" EnableBackgroundColor="true" CssClass="x-form-item">
                             <Items>
-                                <x:Label ID="Label1" runat="server" ShowLabel="false" Text="合作银行："></x:Label>
+                                <x:Label ID="Label1" runat="server" ShowLabel="false" CssClass="inline" Text="合作银行："></x:Label>
                                 <x:DropDownList ID="ddl_Bank" Width="300px" runat="server" AutoPostBack="true"
                                     ShowLabel="true" Label="合作银行" OnSelectedIndexChanged="ddl_Bank_SelectedIndexChanged">
                                 </x:DropDownList>
-                                <x:Label ID="Label2" runat="server" ShowLabel="false" Text="企业名称：" CssStyle="padding-left:5px"></x:Label>
+                                <x:Label ID="Label2" runat="server" ShowLabel="false" Text="企业名称：" CssClass="inline" CssStyle="padding-left:5px"></x:Label>
                                 <x:DropDownList ID="ddl_Dealer" Width="300px" runat="server" Label="企业名称">
                                 </x:DropDownList>
                             </Items>
@@ -44,7 +44,7 @@
                         <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" Layout="Column"
                             EnableBackgroundColor="true" CssClass="x-form-item">
                             <Items>
-                                <x:Label ID="Label3" runat="server" ShowLabel="false" Text="二网名称："></x:Label>
+                                <x:Label ID="Label3" runat="server" ShowLabel="false" CssClass="inline" Text="二网名称："></x:Label>
                                 <x:TextBox ID="txt_StorageName" runat="server" Label="二网名称" Width="306px" Text="" CssStyle="height:20px;font-size:15px">
                                 </x:TextBox>
                                 <x:Button ID="btn_Search" runat="server" Text="搜索" Visible="false" Icon="SystemSearch" OnClick="btn_Search_Click" CssStyle="padding-left:5px">

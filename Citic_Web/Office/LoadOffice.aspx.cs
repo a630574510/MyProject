@@ -13,17 +13,11 @@ namespace Citic_Web.Office
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //string time = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //ViewState["_time"] = ViewState["_time"] == null ? Request.QueryString["_time"] : string.Empty;
-            //bool isFirst = time == ViewState["_time"].ToString();
             if (!IsPostBack)
             {
                 Session["_time"] = Session["_time"] == null ? Request.QueryString["_time"] : null;
                 if (Session["_time"] != null)
                 {
-                    //系统沉睡1秒
-                    //Thread.Sleep(1000);
-
                     //经销商明
                     //以经销商名为依据，创建文件夹
                     string _DealerName = string.Empty;

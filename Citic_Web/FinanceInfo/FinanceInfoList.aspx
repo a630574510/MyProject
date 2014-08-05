@@ -37,15 +37,15 @@
                         <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="企业名称：" CssStyle="padding-right:8px"></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="企业名称：" CssStyle="padding-right:8px" CssClass="inline"></x:Label>
                                 <x:TextBox ID="txt_Dealer" runat="server" CssStyle="height:20px;font-size:15px" Width="306px" AutoPostBack="true" OnTextChanged="txt_Bank_TextChanged"></x:TextBox>
-                                <x:Label ID="Label2" runat="server" Text="合作行：" CssStyle="padding-left:20px;padding-right:22px"></x:Label>
+                                <x:Label ID="Label2" runat="server" Text="合作行：" CssStyle="padding-left:20px;padding-right:22px" CssClass="inline"></x:Label>
                                 <x:DropDownList ID="ddl_Bank" runat="server" Width="300px"></x:DropDownList>
-                                <x:Label ID="Label5" runat="server" Text="状态：" CssStyle="padding-left:20px;padding-right:10px"></x:Label>
+                                <x:Label ID="Label5" runat="server" Text="状态：" CssStyle="padding-left:20px;padding-right:10px" CssClass="inline"></x:Label>
                                 <x:DropDownList ID="ddl_Status" runat="server" Width="100px">
-                                    <x:ListItem Text="请选择" Value="-1" />
+                                    <x:ListItem Text="请选择" Value="-1" Selected="true" />
                                     <x:ListItem Text="正常" Value="1" />
-                                    <x:ListItem Text="清票" Value="2" />
+                                    <x:ListItem Text="清票" Value="0" />
                                 </x:DropDownList>
                             </Items>
                         </x:Panel>
@@ -53,11 +53,11 @@
                         <x:Panel ID="Panel4" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label3" runat="server" Text="开票日期：" CssStyle="padding-right:8px"></x:Label>
+                                <x:Label ID="Label3" runat="server" Text="开票日期：" CssStyle="padding-right:8px" CssClass="inline"></x:Label>
                                 <x:DatePicker ID="dp_Start" runat="server" EnableEdit="false" Width="110px"></x:DatePicker>
-                                <x:Label ID="Label4" runat="server" Text="到期日期：" CssStyle="padding-left:10px;padding-right:6px"></x:Label>
+                                <x:Label ID="Label4" runat="server" Text="到期日期：" CssStyle="padding-left:10px;padding-right:6px" CssClass="inline"></x:Label>
                                 <x:DatePicker ID="dp_End" runat="server" EnableEdit="false" Width="114px"></x:DatePicker>
-                                <x:Label ID="Label6" runat="server" Text="汇票号：" CssStyle="padding-left:20px;padding-right:22px"></x:Label>
+                                <x:Label ID="Label6" runat="server" Text="汇票号：" CssStyle="padding-left:20px;padding-right:22px" CssClass="inline"></x:Label>
                                 <x:TextBox ID="txt_DraftNo" runat="server" Label="汇票号" Text="" CssStyle="height:20px;font-size:15px" Width="306px"></x:TextBox>
                                 <x:Button runat="server" Text="查  询" ID="btn_Search" Icon="SystemSearch" EnablePostBack="true" OnClick="btn_Search_Click" CssStyle="padding-left:20px" Visible="false">
                                 </x:Button>
@@ -69,10 +69,9 @@
                     BoxFlex="1" Layout="Fit">
                     <Items>
                         <x:Grid ID="grid_List" PageSize="15" ShowBorder="true" ShowHeader="false" AllowPaging="true"
-                            CssStyle="padding-top:0px" runat="server" EnableCheckBoxSelect="True" DataKeyNames="DraftNo,BankID,DealerID"
+                            CssStyle="padding-top:0px" runat="server" EnableCheckBoxSelect="True" DataKeyNames="ID,DraftNo,BankID,DealerID,DraftType"
                             IsDatabasePaging="true" BoxConfigAlign="Stretch" OnPageIndexChange="grid_List_PageIndexChange"
-                            EnableRowNumber="True" ClearSelectedRowsAfterPaging="false" EnableTextSelection="true"
-                            OnRowDataBound="grid_List_RowDataBound" OnRowCommand="grid_List_RowCommand">
+                            EnableRowNumber="True" ClearSelectedRowsAfterPaging="false" EnableTextSelection="true" OnRowCommand="grid_List_RowCommand">
                             <Toolbars>
                                 <x:Toolbar ID="Toolbar1" runat="server">
                                     <Items>
@@ -82,7 +81,7 @@
                                         <x:ToolbarSeparator ID="tbs_Delete" runat="server" Visible="false" />
                                         <x:Button ID="btn_Clear" runat="server" Text="清票" Icon="CssDelete" OnClick="btn_Clear_Click" Visible="false" />
                                         <x:ToolbarSeparator ID="ToolbarSeparator2" runat="server" Visible="false" />
-                                        <x:HyperLink ID="HyperLink1" runat="server" Label="" NavigateUrl="~/Templates/融资信息导入表.xls" Target="_blank" Text="融资信息导入模版下载"></x:HyperLink>
+                                        <x:HyperLink ID="HyperLink1" runat="server" Label="" NavigateUrl="~/Templates/融资信息导入表-模版.xls" Target="_blank" Text="融资信息导入模版下载"></x:HyperLink>
                                         <x:ToolbarFill ID="ToolbarFill2" runat="server" />
                                         <x:Button ID="btn_Import" runat="server" Text="导入数据（Excel文件）" Icon="DiskDownload" Visible="false" />
                                         <x:ToolbarSeparator ID="tbs_Excel" runat="server" Visible="false">
@@ -105,9 +104,15 @@
                                 <x:BoundField ColumnID="GuaranteeNo" HeaderText="保证金帐号" DataField="GuaranteeNo" />
                                 <x:BoundField ColumnID="DarftMoney" HeaderText="票面金额" DataField="DarftMoney" />
                                 <x:BoundField ColumnID="CarStock" HeaderText="库存台数" DataField="CarStock" Width="60px" />
-                                <x:BoundField ColumnID="HKMoney" HeaderText="回款金额" DataField="HKMoney" />
-                                <x:BoundField ColumnID="CKMoney" HeaderText="敞口金额" DataField="CKMoney" />
-                                <x:BoundField ColumnID="DraftType" HeaderText="状态" DataField="DraftType" Width="50px" />
+                                <x:BoundField ColumnID="HKMoney" HeaderText="回款金额" DataField="HKMoney" Width="100px" />
+                                <x:BoundField ColumnID="CKMoney" HeaderText="敞口金额" DataField="CKMoney" Width="100px" />
+                                <x:BoundField ColumnID="YYMoney" HeaderText="已押金额" DataField="YYMoney" Width="100px" />
+                                <x:BoundField ColumnID="WYMoney" HeaderText="未押金额" DataField="WYMoney" Width="100px" />
+                                <x:BoundField ColumnID="DraftTypeName" HeaderText="状态" DataField="DraftTypeName" Width="60px" />
+                                <x:BoundField ColumnID="ID" DataField="ID" HideMode="Visibility" Hidden="true" />
+                                <x:BoundField ColumnID="DraftNo_" DataField="DraftNo" HideMode="Visibility" Hidden="true" />
+                                <x:BoundField ColumnID="BankID_" DataField="BankID" HideMode="Visibility" Hidden="true" />
+                                <x:BoundField ColumnID="DealerID_" DataField="DealerID" HideMode="Visibility" Hidden="true" />
                             </Columns>
                             <PageItems>
                                 <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
@@ -151,7 +156,7 @@
                 source: function (request, response) {
                     var term = request.term;
 
-                    $.getJSON("searchByFilter.ashx?", request, function (data, status, xhr) {
+                    $.getJSON("../Handlers/searchDealer.ashx", request, function (data, status, xhr) {
                         response(data);
                     });
                 }

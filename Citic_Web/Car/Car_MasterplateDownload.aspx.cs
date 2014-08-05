@@ -15,7 +15,6 @@ namespace Citic_Web.Car
         {
             if (!IsPostBack)
             {
-
                 this.dp_AddTime.SelectedDate = DateTime.Now;
             }
         }
@@ -28,7 +27,7 @@ namespace Citic_Web.Car
             }
             if (!string.IsNullOrEmpty(this.dp_AddTime.Text.Trim()))
             {
-                sb.AppendFormat("and CONVERT(varchar(10),CreateTime,23) ='{0}'", this.dp_AddTime.Text.Trim());
+                sb.AppendFormat("and CONVERT(varchar(10),CreateTime,23) ='{0}' ", this.dp_AddTime.Text.Trim());
             }
             CarMasterplate CarMasterplateBll = new CarMasterplate();
             int RoleId = this.CurrentUser.RoleId;       //获取角色id
@@ -36,23 +35,23 @@ namespace Citic_Web.Car
             switch (RoleId)
             {
                 case 1:         //1为超级管理员
-                    dt = CarMasterplateBll.GetList(sb.ToString()).Tables[0];
+                    dt = CarMasterplateBll.GetList(sb.Append(" order by CreateTime desc").ToString()).Tables[0];
                     break;
                 case 2:         //2为管理员
                     break;
                 case 3:         //3为业务经理
 
-                    dt = CarMasterplateBll.GetList(sb.ToString()).Tables[0];
+                    dt = CarMasterplateBll.GetList(sb.Append(" order by CreateTime desc").ToString()).Tables[0];
                     break;
                 case 4:         //4为市场经理
                     break;
                 case 5:         //5为市场专员
-
-                    dt = CarMasterplateBll.GetList(sb.ToString()).Tables[0];
+                    sb.AppendFormat(" and BankID in(select MappingID from tb_UserMapping where RoleID=5 and UserID='{0}')", CurrentUser.UserId);
+                    dt = CarMasterplateBll.GetList(sb.Append(" order by CreateTime desc").ToString()).Tables[0];
                     break;
                 case 6:         //6为品牌专员
-
-                    dt = CarMasterplateBll.GetList(sb.ToString()).Tables[0];
+                    sb.AppendFormat(" and BankID in(select MappingID from tb_UserMapping where RoleID=6 and UserID='{0}')", CurrentUser.UserId);
+                    dt = CarMasterplateBll.GetList(sb.Append(" order by CreateTime desc").ToString()).Tables[0];
                     break;
                 case 7:         //7为调配专员
                     break;
@@ -60,8 +59,8 @@ namespace Citic_Web.Car
                     break;
                 case 9:         //9为厂家
                     break;
-                case 10:         //10为监管员 2014年4月16日 
-                    sb.AppendFormat("and CreateID='{0}'", CurrentUser.UserId);
+                case 10:         //10为监管员 2014年4月16日   
+                    sb.AppendFormat(" and CreateID='{0}' order by CreateTime desc", CurrentUser.UserId);
                     dt = CarMasterplateBll.GetList(sb.ToString()).Tables[0];
                     break;
             }

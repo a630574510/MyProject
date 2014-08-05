@@ -58,6 +58,24 @@ namespace Citic_Web.ProjectTracking.RiskControl {
         protected global::FineUI.Panel Panel2;
         
         /// <summary>
+        /// Label2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label2;
+        
+        /// <summary>
+        /// txt_Dealer 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextBox txt_Dealer;
+        
+        /// <summary>
         /// Label1 控件。
         /// </summary>
         /// <remarks>
@@ -121,58 +139,130 @@ namespace Citic_Web.ProjectTracking.RiskControl {
         protected global::FineUI.Button btn_Verify;
         
         /// <summary>
-        /// WTCLBF 控件。
+        /// SQ_Content 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea WTCLBF;
+        protected global::FineUI.RenderField SQ_Content;
         
         /// <summary>
-        /// FXWTBMQZ 控件。
+        /// txt_SQ_Content 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox FXWTBMQZ;
+        protected global::FineUI.TextArea txt_SQ_Content;
         
         /// <summary>
-        /// QCJRZXYJ 控件。
+        /// OPFD 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea QCJRZXYJ;
+        protected global::FineUI.RenderField OPFD;
         
         /// <summary>
-        /// QCJRZXQZ 控件。
+        /// txt_OPFD 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox QCJRZXQZ;
+        protected global::FineUI.TextArea txt_OPFD;
         
         /// <summary>
-        /// GLZXYJ 控件。
+        /// OPFDPIC 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextArea GLZXYJ;
+        protected global::FineUI.RenderCheckField OPFDPIC;
         
         /// <summary>
-        /// GLZXQZ 控件。
+        /// ORCD 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox GLZXQZ;
+        protected global::FineUI.RenderField ORCD;
+        
+        /// <summary>
+        /// txt_ORCD 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_ORCD;
+        
+        /// <summary>
+        /// ORCDPIC 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.RenderCheckField ORCDPIC;
+        
+        /// <summary>
+        /// OBD 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.RenderField OBD;
+        
+        /// <summary>
+        /// txt_OBD 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_OBD;
+        
+        /// <summary>
+        /// OBDPIC 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.RenderCheckField OBDPIC;
+        
+        /// <summary>
+        /// Result 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.RenderField Result;
+        
+        /// <summary>
+        /// txt_Result 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextArea txt_Result;
+        
+        /// <summary>
+        /// ResultPIC 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.RenderCheckField ResultPIC;
         
         /// <summary>
         /// ToolbarSeparator1 控件。

@@ -39,13 +39,14 @@
                                 <x:TextBox ID="txt_DealerName" Width="300px" runat="server" Label="经销商名称" Text="" ShowRedStar="true"
                                     Required="true" RequiredMessage="请输入经销商名称！">
                                 </x:TextBox>
+                                <x:TextBox ID="txt_JC" runat="server" Label="简称" Text="" Width="300px"></x:TextBox>
                                 <x:CheckBoxList ID="cbl_DealerType" runat="server" Width="300px" Label="经销商属性">
                                     <x:CheckItem Text="民营" Value="1" />
                                     <x:CheckItem Text="国营" Value="2" />
                                     <x:CheckItem Text="集团" Value="3" />
                                     <x:CheckItem Text="单店" Value="4" />
                                 </x:CheckBoxList>
-                                <x:CheckBox ID="chk_IsGroup" runat="server" Label="是否是集团性质" Text=""></x:CheckBox>
+                                <x:CheckBox ID="chk_IsGroup" runat="server" Label="是否是集团性质" Text="" Visible="false"></x:CheckBox>
                                 <x:TextBox ID="txt_OtherIndustries" runat="server" Label="其他产业" Text="" Width="300px"></x:TextBox>
                                 <x:DropDownList ID="ddl_GotoworkTime" runat="server" Label="上班时间" Width="300px">
                                     <x:ListItem Value="06:30" Text="06:30" />
@@ -58,8 +59,8 @@
                                     <x:ListItem Value="10:00" Text="10:00" />
                                 </x:DropDownList>
                                 <x:DropDownList ID="ddl_GoffworkTime" runat="server" Label="下班时间" Width="300px">
-                                    <x:ListItem Value="18:00" Text="17:00" />
-                                    <x:ListItem Value="18:00" Text="17:30" />
+                                    <x:ListItem Value="17:00" Text="17:00" />
+                                    <x:ListItem Value="17:30" Text="17:30" />
                                     <x:ListItem Value="18:00" Text="18:00" Selected="true" />
                                     <x:ListItem Value="18:30" Text="18:30" />
                                     <x:ListItem Value="19:00" Text="19:00" />
@@ -70,7 +71,8 @@
                                     <x:ListItem Value="21:30" Text="21:30" />
                                     <x:ListItem Value="22:00" Text="22:00" />
                                 </x:DropDownList>
-                                <x:TextBox ID="txt_DealerPayCode" runat="server" Width="300px" Label="组织机构代码" ShowRedStar="true" Text="" Required="true" RequiredMessage="组织机构代码必填！" CompareType="String" CompareValue="" CompareOperator="NotEqual" CompareMessage="请填写组织机构代码！"></x:TextBox>
+                                <x:TextBox ID="txt_OrganizationCode" runat="server" Label="组织机构代码" Width="300px" ShowRedStar="true" Text="" RequiredMessage="请填写组织机构代码！" CompareType="String" CompareValue="" CompareOperator="NotEqual" CompareMessage="请填写组织机构代码！"></x:TextBox>
+
                                 <x:TextBox ID="txt_YWZ" runat="server" Width="300px" Label="经销商业务章" Text=""></x:TextBox>
                                 <x:UserControlConnector ID="UserControlConnector1" runat="server">
                                     <uc1:WUC_Address runat="server" ID="WUC_Address" />
@@ -120,8 +122,8 @@
                             </Toolbars>
                         </x:Panel>
                         <x:Grid ID="grid_List1" runat="server" EnableRowNumber="true" BoxFlex="1"
-                            ShowBorder="false" ShowHeader="false" DataKeyNames="dc_ID,dc_Name,dc_Phone" IsDatabasePaging="true"
-                            ClearSelectedRowsAfterPaging="false"
+                            ShowBorder="false" ShowHeader="false" DataKeyNames="LinkmanID" IsDatabasePaging="true"
+                            ClearSelectedRowsAfterPaging="false" EnableTextSelection="true"
                             OnRowCommand="grid_List_RowCommand">
                             <Columns>
                                 <x:LinkButtonField ColumnID="link_Delete" ConfirmIcon="Warning" ConfirmTarget="Parent" Width="40px"
@@ -173,8 +175,8 @@
                                 </x:Toolbar>
                             </Toolbars>
                         </x:Panel>
-                        <x:Grid ID="grid_List2" runat="server" EnableRowNumber="true" BoxFlex="1"
-                            ShowBorder="false" ShowHeader="false" DataKeyNames="dc_ID,dc_Name,dc_Phone" IsDatabasePaging="true"
+                        <x:Grid ID="grid_List2" runat="server" EnableRowNumber="true" BoxFlex="1" EnableTextSelection="true"
+                            ShowBorder="false" ShowHeader="false" DataKeyNames="LinkmanID" IsDatabasePaging="true"
                             ClearSelectedRowsAfterPaging="false" OnRowCommand="grid_List_RowCommand">
                             <Columns>
                                 <x:LinkButtonField ColumnID="link_Delete" ConfirmIcon="Warning" ConfirmTarget="Parent" Width="40px"
@@ -194,14 +196,14 @@
 
                 <x:Grid ID="grid_BankList" runat="server" BoxFlex="1" Title="合作行信息" EnableBackgroundColor="true" TableColspan="2"
                     ShowHeader="true" ShowBorder="true" DataKeyNames="ID,BankID,DealerID" Height="290px" Width="770px"
-                    AutoScroll="true" CssStyle="padding-top:5px"
+                    AutoScroll="true" CssStyle="padding-top:5px" EnableTextSelection="true"
                     OnRowDataBound="grid_BankList_RowDataBound" OnRowCommand="grid_BankList_RowCommand">
                     <Toolbars>
                         <x:Toolbar ID="Toolbar8" runat="server">
                             <Items>
                                 <x:Button ID="btn_ChoiseBank" runat="server" Text="选择合作行" Icon="Add" OnClick="btn_ChoiseBank_Click"></x:Button>
                                 <x:ToolbarSeparator ID="tbs_Modify" runat="server"></x:ToolbarSeparator>
-                                <x:Button ID="btn_ModifyBank" runat="server" Text="修改合作行" OnClick="btn_ModifyBank_Click"></x:Button>
+                                <x:Button ID="btn_ModifyBank" runat="server" Text="修改合作行" Icon="BookEdit" OnClick="btn_ModifyBank_Click"></x:Button>
                             </Items>
                         </x:Toolbar>
                     </Toolbars>
@@ -209,10 +211,10 @@
                         <x:BoundField HeaderText="合作行名称" DataField="BankName" Width="150px" />
                         <x:BoundField HeaderText="合作品牌" DataField="BrandName" Width="100px" />
                         <x:BoundField HeaderText="业务模式" DataField="BusinessMode" Width="80px" />
-                        <x:BoundField HeaderText="实收费用" DataField="SSMoney" Width="60px" />
-                        <x:BoundField HeaderText="应收费用" DataField="YSMoney" Width="60px" />
+                        <x:BoundField HeaderText="实收费用" DataField="SSMoney" Width="70px" />
+                        <x:BoundField HeaderText="应收费用" DataField="YSMoney" Width="70px" />
                         <x:BoundField HeaderText="付费周期" DataField="PaymentCycle" Width="60px" />
-                        <x:BoundField HeaderText="驻店日期" DataField="DispatchTime" Width="150px" />
+                        <x:BoundField HeaderText="驻店日期" DataField="DispatchTime" Width="100px" />
                         <x:BoundField HeaderText="合作状态" DataField="CollaborateType" Width="60px" />
                         <x:LinkButtonField HeaderText="操作" Text="停止合作" CommandName="stop" Width="60px" ConfirmText="确定要停止合作？" ConfirmIcon="Question" ConfirmTitle="停止合作" />
                     </Columns>

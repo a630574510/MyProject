@@ -83,23 +83,27 @@ namespace Citic.DAL
         /// </summary>
         public bool Update(Citic.Model.Bank model)
         {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("update tb_Bank_List set ");
-            strSql.Append("BankName=@BankName,");
-            strSql.Append("BankType=@BankType,");
-            strSql.Append("ParentID=@ParentID,");
-            strSql.Append("Address=@Address,");
-            strSql.Append("CreateID=@CreateID,");
-            strSql.Append("CreateTime=@CreateTime,");
-            strSql.Append("UpdateID=@UpdateID,");
-            strSql.Append("UpdateTime=@UpdateTime,");
-            strSql.Append("DeleteID=@DeleteID,");
-            strSql.Append("DeleteTime=@DeleteTime,");
-            strSql.Append("IsDelete=@IsDelete,");
-            strSql.Append("IsPort=@IsPort,");
-            strSql.Append("ConnectID=@ConnectID");
-            strSql.Append(" where BankID=@BankID");
-            SqlParameter[] parameters = {
+            try
+            {
+                System.Collections.Generic.List<CommandInfo> cInfos = new System.Collections.Generic.List<CommandInfo>();
+
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append("update tb_Bank_List set ");
+                strSql.Append("BankName=@BankName,");
+                strSql.Append("BankType=@BankType,");
+                strSql.Append("ParentID=@ParentID,");
+                strSql.Append("Address=@Address,");
+                strSql.Append("CreateID=@CreateID,");
+                strSql.Append("CreateTime=@CreateTime,");
+                strSql.Append("UpdateID=@UpdateID,");
+                strSql.Append("UpdateTime=@UpdateTime,");
+                strSql.Append("DeleteID=@DeleteID,");
+                strSql.Append("DeleteTime=@DeleteTime,");
+                strSql.Append("IsDelete=@IsDelete,");
+                strSql.Append("IsPort=@IsPort,");
+                strSql.Append("ConnectID=@ConnectID");
+                strSql.Append(" where BankID=@BankID");
+                SqlParameter[] parameters = {
 					new SqlParameter("@BankName", SqlDbType.NVarChar,50),
 					new SqlParameter("@BankType", SqlDbType.Int,4),
 					new SqlParameter("@ParentID", SqlDbType.Int,4),
@@ -114,29 +118,76 @@ namespace Citic.DAL
 					new SqlParameter("@IsPort", SqlDbType.Bit,1),
 					new SqlParameter("@ConnectID", SqlDbType.NVarChar,50),
 					new SqlParameter("@BankID", SqlDbType.Int,4)};
-            parameters[0].Value = model.BankName;
-            parameters[1].Value = model.BankType;
-            parameters[2].Value = model.ParentID;
-            parameters[3].Value = model.Address;
-            parameters[4].Value = model.CreateID;
-            parameters[5].Value = model.CreateTime;
-            parameters[6].Value = model.UpdateID;
-            parameters[7].Value = model.UpdateTime;
-            parameters[8].Value = model.DeleteID;
-            parameters[9].Value = model.DeleteTime;
-            parameters[10].Value = model.IsDelete;
-            parameters[11].Value = model.IsPort;
-            parameters[12].Value = model.ConnectID;
-            parameters[13].Value = model.BankID;
+                parameters[0].Value = model.BankName;
+                parameters[1].Value = model.BankType;
+                parameters[2].Value = model.ParentID;
+                parameters[3].Value = model.Address;
+                parameters[4].Value = model.CreateID;
+                parameters[5].Value = model.CreateTime;
+                parameters[6].Value = model.UpdateID;
+                parameters[7].Value = model.UpdateTime;
+                parameters[8].Value = model.DeleteID;
+                parameters[9].Value = model.DeleteTime;
+                parameters[10].Value = model.IsDelete;
+                parameters[11].Value = model.IsPort;
+                parameters[12].Value = model.ConnectID;
+                parameters[13].Value = model.BankID;
+                cInfos.Add(new CommandInfo(strSql.ToString(), parameters));
 
-            int rows = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
-            if (rows > 0)
-            {
-                return true;
+                StringBuilder update_DealerBank = new StringBuilder();
+                update_DealerBank.Append("Update tb_Dealer_Bank_List Set BankName = @BankName Where BankID = @BankID");
+                SqlParameter[] update_DealerBankParams = {
+                new SqlParameter("@BankName",model.BankName),
+                new SqlParameter("@BankID",model.BankID)
+            };
+                cInfos.Add(new CommandInfo(update_DealerBank.ToString(), update_DealerBankParams));
+
+                StringBuilder update_Draft = new StringBuilder();
+                update_Draft.Append("Update tb_Draft_List Set BankName = @BankName Where BankID = @BankID ");
+                SqlParameter[] update_DraftParams = {
+                new SqlParameter("@BankName",model.BankName),
+                new SqlParameter("@BankID",model.BankID)
+            };
+                cInfos.Add(new CommandInfo(update_Draft.ToString(), update_DraftParams));
+
+                Dealer_Bank Dealer_BankBll = new Dealer_Bank();
+                DataTable dt = Dealer_BankBll.GetList(string.Format(" A.BankID = {0} ", model.BankID)).Tables[0];
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string tableName = "tb_Car_" + row["BankID"].ToString() + "_" + row["DealerID"].ToString();
+                        string update_Car = string.Format("Update {0} Set BankName = @BankName Where BankID = @BankID ", tableName);
+                        SqlParameter[] update_CarParam = { new SqlParameter("@BankName", model.BankName), new SqlParameter("@BankID", model.BankID) };
+                        cInfos.Add(new CommandInfo(update_Car, update_CarParam));
+                    }
+                }
+
+                String update_DBSX = "Update tb_DBSX_List Set BankName = @BankName Where BankID = @BankID ";
+                SqlParameter[] update_DBSXParam = { new SqlParameter("@BankName", model.BankName), new SqlParameter("@BankID", model.BankID) };
+                cInfos.Add(new CommandInfo(update_DBSX, update_DBSXParam));
+
+                String update_StockError = "Update tb_StockError_List Set BankName = @BankName Where BankID = @BankID ";
+                SqlParameter[] update_StockErrorParam = { new SqlParameter("@BankName", model.BankName), new SqlParameter("@BankID", model.BankID) };
+                cInfos.Add(new CommandInfo(update_StockError, update_StockErrorParam));
+
+                String update_RisksSolveDocuments = "Update tb_RisksSolveDocuments Set SQ_Bank = @BankName Where SQ_BankID = @BankID ";
+                SqlParameter[] update_RisksSolveDocumentsParam = { new SqlParameter("@BankName", model.BankName), new SqlParameter("@BankID", model.BankID) };
+                cInfos.Add(new CommandInfo(update_RisksSolveDocuments, update_RisksSolveDocumentsParam));
+
+                int rows = DbHelperSQL.ExecuteSqlTran(cInfos);
+                if (rows > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                throw ex;
             }
         }
 
@@ -470,15 +521,25 @@ namespace Citic.DAL
         }
         #endregion
 
-        #region 获得监管员的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess()
+        #region 获得银行的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append(" SELECT T.BankID,T.BankName,CASE T.BankType WHEN 0 THEN '总行' WHEN 1 THEN '分行' WHEN 2 THEN '支行' END BankType,T.ParentID,ISNULL(B.BankName,'') ParentName,T.Address,T.CreateID,T.CreateTime,T.UpdateID,T.UpdateTime,T.DeleteID,T.DeleteTime,T.IsDelete,T.IsPort,T.ConnectID ");
+            strSql.Append("SELECT * FROM( SELECT ROW_NUMBER() OVER(ORDER BY T.BankID) Row, T.BankID,T.BankName,CASE T.BankType WHEN 0 THEN '总行' WHEN 1 THEN '分行' WHEN 2 THEN '支行' END BankType,T.ParentID,ISNULL(B.BankName,'') ParentName,T.Address,T.CreateID,T.CreateTime,T.UpdateID,T.UpdateTime,T.DeleteID,T.DeleteTime,T.IsDelete,T.IsPort,T.ConnectID ");
             strSql.Append(" FROM tb_Bank_List T LEFT JOIN tb_Bank_List B ON T.ParentID=B.BankID ");
+            if (!string.IsNullOrEmpty(where))
+            {
+                strSql.AppendFormat(" WHERE {0}", where);
+            }
+            strSql.Append(") TT ");
+            if (startIndex != 0 && endIndex != 0)
+            {
+                strSql.AppendFormat(" WHERE TT.Row BETWEEN {0} AND {1}", startIndex, endIndex);
+            }
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion
+
         #endregion  ExtensionMethod
     }
 }

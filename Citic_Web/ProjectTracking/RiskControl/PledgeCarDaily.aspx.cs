@@ -68,9 +68,13 @@ namespace Citic_Web.ProjectTracking.RiskControl
             {
                 where.AppendFormat(" and T.BankID = {0}", this.txt_Bank.Text.Split('_')[1]);
             }
-            if (this.txt_Vin.Text != string.Empty)
+            if (!string.IsNullOrEmpty(this.txt_Vin.Text))
             {
                 where.AppendFormat(" and T.Vin like '%{0}%'", this.txt_Vin.Text);
+            }
+            if (!string.IsNullOrEmpty(this.txt_Brand.Text))
+            {
+                where.AppendFormat(" and B.BrandName like '%{0}%'", this.txt_Brand.Text);
             }
             return where.ToString();
         }
@@ -89,10 +93,22 @@ namespace Citic_Web.ProjectTracking.RiskControl
         #region 加载企业信息--乔春羽
         private void BankDataBind()
         {
-            string dealerID = this.txt_Bank.Text.Split('_')[1];
-            DataTable dt = Dealer_BankBll.GetList(string.Format(" BankID={0} and CollaborateType=1 and IsDelete=0", dealerID)).Tables[0];
-            if (dt != null && dt.Rows.Count > 0)
+            this.ddl_Dealer.Items.Clear();
+            string val = this.txt_Bank.Text;
+            if (!string.IsNullOrEmpty(val) && val.IndexOf('_') > 0)
             {
+                string where = string.Empty;
+                //监管员
+                if (this.CurrentUser.RoleId == 10)
+                {
+                    where = string.Format(" DealerID in (select DealerID from tb_Dealer_List where SupervisorID='{0}')", this.CurrentUser.RelationID.Value);
+                }
+                else
+                {
+
+                }
+                DataTable dt = Dealer_BankBll.GetDealerByBankForDataTable(string.IsNullOrEmpty(val.Split('_')[1]) ? 0 : int.Parse(val.Split('_')[1]), where);
+
                 ddl_Dealer.DataTextField = "DealerName";
                 ddl_Dealer.DataValueField = "DealerID";
                 ddl_Dealer.DataSource = dt;
@@ -232,13 +248,6 @@ namespace Citic_Web.ProjectTracking.RiskControl
         }
         #endregion
 
-        #region 窗体关闭事件--乔春羽(2013.8.9)
-        protected void WindowAdd_Close(object sender, WindowCloseEventArgs e)
-        {
-
-        }
-        #endregion
-
         #region 判断登陆角色，显示不同的按钮--乔春羽(2013.9.3)
         /// <summary>
         /// 按钮权限过滤
@@ -270,23 +279,26 @@ namespace Citic_Web.ProjectTracking.RiskControl
         #region 选择经销商，加载合作行--乔春羽(2013.12.12)
         protected void txt_Dealer_TextChanged(object sender, EventArgs e)
         {
-            string value = this.txt_Bank.Text;
-            if (!string.IsNullOrEmpty(value))
-            {
-                if (value.IndexOf('_') > 0)
-                {
-                    BankDataBind();
-                }
-            }
+            BankDataBind();
         }
         #endregion
 
         #region 生成Excel--乔春羽(2013.12.12)
         protected void btn_BuildExcel_Click(object sender, EventArgs e)
         {
-            if (DtSource == null || DtSource.Rows.Count <= 0)
+            string bankValue = this.txt_Bank.Text;
+            if (string.IsNullOrEmpty(bankValue) || bankValue.IndexOf("_") <= 0 || bankValue.Split('_').Length != 2)
             {
-                Alert.ShowInTop("没有可导出的数据！");
+                AlertShowInTop("请选择合作行！");
+                return;
+            }
+            DataTable dt = null;
+            string where = this.ConditionInit();
+            string tbName = string.Format("tb_Car_{1}_{0}", ddl_Dealer.SelectedValue, txt_Bank.Text.Split('_')[1]);
+            dt = StockErrorBll.GetListByPage(where, tbName, "CreateTime DESC", 0, 0).Tables[0];
+            if (dt == null || dt.Rows.Count <= 0)
+            {
+                AlertShowInTop("没有可导出的数据！");
                 return;
             }
             string sheetName = "《每日质押车辆统计表》";
@@ -298,28 +310,28 @@ namespace Citic_Web.ProjectTracking.RiskControl
             Excel.Worksheet wSheet = wBook.Worksheets[1] as Excel.Worksheet;
 
             int errorCarCount = 0;
-            if (DtSource.Rows.Count > 0)
+            if (dt.Rows.Count > 0)
             {
                 int row = 0;
-                row = DtSource.Rows.Count;
-                int col = DtSource.Columns.Count;
+                row = dt.Rows.Count;
+                int col = dt.Columns.Count;
                 for (int i = 0; i < row; i++)
                 {
-                    if (!Convert.ToBoolean(DtSource.Rows[i]["Status"]))
+                    if (!Convert.ToBoolean(dt.Rows[i]["Status"]))
                     {
                         errorCarCount++;
                     }
-                    string vin = DtSource.Rows[i]["Vin"].ToString();
-                    DateTime dt = Convert.ToDateTime(DtSource.Rows[i]["CreateTime"]);
-                    wSheet.Cells[i + 2, 1] = DtSource.Rows[i]["DealerName"];
-                    wSheet.Cells[i + 2, 2] = DtSource.Rows[i]["BankName"];
-                    wSheet.Cells[i + 2, 3] = DtSource.Rows[i]["BrandName"];
-                    wSheet.Cells[i + 2, 4] = DtSource.Rows[i]["CreateTime"];
-                    wSheet.Cells[i + 2, 5] = DtSource.Rows[i]["ErrorOther"];
+                    string vin = dt.Rows[i]["Vin"].ToString();
+                    DateTime time = Convert.ToDateTime(dt.Rows[i]["CreateTime"]);
+                    wSheet.Cells[i + 2, 1] = dt.Rows[i]["DealerName"];
+                    wSheet.Cells[i + 2, 2] = dt.Rows[i]["BankName"];
+                    wSheet.Cells[i + 2, 3] = dt.Rows[i]["BrandName"];
+                    wSheet.Cells[i + 2, 4] = dt.Rows[i]["CreateTime"];
+                    wSheet.Cells[i + 2, 5] = dt.Rows[i]["ErrorOther"];
                     wSheet.Cells[i + 2, 6] = vin.Substring(vin.Length - 6);
-                    wSheet.Cells[i + 2, 7] = DtSource.Rows[i]["CreateTime"];
-                    wSheet.Cells[i + 2, 8] = DtSource.Rows[i]["CarCost"];
-                    wSheet.Cells[i + 2, 9] = Math.Abs((int)(DateTime.Now - dt).TotalDays);
+                    wSheet.Cells[i + 2, 7] = dt.Rows[i]["CreateTime"];
+                    wSheet.Cells[i + 2, 8] = dt.Rows[i]["CarCost"];
+                    wSheet.Cells[i + 2, 9] = Math.Abs((int)(DateTime.Now - time).TotalDays);
                 }
             }
 
@@ -334,7 +346,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
             wSheet.Cells[1, 1 + 8] = "异常持续天数";
 
             //加尾部
-            int bottom = DtSource.Rows.Count + 1;
+            int bottom = dt.Rows.Count + 1;
             wSheet.Cells[bottom + 2, 1] = "质押车辆总数:";
             wSheet.Cells[bottom + 2, 2] = bottom - 1;
             wSheet.Cells[bottom + 3, 1] = "异常车辆总数:";
@@ -356,17 +368,17 @@ namespace Citic_Web.ProjectTracking.RiskControl
             string imagePath = string.Format("~/UploadImage/日查库照片/{0}/{1}/{0}_{1}_{2}.jpg", this.ddl_Dealer.SelectedValue, this.txt_Bank.Text.Split('_')[1], ConvertShortDateTimeToUI(DateTime.Now));
 
             //监管员角色不执行此步骤。
-            if (this.CurrentUser.RoleId != 10)
+            if (this.CurrentUser.RoleId == 10)
             {
-                if (File.Exists(imagePath))
+                if (File.Exists(Server.MapPath(imagePath)))
                 {
                     //插入图片
                     Excel.Worksheet worksheet = (Excel.Worksheet)excel.ActiveSheet;
-                    worksheet.Shapes.AddPicture(Server.MapPath(imagePath), MsoTriState.msoFalse, MsoTriState.msoTrue, 50, 50, 150, 150);
+                    worksheet.Shapes.AddPicture(Server.MapPath(imagePath), MsoTriState.msoFalse, MsoTriState.msoTrue, (float)50, (float)(dt.Rows.Count * 10), 150, 150);
                 }
-                else 
+                else
                 {
-                    Alert.ShowInTop("该店没有图片！");
+                    AlertShowInTop("该店没有图片！");
                 }
             }
             //保存工作簿   

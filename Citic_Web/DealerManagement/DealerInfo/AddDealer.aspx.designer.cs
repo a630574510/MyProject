@@ -94,6 +94,15 @@ namespace Citic_Web.DealerManagement.DealerInfo {
         protected global::FineUI.TextBox txt_DealerName;
         
         /// <summary>
+        /// txt_JC 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextBox txt_JC;
+        
+        /// <summary>
         /// cbl_DealerType 控件。
         /// </summary>
         /// <remarks>
@@ -139,13 +148,13 @@ namespace Citic_Web.DealerManagement.DealerInfo {
         protected global::FineUI.DropDownList ddl_GoffworkTime;
         
         /// <summary>
-        /// txt_DealerPayCode 控件。
+        /// txt_OrganizationCode 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox txt_DealerPayCode;
+        protected global::FineUI.TextBox txt_OrganizationCode;
         
         /// <summary>
         /// txt_YWZ 控件。

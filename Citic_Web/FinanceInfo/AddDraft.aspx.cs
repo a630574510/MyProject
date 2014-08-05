@@ -21,6 +21,11 @@ namespace Citic_Web.FinanceInfo
         }
         #region PrivateField--乔春羽(2013.11.29)
         private const string DEALERID = "DealerID";
+        private string DealerID
+        {
+            get { return ViewState[DEALERID] == null ? string.Empty : (string)ViewState[DEALERID]; }
+            set { ViewState[DEALERID] = value; }
+        }
         #endregion
 
         #region 绑定数据--乔春羽(2013.11.29)
@@ -29,6 +34,7 @@ namespace Citic_Web.FinanceInfo
         /// </summary>
         private void GridBind()
         {
+            DataTable dt = null;
             //where条件
             string where = ConditionInit();
 
@@ -44,10 +50,17 @@ namespace Citic_Web.FinanceInfo
             int pageSize = grid_List.PageSize;
             int rowbegin = pageIndex * pageSize + 1;
             int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = DealerBll.GetListByPage(where, "CreateTime DESC", rowbegin, rowend).Tables[0];
+            try
+            {
+                dt = DealerBll.GetListByPage(where, "CreateTime DESC", rowbegin, rowend).Tables[0];
 
-            grid_List.DataSource = dt;
-            grid_List.DataBind();
+                grid_List.DataSource = dt;
+                grid_List.DataBind();
+            }
+            catch (Exception e)
+            {
+                Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "GridBind()");
+            }
         }
 
 
@@ -73,7 +86,6 @@ namespace Citic_Web.FinanceInfo
             {
                 where.AppendFormat(" and DealerName like '%{0}%'", DealerName);
             }
-
             return where.ToString();
         }
         #endregion
@@ -100,7 +112,7 @@ namespace Citic_Web.FinanceInfo
             if (e.RowIndex > -1)
             {
                 //将经销商ID存起来
-                ViewState.Add(DEALERID, this.grid_List.DataKeys[e.RowIndex][0]);
+                DealerID = this.grid_List.DataKeys[e.RowIndex][0].ToString();
                 //将经销商名显示出来
                 this.lbl_DealerName.Text = this.grid_List.DataKeys[e.RowIndex][1].ToString();
 
@@ -124,7 +136,7 @@ namespace Citic_Web.FinanceInfo
                     this.ddl_Bank.DataBind();
                 }
             }
-            this.AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
+            AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
         }
         #endregion
 
@@ -173,7 +185,6 @@ namespace Citic_Web.FinanceInfo
         protected void btn_SaveAndClose_Click(object sender, EventArgs e)
         {
             Save();
-            PageContext.RegisterStartupScript(ActiveWindow.GetHideRefreshReference());
         }
 
         #region 判断是否有重复的汇票号--乔春羽
@@ -216,28 +227,30 @@ namespace Citic_Web.FinanceInfo
 
             try
             {
-                if (!ExistsDraftNo(model.DraftNo))
+                DataTable existsDraft = this.DraftBll.GetList(string.Format(" DraftNo = '{0}' and BankID='{1}' and DealerID='{2}' and IsDelete = 0 ", model.DraftNo, model.BankID, model.DealerID)).Tables[0];
+                if (existsDraft == null || existsDraft.Rows.Count == 0)
                 {
                     int num = DraftBll.Add(model);
                     if (num > 0)
                     {
-                        Alert.ShowInTop("添加成功！");
+                        AlertShowInTop("添加成功！");
                     }
                     else
                     {
-                        Alert.ShowInTop("添加失败！");
+                        AlertShowInTop("添加失败！");
+                        return;
                     }
                 }
                 else
                 {
-                    Alert.ShowInTop("汇票号已存在，请重新填写！");
+                    AlertShowInTop("汇票号已存在，请重新填写！");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "Save()");
             }
+            PageContext.RegisterStartupScript(ActiveWindow.GetHideRefreshReference());
         }
         #endregion
 
@@ -265,12 +278,50 @@ namespace Citic_Web.FinanceInfo
             SyncSelectedRowIndexArrayToHiddenField(grid_List, hfSelectedIDS);
             grid_List.PageIndex = e.NewPageIndex;
 
-            //乔春羽
             GridBind();
-            //乔春羽
 
             UpdateSelectedRowIndexArray(grid_List, hfSelectedIDS);
         }
         #endregion
+
+        #region 选择合作行之后，再与之前选择的经销商一同判断该店是否已经对接接口--乔春羽(2014.5.6)
+        protected void ddl_Bank_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string bankID = this.ddl_Bank.SelectedValue;
+            if (!string.IsNullOrEmpty(bankID) && bankID != "-1")
+            {
+                Citic.Model.Bank bankModel = this.BankBll.GetModel(int.Parse(bankID));
+                string bankCode = bankModel.ConnectID;
+                if (!string.IsNullOrEmpty(this.DealerID))
+                {
+                    DataTable dt = this.Dealer_BankBll.GetList(1, string.Format(" BankID = '{0}' and DealerID = '{1}'", bankID, this.DealerID), "ID").Tables[0];
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        string relationID = string.Empty;
+                        if (bankCode.Equals(Common.Common.GuangDaString))
+                        {
+                            relationID = dt.Rows[0]["GD_ID"].ToString();
+                        }
+                        else if (bankCode.Equals(Common.Common.ZhongXinString))
+                        {
+                            relationID = dt.Rows[0]["ZX_ID"].ToString();
+                        }
+
+                        if (!string.IsNullOrEmpty(relationID) && relationID != "-1")
+                        {
+                            string message = string.Format("经销商：{0}\r\n已对接{1}接口，该功能不可用！", this.lbl_DealerName.Text, bankCode.Equals(Common.Common.GuangDaString) ? "光大" : bankCode.Equals(Common.Common.ZhongXinString) ? "中信" : string.Empty);
+                            AlertShowInTop(message);
+                            this.btn_SaveAndClose.Enabled = false;
+                        }
+                        else
+                        {
+                            this.btn_SaveAndClose.Enabled = true;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
     }
 }

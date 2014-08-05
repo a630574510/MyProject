@@ -54,8 +54,8 @@
                         </x:Panel>
                     </Items>
                 </x:SimpleForm>
-                <x:Grid ID="grid_List" runat="server" ShowHeader="false" EnableBackgroundColor="true"
-                    BoxFlex="1" EnableCheckBoxSelect="true" AllowPaging="true" DataKeyNames="ID,Vin" IsDatabasePaging="true"
+                <x:Grid ID="grid_List" runat="server" ShowHeader="false" EnableBackgroundColor="true" EnableTextSelection="true"
+                    BoxFlex="1" EnableCheckBoxSelect="false" AllowPaging="true" DataKeyNames="ID,Vin" IsDatabasePaging="true"
                     OnPageIndexChange="grid_List_PageIndexChange" OnRowDataBound="grid_List_RowDataBound"
                     AllowSorting="true" OnSort="grid_List_Sort" SortColumnIndex="0" SortDirection="ASC" PageSize="15">
 
@@ -63,7 +63,6 @@
                         <x:BoundField HeaderText="经销商" DataField="DealerName" SortField="DealerName" Width="200px" />
                         <x:BoundField HeaderText="票号" DataField="DraftNo" SortField="DraftNo" Width="200px" />
                         <x:BoundField HeaderText="车架号" DataField="Vin" Width="200px" />
-                        <x:BoundField HeaderText="事项" DataField="ReqType" Width="60px" />
                         <x:BoundField HeaderText="具体内容" DataField="Content" Width="300px" />
                         <x:BoundField HeaderText="申请时间" DataField="CreateTime" />
                         <x:BoundField HeaderText="状态" DataField="Status" Width="50px" />

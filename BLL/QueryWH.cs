@@ -64,30 +64,6 @@ namespace Citic.BLL
         }
 
         /// <summary>
-        /// 得到一个对象实体，从缓存中
-        /// </summary>
-        public Citic.Model.QueryWH GetModelByCache(int ID)
-        {
-
-            string CacheKey = "QueryWHModel-" + ID;
-            object objModel = Maticsoft.Common.DataCache.GetCache(CacheKey);
-            if (objModel == null)
-            {
-                try
-                {
-                    objModel = dal.GetModel(ID);
-                    if (objModel != null)
-                    {
-                        int ModelCache = Maticsoft.Common.ConfigHelper.GetConfigInt("ModelCache");
-                        Maticsoft.Common.DataCache.SetCache(CacheKey, objModel, DateTime.Now.AddMinutes(ModelCache), TimeSpan.Zero);
-                    }
-                }
-                catch { }
-            }
-            return (Citic.Model.QueryWH)objModel;
-        }
-
-        /// <summary>
         /// 获得数据列表
         /// </summary>
         public DataSet GetList(string strWhere)
@@ -146,13 +122,6 @@ namespace Citic.BLL
         {
             return dal.GetRecordCount(strWhere);
         }
-        /// <summary>
-        /// 分页获取数据列表
-        /// </summary>
-        public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
-        {
-            return dal.GetListByPage(strWhere, orderby, startIndex, endIndex);
-        }
         #endregion  BasicMethod
         #region  ExtensionMethod
         #region 批量更新--乔春羽(2013.12.6)
@@ -164,6 +133,35 @@ namespace Citic.BLL
         public int Updates(params Citic.Model.QueryWH[] models)
         {
             return dal.Updates(models);
+        }
+        #endregion
+        #region 查询数据，分页--乔春羽(2014.4.18)
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetListByPage(string strWhere, string orderby, int startIndex, int endIndex)
+        {
+            return dal.GetListByPage(strWhere, orderby, startIndex, endIndex);
+        }
+        #endregion
+        #region 查询数据数量--乔春羽(2014.4.18)
+        public int GetRecordCountBySearch(string strWhere)
+        {
+            return dal.GetRecordCountBySearch(strWhere);
+        }
+        #endregion
+        #region 查询数据，不分页--乔春羽(2014.4.21)
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        public DataSet GetList(string strWhere, string orderby)
+        {
+            DataSet ds = dal.GetList(strWhere, orderby);
+            if (ds == null || ds.Tables[0] == null)
+            {
+                ds.Tables.Add(new DataTable());
+            }
+            return ds;
         }
         #endregion
         #endregion  ExtensionMethod

@@ -58,11 +58,10 @@
                         <x:Panel ID="pnl_CarInfo" EnableBackgroundColor="true" runat="server" BodyPadding="0px" BoxFlex="2"
                             ShowHeader="true" Title="质押物信息" CssStyle="padding-right:5px" Layout="Fit">
                             <Items>
-                                <x:Grid ID="grid_List" PageSize="10" ShowBorder="false" ShowHeader="false" AllowPaging="true"
+                                <x:Grid ID="grid_List" PageSize="10" ShowBorder="false" ShowHeader="false"
                                     runat="server" DataKeyNames="CarID,Vin" EnableTextSelection="true" AutoHeight="true"
-                                    IsDatabasePaging="true" BoxConfigAlign="Stretch" OnPageIndexChange="grid_List_PageIndexChange"
-                                    EnableRowNumber="True" ClearSelectedRowsAfterPaging="false" ForceFitAllTime="false"
-                                    OnRowDataBound="grid_List_RowDataBound" AutoScroll="true">
+                                    BoxConfigAlign="Stretch" ForceFitAllTime="false" AutoScroll="true"
+                                    OnRowDataBound="grid_List_RowDataBound">
                                     <Columns>
                                         <x:BoundField ID="bf_Vin" DataField="Vin" DataFormatString="{0}" HeaderText="车架号" />
                                         <x:BoundField ID="bf_CarModel" DataField="CarModel" DataFormatString="{0}" HeaderText="型号" />
@@ -75,19 +74,6 @@
                                         <x:BoundField ID="bf_Statu" DataField="Statu" DataFormatString="{0}" HeaderText="车辆状态" />
                                         <x:BoundField ID="bf_ReturnCost" DataField="ReturnCost" DataFormatString="{0}" HeaderText="回款金额" />
                                     </Columns>
-                                    <PageItems>
-                                        <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
-                                        </x:ToolbarSeparator>
-                                        <x:ToolbarText ID="TtxtPage" runat="server" Text="每页数：">
-                                        </x:ToolbarText>
-                                        <x:DropDownList runat="server" ID="ddlPageSize" Width="40px" AutoPostBack="true"
-                                            OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
-                                            <x:ListItem Text="5" Value="5" />
-                                            <x:ListItem Text="10" Value="10" Selected="true" />
-                                            <x:ListItem Text="15" Value="15" />
-                                            <x:ListItem Text="20" Value="20" />
-                                        </x:DropDownList>
-                                    </PageItems>
                                 </x:Grid>
                             </Items>
                         </x:Panel>

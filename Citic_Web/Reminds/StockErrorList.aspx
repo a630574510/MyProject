@@ -30,12 +30,14 @@
                             CssClass="x-form-item">
                             <Items>
                                 <x:Label ID="Label1" runat="server" Text="经销商：" CssClass="inline" CssStyle="padding-right:12px"></x:Label>
-                                <x:TextBox ID="txt_DealerName" runat="server" Label="经销商" Text="" Width="300px" AutoPostBack="true" OnTextChanged="txt_DealerName_TextChanged" CssClass="inline"></x:TextBox>
+                                <x:TextBox ID="txt_DealerName" runat="server" Height="25px" Label="经销商" Text="" Width="300px" AutoPostBack="true" OnTextChanged="txt_DealerName_TextChanged"></x:TextBox>
 
                                 <x:Label ID="Label2" runat="server" Text="合作行：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
-                                <x:DropDownList ID="ddl_Bank" runat="server" Width="300px"></x:DropDownList>
-                                <x:Label ID="Label3" runat="server" Label="Label" Text="车架号：" CssStyle="margin-left:5px"></x:Label>
-                                <x:TextBox ID="txt_Vin" runat="server" Label="Label" Text="" CssStyle="margin-left:5px"></x:TextBox>
+                                <x:DropDownList ID="ddl_Bank" runat="server" Width="300px">
+                                    <x:ListItem Text="请选择" Value="-1" Selected="true" />
+                                </x:DropDownList>
+                                <x:Label ID="Label3" runat="server" Label="Label" Text="车架号：" CssClass="inline" CssStyle="margin-left:5px"></x:Label>
+                                <x:TextBox ID="txt_Vin" runat="server" Height="25px" Text="" CssStyle="margin-left:5px"></x:TextBox>
                             </Items>
                         </x:Panel>
                         <x:Panel ID="Panel3" runat="server" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column"
@@ -70,7 +72,7 @@
                         <x:BoundField HeaderText="经销商" DataField="DealerName" ColumnID="DealerName" Width="200px" />
                         <x:BoundField HeaderText="票号" DataField="DraftNo" ColumnID="DraftNo" Width="200px" />
                         <x:BoundField HeaderText="车架号" DataField="Vin" ColumnID="Vin" Width="200px" />
-                        <x:BoundField HeaderText="车辆金额" DataField="CarCost" ColumnID="CarCost" Width="60px" />
+                        <x:BoundField HeaderText="车辆金额" DataField="CarCost" ColumnID="CarCost" Width="70px" />
                         <x:BoundField HeaderText="合作行" DataField="BankName" ColumnID="BankName" Width="200px" />
                         <x:BoundField HeaderText="异常状态" DataField="ErrorType" ColumnID="ErrorType" />
                         <x:BoundField HeaderText="具体内容" DataField="ErrorOther" ColumnID="ErrorOther" />
@@ -114,18 +116,11 @@
     function onReady() {
         var txt_Dealer = '<%= txt_DealerName.ClientID %>';
 
-        var cache = {};
-
         $('#' + txt_Dealer).autocomplete({
             source: function (request, response) {
                 var term = request.term;
-                if (term in cache) {
-                    response(cache[term]);
-                    return;
-                }
 
-                $.getJSON("../ProjectTracking/RiskControl/search.ashx", request, function (data, status, xhr) {
-                    cache[term] = data;
+                $.getJSON("../Handlers/searchDealer.ashx", request, function (data, status, xhr) {
                     response(data);
                 });
             }

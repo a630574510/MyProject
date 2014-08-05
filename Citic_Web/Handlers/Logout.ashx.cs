@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.SessionState;
 using System.Web.Security;
+using System.Collections;
 
 namespace Citic_Web.Handlers
 {
@@ -16,6 +17,12 @@ namespace Citic_Web.Handlers
         {
             context.Response.ContentType = "text/plain";
             context.Session.Clear();
+            //Hashtable map = (Hashtable)HttpContext.Current.Session[AuthProcess.LOGIN_KEY];
+            //if (map != null)
+            //{
+            //    map.Remove(AuthProcess.UserSessionID);
+            //    HttpContext.Current.Session[AuthProcess.LOGIN_KEY] = map;
+            //}
             FormsAuthentication.SignOut();
             context.Response.Redirect("~/Login.aspx");
         }

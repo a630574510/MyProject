@@ -65,7 +65,7 @@
                                                 DataNavigateUrlFormatString="../Confirmation/{0}" DataNavigateUrlFieldsEncode="true"
                                                 Text="钥匙借用登记表下载" />
                                             <x:BoundField HeaderText="添加人" DataField="CreateName" />
-                                            <x:BoundField HeaderText="添加日期" DataField="CreateTime"  DataFormatString="{0:yyyy-MM-dd}" />
+                                            <x:BoundField HeaderText="添加时间" DataField="CreateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                         </Columns>
                                     </x:Grid>
                                 </Items>
@@ -80,7 +80,7 @@
                                                 DataNavigateUrlFormatString="../Confirmation/{0}" DataNavigateUrlFieldsEncode="true"
                                                 Text="出库申请书下载" />
                                             <x:BoundField HeaderText="添加人" DataField="CreateName" />
-                                            <x:BoundField HeaderText="添加日期" DataField="CreateTime"  DataFormatString="{0:yyyy-MM-dd}" />
+                                            <x:BoundField HeaderText="添加时间" DataField="CreateTime"  DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                         </Columns>
                                     </x:Grid>
                                 </Items>
@@ -95,7 +95,7 @@
                                                 DataNavigateUrlFormatString="../Confirmation/{0}" DataNavigateUrlFieldsEncode="true"
                                                 Text="二网申请书下载" />
                                             <x:BoundField HeaderText="添加人" DataField="CreateName" />
-                                            <x:BoundField HeaderText="添加日期" DataField="CreateTime" DataFormatString="{0:yyyy-MM-dd}" />
+                                            <x:BoundField HeaderText="添加时间" DataField="CreateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                         </Columns>
                                     </x:Grid>
                                 </Items>

@@ -157,22 +157,49 @@ namespace Citic_Web.DealerManagement.DealerInfo {
         protected global::FineUI.Panel Panel7;
         
         /// <summary>
-        /// lbl_BankInterface 控件。
+        /// lbl_ZXInterface 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Label lbl_BankInterface;
+        protected global::FineUI.Label lbl_ZXInterface;
         
         /// <summary>
-        /// cbl_BankInterface 控件。
+        /// chk_ZXInterface 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.CheckBox cbl_BankInterface;
+        protected global::FineUI.CheckBox chk_ZXInterface;
+        
+        /// <summary>
+        /// Panel9 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Panel Panel9;
+        
+        /// <summary>
+        /// lbl_GDInterface 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label lbl_GDInterface;
+        
+        /// <summary>
+        /// chk_GDInterface 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.CheckBox chk_GDInterface;
         
         /// <summary>
         /// grid_List 控件。

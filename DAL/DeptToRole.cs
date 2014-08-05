@@ -29,7 +29,6 @@ namespace Citic.DAL
             return DbHelperSQL.Exists(strSql.ToString(), parameters);
         }
 
-
         /// <summary>
         /// 增加一条数据
         /// </summary>
@@ -37,17 +36,19 @@ namespace Citic.DAL
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into tb_DeptToRole(");
-            strSql.Append("DeptID,RoleID,RoleName)");
+            strSql.Append("DeptID,RoleID,RoleName,IsDepartManager)");
             strSql.Append(" values (");
-            strSql.Append("@DeptID,@RoleID,@RoleName)");
+            strSql.Append("@DeptID,@RoleID,@RoleName,@IsDepartManager)");
             strSql.Append(";select @@IDENTITY");
             SqlParameter[] parameters = {
 					new SqlParameter("@DeptID", SqlDbType.Int,4),
 					new SqlParameter("@RoleID", SqlDbType.Int,4),
-					new SqlParameter("@RoleName", SqlDbType.NVarChar,100)};
+					new SqlParameter("@RoleName", SqlDbType.NVarChar,100),
+					new SqlParameter("@IsDepartManager", SqlDbType.Bit,1)};
             parameters[0].Value = model.DeptID;
             parameters[1].Value = model.RoleID;
             parameters[2].Value = model.RoleName;
+            parameters[3].Value = model.IsDepartManager;
 
             object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
             if (obj == null)
@@ -68,17 +69,20 @@ namespace Citic.DAL
             strSql.Append("update tb_DeptToRole set ");
             strSql.Append("DeptID=@DeptID,");
             strSql.Append("RoleID=@RoleID,");
-            strSql.Append("RoleName=@RoleName");
+            strSql.Append("RoleName=@RoleName,");
+            strSql.Append("IsDepartManager=@IsDepartManager");
             strSql.Append(" where ID=@ID");
             SqlParameter[] parameters = {
 					new SqlParameter("@DeptID", SqlDbType.Int,4),
 					new SqlParameter("@RoleID", SqlDbType.Int,4),
 					new SqlParameter("@RoleName", SqlDbType.NVarChar,100),
+					new SqlParameter("@IsDepartManager", SqlDbType.Bit,1),
 					new SqlParameter("@ID", SqlDbType.Int,4)};
             parameters[0].Value = model.DeptID;
             parameters[1].Value = model.RoleID;
             parameters[2].Value = model.RoleName;
-            parameters[3].Value = model.ID;
+            parameters[3].Value = model.IsDepartManager;
+            parameters[4].Value = model.ID;
 
             int rows = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -142,7 +146,7 @@ namespace Citic.DAL
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select  top 1 ID,DeptID,RoleID,RoleName from tb_DeptToRole ");
+            strSql.Append("select  top 1 ID,DeptID,RoleID,RoleName,IsDepartManager from tb_DeptToRole ");
             strSql.Append(" where ID=@ID");
             SqlParameter[] parameters = {
 					new SqlParameter("@ID", SqlDbType.Int,4)
@@ -186,6 +190,17 @@ namespace Citic.DAL
                 {
                     model.RoleName = row["RoleName"].ToString();
                 }
+                if (row["IsDepartManager"] != null && row["IsDepartManager"].ToString() != "")
+                {
+                    if ((row["IsDepartManager"].ToString() == "1") || (row["IsDepartManager"].ToString().ToLower() == "true"))
+                    {
+                        model.IsDepartManager = true;
+                    }
+                    else
+                    {
+                        model.IsDepartManager = false;
+                    }
+                }
             }
             return model;
         }
@@ -196,7 +211,7 @@ namespace Citic.DAL
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ID,DeptID,RoleID,RoleName ");
+            strSql.Append("select ID,DeptID,RoleID,RoleName,IsDepartManager ");
             strSql.Append(" FROM tb_DeptToRole ");
             if (strWhere.Trim() != "")
             {
@@ -216,7 +231,7 @@ namespace Citic.DAL
             {
                 strSql.Append(" top " + Top.ToString());
             }
-            strSql.Append(" ID,DeptID,RoleID,RoleName ");
+            strSql.Append(" ID,DeptID,RoleID,RoleName,IsDepartManager ");
             strSql.Append(" FROM tb_DeptToRole ");
             if (strWhere.Trim() != "")
             {
@@ -306,6 +321,27 @@ namespace Citic.DAL
                 }
             }
             return num;
+        }
+        #endregion
+
+        #region 获取当前登录用户角色的上级角色--乔春羽(2014.4.21)
+        public object GetBossRoleID(string roleID)
+        {
+            object obj = null;
+            StringBuilder strSql = new StringBuilder("GO");
+            strSql.AppendLine("DECLARE @DeptID int = 0");
+            strSql.AppendLine(string.Format("SELECT @DeptID = DeptID FROM tb_DeptToRole WHERE RoleID = '{0}'", roleID));
+            strSql.AppendLine("SELECT RoleID FROM tb_DeptToRole WHERE DeptID = @DeptID AND IsDepartManager = 1");
+            strSql.AppendLine("GO");
+            try
+            {
+                obj = DbHelperSQL.GetSingle(strSql.ToString());
+            }
+            catch
+            {
+                obj = string.Empty;
+            }
+            return obj;
         }
         #endregion
 

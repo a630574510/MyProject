@@ -31,10 +31,24 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 //显示之前添加过的品牌信息
                 BrandDataBind();
 
-                Citic.Model.Dealer model = Session["model"] as Citic.Model.Dealer;
-                if (model != null)
+                object obj = Session["model"];
+                if (obj is Citic.Model.Dealer)
                 {
-                    DealerName = model.DealerName;
+                    Citic.Model.Dealer model = obj as Citic.Model.Dealer;
+                    if (model != null)
+                    {
+                        this.DealerName = model.DealerName;
+                        this.ORG_CODE = model.DealerPayCode;
+                    }
+                }
+                else if (obj is DataRow)
+                {
+                    DataRow row = obj as DataRow;
+                    if (row != null)
+                    {
+                        this.DealerName = row["DealerName"].ToString();
+                        this.ORG_CODE = row["DealerPayCode"].ToString();
+                    }
                 }
 
                 string dealerIDStr = Request.QueryString["DealerID"];
@@ -43,12 +57,30 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     ViewState.Add("DealerID", dealerIDStr);
                 }
 
+
+                string str = Request.QueryString["isAdd"];
+                if (!string.IsNullOrEmpty(str))
+                {
+                    if (str == "1")
+                    {
+                        this.IsAdd = 1;
+                    }
+                    else
+                    {
+                        this.IsAdd = 0;
+                    }
+                }
+                else
+                {
+                    this.IsAdd = 0;
+                }
+
                 string bankID = Request.QueryString["_bankid"];
                 if (!string.IsNullOrEmpty(bankID) && !string.IsNullOrEmpty(dealerIDStr))
                 {
                     this.BankID = int.Parse(bankID);
                     //加载所选择的“经销商合作行信息”
-                    DataTable dt = Dealer_BankBll.GetList(string.Format(" DealerID='{0}' and BankID='{1}' ", dealerIDStr, bankID)).Tables[0];
+                    DataTable dt = Dealer_BankBll.GetList(string.Format(" A.DealerID='{0}' and A.BankID='{1}' ", dealerIDStr, bankID)).Tables[0];
                     if (dt != null && dt.Rows.Count > 0)
                     {
                         //禁用银行选择功能
@@ -60,18 +92,28 @@ namespace Citic_Web.DealerManagement.DealerInfo
                         string bankName = dt.Rows[0]["BankName"].ToString();
                         this.lbl_BankName.Text = bankName;
                         this.lbl_BankName.CssStyle = "font-weight:bold;font-size:18px;color:red";
+                        string bankCode = dt.Rows[0]["ConnectID"].ToString();
                         hf_BankID.Text = bankID;
 
-                        if (bankName.Substring(0, 2) == "光大")
+                        if (bankCode.Equals(Common.Common.GuangDaString))
                         {
-                            this.lbl_BankInterface.Enabled = true;
-                            this.cbl_BankInterface.Enabled = true;
+                            //中信接口
+                            this.lbl_ZXInterface.Enabled = false;
+                            this.chk_ZXInterface.Enabled = false;
+
+                            //光大接口
+                            this.lbl_GDInterface.Enabled = true;
+                            this.chk_GDInterface.Enabled = true;
+                            this.chk_GDInterface.Checked = true;
                         }
-                        else
+                        else if (bankCode.Equals(Common.Common.ZhongXinString))
                         {
-                            this.lbl_BankInterface.Enabled = false;
-                            this.cbl_BankInterface.Enabled = false;
-                            this.cbl_BankInterface.Checked = false;
+                            this.lbl_ZXInterface.Enabled = true;
+                            this.chk_ZXInterface.Enabled = true;
+                            this.chk_ZXInterface.Checked = true;
+
+                            this.lbl_GDInterface.Enabled = false;
+                            this.chk_GDInterface.Enabled = false;
                         }
                         #endregion
 
@@ -79,21 +121,21 @@ namespace Citic_Web.DealerManagement.DealerInfo
                         foreach (DataRow row in dt.Rows)
                         {
                             object[] objs = row.ItemArray;
-                            object dc_BrandID = objs[5];
+                            object dc_BrandID = row["BrandID"];
                             object dc_ID = string.Empty;
-                            object dc_BrandName = objs[6];
-                            object dc_BusinessMode = objs[7];
+                            object dc_BrandName = row["BrandName"];
+                            object dc_BusinessMode = row["BusinessMode"];
                             object dc_BusinessModeStr = string.Empty;
-                            object dc_SSMoney = objs[10];
-                            object dc_YSMoney = objs[11];
-                            object dc_PaymentCycle = objs[12];
+                            object dc_SSMoney = row["SSMoney"];
+                            object dc_YSMoney = row["YSMoney"];
+                            object dc_PaymentCycle = row["PaymentCycle"];
                             object dc_PaymentCycleStr = string.Empty;
-                            object dc_FinancingMode = objs[8];
+                            object dc_FinancingMode = row["FinancingMode"];
                             object dc_FinancingModeStr = string.Empty;
-                            object dc_DispatchTime = objs[13];
+                            object dc_DispatchTime = row["DispatchTime"];
 
                             dc_ID = GetMaxID(Dt_Brand);
-                            dc_BusinessModeStr = dc_BusinessMode.ToString() == "1" ? "车证模式" : dc_BusinessMode.ToString() == "2" ? "合格证模式" : dc_BusinessMode.ToString() == "3" ? "巡库模式" : string.Empty;
+                            dc_BusinessModeStr = dc_BusinessMode.ToString() == "1" ? "车证模式" : dc_BusinessMode.ToString() == "2" ? "合格证模式" : dc_BusinessMode.ToString() == "3" ? "巡库模式" : "无效";
                             dc_PaymentCycleStr = dc_PaymentCycle.ToString() == "1" ? "月" : dc_PaymentCycle.ToString() == "2" ? "季" : dc_PaymentCycle.ToString() == "3" ? "半年" : dc_PaymentCycle.ToString() == "4" ? "年" : string.Empty;
                             if (dc_FinancingMode.ToString().Contains("1"))
                             {
@@ -126,15 +168,15 @@ namespace Citic_Web.DealerManagement.DealerInfo
                             dr["dc_FinancingModeStr"] = dc_FinancingModeStr;
                             dr["dc_DispatchTime"] = dc_DispatchTime;
 
-                            dr["ID"] = objs[0];
-                            dr["DealerID"] = objs[1];
-                            dr["DealerName"] = objs[2];
-                            dr["BankID"] = objs[3];
-                            dr["BankName"] = objs[4];
-                            dr["GD_ID"] = objs[18];
-                            dr["CreateID"] = objs[14];
-                            dr["CreateTime"] = objs[15];
-                            dr["StopTime"] = objs[17];
+                            dr["ID"] = row["ID"];
+                            dr["DealerID"] = row["DealerID"];
+                            dr["DealerName"] = row["DealerName"];
+                            dr["BankID"] = row["BankID"];
+                            dr["BankName"] = row["BankName"];
+                            dr["GD_ID"] = row["GD_ID"];
+                            dr["CreateID"] = row["CreateID"];
+                            dr["CreateTime"] = row["CreateTime"];
+                            dr["StopTime"] = row["StopTime"];
 
                             Dt_Brand.Rows.Add(dr);
                         }
@@ -146,7 +188,13 @@ namespace Citic_Web.DealerManagement.DealerInfo
         }
 
         #region PrivateFields--乔春羽
-        public int DealerID
+        private int IsAdd
+        {
+            get { return (int)ViewState["IsAdd"]; }
+            set { ViewState["IsAdd"] = value; }
+        }
+
+        private int DealerID
         {
             get
             {
@@ -159,11 +207,21 @@ namespace Citic_Web.DealerManagement.DealerInfo
             }
         }
 
+        /// <summary>
+        /// 存储组织机构代码值
+        /// </summary>
+        private string ORG_CODE
+        {
+            get { return (string)ViewState["ORG_CODE"]; }
+            set { ViewState["ORG_CODE"] = value; }
+        }
+
         public string DealerName
         {
             get { return (string)ViewState["DealerName"]; }
             set { ViewState["DealerName"] = value; }
         }
+
         /// <summary>
         /// 存放品牌信息（品牌作为一个新的维度区分了一个店）
         /// </summary>
@@ -240,13 +298,20 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 return _GD_CustInfoBll;
             }
         }
+
         /// <summary>
         /// 从表GD_CustInfo中查询出来的CustID
         /// </summary>
-        private string CustID
+        private string GD_ID
         {
-            get { return (string)ViewState["CustID"]; }
+            get { return ViewState["CustID"] == null ? string.Empty : (string)ViewState["CustID"]; }
             set { ViewState["CustID"] = value; }
+        }
+
+        private string ZX_ID
+        {
+            get { return ViewState["ZX_ID"] == null ? string.Empty : (string)ViewState["ZX_ID"]; }
+            set { ViewState["ZX_ID"] = value; }
         }
 
         /// <summary>
@@ -331,7 +396,7 @@ namespace Citic_Web.DealerManagement.DealerInfo
             //DealerID=0，表示该页面是从“添加经销商”的入口进入的。
             //其目的是，要添加合作行与品牌。
             //所以，要将所选择的银行和品牌添加到共有变量Banks中。
-            if (DealerID == 0)
+            if (this.IsAdd == 1)
             {
                 foreach (DataRow row in Dt_Brand.Rows)
                 {
@@ -344,7 +409,6 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     model.SSMoney = Convert.ToDecimal(row["dc_SSMoney"] == null ? 0.00 : row["dc_SSMoney"]);
                     model.YSMoney = Convert.ToDecimal(row["dc_YSMoney"] == null ? 0.00 : row["dc_YSMoney"]);
                     model.PaymentCycle = Convert.ToInt32(row["dc_PaymentCycle"]);
-                    //model.FinancingMode = row["dc_FinancingMode"].ToString();
                     model.FinancingMode = string.Empty;
                     model.BrandID = Convert.ToInt32(row["dc_BrandID"]);
                     model.BrandName = row["dc_BrandName"].ToString();
@@ -353,7 +417,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     model.CreateID = this.CurrentUser.UserId;
                     model.CreateTime = DateTime.Now;
 
-                    model.GD_ID = CustID;
+                    model.GD_ID = GD_ID;
+                    model.ZX_ID = ZX_ID;
 
                     Banks.Add(model);
                 }
@@ -388,7 +453,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
                         model.CreateID = this.CurrentUser.UserId;
                         model.CreateTime = DateTime.Now;
 
-                        model.GD_ID = CustID;
+                        model.GD_ID = GD_ID;
+                        model.ZX_ID = ZX_ID;
 
                         banks.Add(model);
                     }
@@ -412,16 +478,16 @@ namespace Citic_Web.DealerManagement.DealerInfo
                     if (this.Dt_Brand != null && Dt_Brand.Rows.Count > 0)
                     {
                         List<Citic.Model.Dealer_Bank> banks = new List<Citic.Model.Dealer_Bank>();
+
                         foreach (DataRow row in Dt_Brand.Rows)
                         {
                             banks.Add(new Citic.Model.Dealer_Bank()
                             {
-                                ID = Convert.ToInt32(row["ID"]),
-                                DealerID = Convert.ToInt32(row["DealerID"]),
-                                DealerName = row["DealerName"].ToString(),
-                                BankID = Convert.ToInt32(row["BankID"]),
-                                BankName = row["BankName"].ToString(),
-                                GD_ID = CustID,
+                                DealerID = this.DealerID,
+                                DealerName = this.DealerName,
+                                BankID = this.BankID,
+                                BankName = this.lbl_BankName.Text,
+                                GD_ID = GD_ID,
                                 BrandID = Convert.ToInt32(row["dc_BrandID"]),
                                 BrandName = row["dc_BrandName"].ToString(),
                                 BusinessMode = Convert.ToInt32(row["dc_BusinessMode"]),
@@ -432,9 +498,8 @@ namespace Citic_Web.DealerManagement.DealerInfo
                                 DispatchTime = Convert.ToDateTime(row["dc_DispatchTime"]),
                                 ZX_ID = string.Empty,
                                 IsDelete = false,
-                                //StopTime = Convert.ToDateTime(row["StopTime"]),
-                                CreateID = Convert.ToInt32(row["CreateID"]),
-                                CreateTime = Convert.ToDateTime(row["CreateTime"]),
+                                CreateID = this.CurrentUser.UserId,
+                                CreateTime = DateTime.Now,
                                 CollaborateType = 1
                             });
                         }
@@ -619,20 +684,49 @@ namespace Citic_Web.DealerManagement.DealerInfo
             if (e.RowIndex > -1)
             {
                 string bankName = grid_List.Rows[e.RowIndex].Values[0].ToString();
+                string bankID = grid_List.Rows[e.RowIndex].DataKeys[0].ToString();
+                object obj = grid_List.Rows[e.RowIndex].DataKeys[2];
+                string bankCode = obj == null ? string.Empty : obj.ToString();
+
+                //做验证
+                int count = this.Dealer_BankBll.GetRecordCountBySearch(string.Format(" (A.DealerID = '{0}' or A.DealerName = '{2}' or B.DealerPayCode = '{3}') and BankID = '{1}' and A.CollaborateType = 1 ", this.DealerID, bankID, this.DealerName, this.ORG_CODE));
+                if (count > 0)
+                {
+                    AlertShowInTop("该经销商已与所选银行合作，请重新选择！");
+                    return;
+                }
+
+                hf_BankID.Text = grid_List.Rows[e.RowIndex].DataKeys[0].ToString();
                 this.lbl_BankName.Text = bankName;
                 this.lbl_BankName.CssStyle = "font-weight:bold;font-size:18px;color:red";
-                hf_BankID.Text = grid_List.Rows[e.RowIndex].DataKeys[0].ToString();
 
-                if (bankName.Substring(0, 2) == "光大")
+                if (bankCode.Equals(Common.Common.GuangDaString))
                 {
-                    this.lbl_BankInterface.Enabled = true;
-                    this.cbl_BankInterface.Enabled = true;
+                    this.lbl_GDInterface.Enabled = true;
+                    this.chk_GDInterface.Enabled = true;
+
+                    this.lbl_ZXInterface.Enabled = false;
+                    this.chk_ZXInterface.Enabled = false;
+                    this.chk_ZXInterface.Checked = false;
+                }
+                else if (bankCode.Equals(Common.Common.ZhongXinString))
+                {
+                    this.lbl_GDInterface.Enabled = false;
+                    this.chk_GDInterface.Enabled = false;
+                    this.chk_GDInterface.Checked = false;
+
+                    this.lbl_ZXInterface.Enabled = true;
+                    this.chk_ZXInterface.Enabled = true;
                 }
                 else
                 {
-                    this.lbl_BankInterface.Enabled = false;
-                    this.cbl_BankInterface.Enabled = false;
-                    this.cbl_BankInterface.Checked = false;
+                    this.lbl_GDInterface.Enabled = false;
+                    this.chk_GDInterface.Enabled = false;
+                    this.chk_GDInterface.Checked = false;
+
+                    this.lbl_ZXInterface.Enabled = false;
+                    this.chk_ZXInterface.Enabled = false;
+                    this.chk_ZXInterface.Checked = false;
                 }
 
                 Citic.Model.Dealer_Bank model = new Citic.Model.Dealer_Bank();
@@ -676,7 +770,27 @@ namespace Citic_Web.DealerManagement.DealerInfo
                 if (e.CommandName == "del")
                 {
                     int id = Convert.ToInt32(grid_BrandList.DataKeys[e.RowIndex][0]);
-                    RemoveBrand(Dt_Brand, id);
+                    if (IsAdd == 1)
+                    {
+                        RemoveBrand(Dt_Brand, id);
+                    }
+                    else if (IsAdd == 0)
+                    {
+                        DataTable tempDt = Dealer_BankBll.GetList(1, string.Format("BankID={0} and DealerID={1} and BrandName='{2}'", this.BankID, this.DealerID, grid_BrandList.DataKeys[e.RowIndex][4]), "ID").Tables[0];
+                        if (tempDt != null && tempDt.Rows.Count > 0)
+                        {
+                            bool flag = Dealer_BankBll.Delete(Convert.ToInt32(tempDt.Rows[0]["ID"]));
+                            if (flag)
+                            {
+                                AlertShowInTop("删除成功！");
+                                RemoveBrand(Dt_Brand, id);
+                            }
+                            else
+                            {
+                                AlertShowInTop("删除失败！");
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -832,25 +946,34 @@ namespace Citic_Web.DealerManagement.DealerInfo
         }
         #endregion
 
-        #region 光大接口对接--乔春羽(2014.3.12)
+        #region //接口对接--乔春羽(2014.3.12)
         protected void cbl_BankInterface_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.cbl_BankInterface.Checked)
+            FineUI.CheckBox chk = sender as FineUI.CheckBox;
+            if (chk != null)
             {
-                if (string.IsNullOrEmpty(this.DealerName))
+                if (chk.Checked)
                 {
-                    AlertShowInTop("还没有添加经销商名称!");
-                    return;
-                }
-                //根据经销商的名称，去GD_CustInfo表中查询出CustID，作为光大直联ID存入表tb_Dealer_Bank_List中的GD_ID字段中。
-                DataTable dt = GD_CustInfoBll.GetList(string.Format(" CUST_NAME = '{0}' ", this.DealerName)).Tables[0];
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    CustID = dt.Rows[0]["CUST_ID"].ToString();
+                    if (string.IsNullOrEmpty(this.DealerName))
+                    {
+                        AlertShowInTop("还没有添加经销商名称!");
+                        return;
+                    }
+                    if (chk.ID.Equals("chk_GDInterface"))
+                    {
+                        this.GD_ID = "-1";
+                        this.ZX_ID = string.Empty;
+                    }
+                    else if (chk.ID.Equals("chk_ZXInterface"))
+                    {
+                        this.GD_ID = string.Empty;
+                        this.ZX_ID = "-1";
+                    }
                 }
                 else
                 {
-                    AlertShowInTop("找不到该经销商的关联数据，不能对接！");
+                    this.ZX_ID = string.Empty;
+                    this.GD_ID = string.Empty;
                 }
             }
         }

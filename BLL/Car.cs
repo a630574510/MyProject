@@ -112,6 +112,13 @@ namespace Citic.BLL
             return dal.GetList(strWhere, tb_Name);
         }
         /// <summary>
+        /// 获得数据列表 前多少条 2014年5月23日
+        /// </summary>
+        public DataSet GetList(string strWhere, string tb_Name, int Top)
+        {
+            return dal.GetList(strWhere, tb_Name, Top);
+        }
+        /// <summary>
         /// 获得前几行数据
         /// </summary>
         public DataSet GetList(int Top, string strWhere, string filedOrder, string tb_Name)

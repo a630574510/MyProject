@@ -14,6 +14,7 @@ namespace Citic.Model
         private int? _deptid;
         private int? _roleid;
         private string _rolename;
+        private bool _isdepartmanager;
         /// <summary>
         /// 
         /// </summary>
@@ -39,12 +40,20 @@ namespace Citic.Model
             get { return _roleid; }
         }
         /// <summary>
-        /// 角色名
+        /// 
         /// </summary>
         public string RoleName
         {
             set { _rolename = value; }
             get { return _rolename; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDepartManager
+        {
+            set { _isdepartmanager = value; }
+            get { return _isdepartmanager; }
         }
         #endregion Model
 

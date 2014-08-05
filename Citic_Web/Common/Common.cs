@@ -85,5 +85,24 @@ namespace Citic_Web.Common
             }
         }
         #endregion
+
+        #region 移除特殊字符（'）--乔春羽(2014.6.26)
+        public static string RemoveSpecialCharacters(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (value.Contains("'"))
+                {
+                    value = value.Replace("'", string.Empty);
+                }
+            }
+            return value;
+        }
+        #endregion
+
+        #region 银行的标识--乔春羽(2014.6.26)
+        public const string GuangDaString = "1000000000";
+        public const string ZhongXinString = "2000000000";
+        #endregion
     }
 }

@@ -63,10 +63,10 @@
                                 <x:BoundField ColumnID="bf_Post" DataField="Post" DataFormatString="{0}" HeaderText="职位" />
                                 <x:BoundField ColumnID="bf_Phone" DataField="Phone" DataFormatString="{0}" HeaderText="电话" />
                                 <x:BoundField ColumnID="bf_Email" DataField="Email" DataFormatString="{0}" HeaderText="Email" />
-                                <x:WindowField WindowID="WindowShowInfo" TextAlign="Left" Width="100px" Icon="Pencil"
+                                <x:WindowField WindowID="WindowShowInfo" TextAlign="Left" Width="60px" Icon="Pencil"
                                     ToolTip="编辑" DataIFrameUrlFields="LinkmanID,LinkmanName" DataIFrameUrlFormatString="../BasicInfoManagement/ShowLinkmanInfo.aspx?lkid={0}"
                                     Title="联系人信息" IFrameUrl="~/alert.aspx" HeaderText="编辑" />
-                                <x:LinkButtonField ColumnID="link_Delete" Width="90px" ConfirmIcon="Warning" ConfirmTarget="Parent"
+                                <x:LinkButtonField ColumnID="link_Delete" Width="60px" ConfirmIcon="Warning" ConfirmTarget="Parent"
                                     ConfirmText="确定要删除？" ConfirmTitle="系统提示" CommandName="delete" Text="删除" HeaderText="删除" />
                             </Columns>
                             <PageItems>

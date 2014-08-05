@@ -10,6 +10,7 @@ using System.Text;
 using FineUI;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using NPOI.SS.UserModel;
 namespace Citic_Web.BasicInfoManagement
 {
     public partial class FactoryList : BasePage
@@ -54,6 +55,11 @@ namespace Citic_Web.BasicInfoManagement
 
                 grid_List.DataSource = dt;
                 grid_List.DataBind();
+
+                if (dt == null || dt.Rows.Count == 0)
+                {
+                    AlertShowInTop("没有数据！");
+                }
             }
             catch (Exception e)
             {
@@ -181,51 +187,98 @@ group by BrandID))) ", this.CurrentUser.RelationID.Value);
             //保存Excel文件
             string sheetName = "厂商信息（当前页）_" + ConvertLongDateTimeToUI(DateTime.Now);
             string sheetNameAll = "厂商信息（全部）_" + ConvertLongDateTimeToUI(DateTime.Now);
+            string where = this.ConditionInit();
             string filePath = string.Empty;
+            string[] headers = { "厂家名称", "地址", "添加人", "添加时间" };
+            string titleName = "厂商信息";
             //保存当前页的数据
-            ExcelEditHelper.Create();
-            ExcelEditHelper.AddSheet(sheetName);
-            DataTable dt = null;
-
-            dt = GetTableForGrid(grid_List);
-
-            string fileName = sheetName + ".xls";//客户端保存的文件名
-            ExcelEditHelper.DataTableAdd2Excel(dt, sheetName);
-
             filePath = "~/DownExcel/" + sheetName + ".xls";
-            bool flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
 
-            //释放ExcelEditHelper
-            CloseExcelEditHelper();
+            NPOIHelper npoi = new NPOIHelper();
+            npoi.Create(titleName);
 
-            //下载Excel文件
-            if (flag)
-            {
-                hl_ExportExcel.NavigateUrl = filePath;
-            }
+            //创建一行，并设定了行高
+            IRow irow = npoi.CreateRow((short)60);
+            //========================创建样式与字体================================
+            //创建一个样式headerCellStyle
+            //大标题样式
+            string headerCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式headerCellStyle附加字体对象
+            npoi.CreateFont(headerCellStyle, 40, "黑体", NPOIFontBoldWeight.Bold, false, false);
+            //创建了一个样式contentCellStyle。
+            //表头样式
+            string contentCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式contentCellStyle附加了一个字体对象
+            npoi.CreateFont(contentCellStyle, 10, "微软雅黑", NPOIFontBoldWeight.Bold, false, false);
+            //内容样式
+            string contentStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            npoi.CreateFont(contentStyle, 10, "微软雅黑", NPOIFontBoldWeight.Normal, false, false);
+            //========================创建样式与字体================================
+            //表头大标题
+            npoi.CreateCells(headers.Length, irow, headerCellStyle);
+            npoi.SetCellValue(irow, 0, titleName);
+            npoi.SetCellRangeAddress(0, 0, 0, headers.Length - 1);
+            //表头小标题
+            IRow rowHeader = npoi.CreateRow();
+            npoi.CreateCells(headers, rowHeader, contentCellStyle);
+
+            int pageIndex = grid_List.PageIndex;
+            int pageSize = grid_List.PageSize;
+            int rowbegin = pageIndex * pageSize + 1;
+            int rowend = (pageIndex + 1) * pageSize;
+            DataTable dt = this.FactoryBll.GetAllListByProcess(where, rowbegin, rowend).Tables[0];
+
+
+            string[] columns = { "FactoryName", "Address", "CreateName", "CreateTime" };
+            npoi.DataTableToExcel(dt, columns, contentStyle);
+
+            //保存文件
+            filePath = "~/DownExcel/" + sheetName + ".xlsx";
+            npoi.Save(Server.MapPath(filePath));
+
+            //显示下载地址
+            hl_ExportExcel.NavigateUrl = filePath;
+
 
             //保存所有的数据
-            ExcelEditHelper.Create();
-            ExcelEditHelper.AddSheet(sheetNameAll);
+            npoi = new NPOIHelper();
+            npoi.Create(titleName);
 
-            dt = FactoryBll.GetAllList().Tables[0];
+            //创建一行，并设定了行高
+            irow = npoi.CreateRow((short)60);
+            //========================创建样式与字体================================
+            //创建一个样式headerCellStyle
+            //大标题样式
+            headerCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式headerCellStyle附加字体对象
+            npoi.CreateFont(headerCellStyle, 40, "黑体", NPOIFontBoldWeight.Bold, false, false);
+            //创建了一个样式contentCellStyle。
+            //表头样式
+            contentCellStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            //给样式contentCellStyle附加了一个字体对象
+            npoi.CreateFont(contentCellStyle, 10, "微软雅黑", NPOIFontBoldWeight.Bold, false, false);
+            //内容样式
+            contentStyle = npoi.CreateCellStyle(NPOIAlign.Center, NPOIVAlign.Center, false, false, true);
+            npoi.CreateFont(contentStyle, 10, "微软雅黑", NPOIFontBoldWeight.Normal, false, false);
+            //========================创建样式与字体================================
+            //表头大标题
+            npoi.CreateCells(headers.Length, irow, headerCellStyle);
+            npoi.SetCellValue(irow, 0, titleName);
+            npoi.SetCellRangeAddress(0, 0, 0, headers.Length - 1);
+            //表头小标题
+            rowHeader = npoi.CreateRow();
+            npoi.CreateCells(headers, rowHeader, contentCellStyle);
 
-            ModifyTableHeaderByGrid(grid_List, dt);
+            dt = this.FactoryBll.GetAllListByProcess(where, 0, 0).Tables[0];
 
-            fileName = sheetName + ".xls";//客户端保存的文件名
-            ExcelEditHelper.DataTableAdd2Excel(dt, sheetNameAll);
+            npoi.DataTableToExcel(dt, columns, contentStyle);
 
-            filePath = "~/DownExcel/" + sheetNameAll + ".xls";
-            flag = ExcelEditHelper.SaveAs(Server.MapPath(filePath));
+            //保存文件
+            filePath = "~/DownExcel/" + sheetNameAll + ".xlsx";
+            npoi.Save(Server.MapPath(filePath));
 
-            //释放ExcelEditHelper
-            CloseExcelEditHelper();
+            hl_ExportAll.NavigateUrl = filePath;
 
-            //下载Excel文件
-            if (flag)
-            {
-                hl_ExportAll.NavigateUrl = filePath;
-            }
         }
         #endregion
 

@@ -157,6 +157,15 @@ namespace Citic.BLL
         #endregion  BasicMethod
 
         #region  ExtensionMethod
+        #region 获取经销商信息列表
+        /// <summary>
+        /// 获得数据列表 张繁 2014年6月11日
+        /// </summary>
+        public DataSet GetListAll(string strWhere)
+        {
+            return dal.GetListAll(strWhere);
+        }
+        #endregion
         #region 获得经销商信息，数据来自“经销商银行合作表”表示该经销商已于银行合作--乔春羽(2013.8.9)
         public DataSet GetDealers(string where)
         {
@@ -224,19 +233,37 @@ namespace Citic.BLL
         public DataSet LedgerSearch(string path, string sqlstr, string strWhere, string orderby, int startIndex, int endIndex, string[] bankIDs, string[] dealerIDs)
         {
             DataSet ds = null;
-            if ((bankIDs != null && bankIDs.Length > 0) && (dealerIDs != null && dealerIDs.Length > 0))
+            StringBuilder where = new StringBuilder();
+            if (dealerIDs != null && dealerIDs.Length > 0)
             {
-                List<string> tbnames = new List<string>();
-
-                foreach (string bankID in bankIDs)
+                where.AppendFormat(" A.DealerID in ({0}) ", string.Join(",", dealerIDs));
+            }
+            else
+            {
+                where.Append(" A.DealerID in (0) ");
+            }
+            if (bankIDs != null && bankIDs.Length > 0)
+            {
+                where.AppendFormat(" and A.BankID in ({0})", string.Join(",", bankIDs));
+            }
+            else
+            {
+                where.Append(" and A.BankID in (0) ");
+            }
+            if (where.Length > 0)
+            {
+                DataTable dt = dal.GetList(where.ToString()).Tables[0];
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    foreach (string dealerID in dealerIDs)
-                    {
-                        tbnames.Add(string.Format("tb_Car_{0}_{1}", bankID, dealerID));
-                    }
-                }
+                    List<string> tbnames = new List<string>();
 
-                ds = dal.LedgerSearch(path, sqlstr, strWhere, orderby, startIndex, endIndex, tbnames.ToArray());
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        tbnames.Add(string.Format("tb_Car_{0}_{1}", row["BankID"].ToString(), row["DealerID"].ToString()));
+                    }
+
+                    ds = dal.LedgerSearch(path, sqlstr, strWhere, orderby, startIndex, endIndex, tbnames.ToArray());
+                }
             }
             else
             {
@@ -257,7 +284,6 @@ namespace Citic.BLL
             return dal.AddRange(models);
         }
         #endregion
-
         #region 排量修改--乔春羽(2014.3.14)
         /// <summary>
         /// 批量修改数据
@@ -385,19 +411,17 @@ namespace Citic.BLL
             return dal.Query(sql);
         }
         #endregion
-        #region 需要导出Excel的数据（根据需要不同，可能导出一页或者全部的数据），将表头改成了文字，并且联查经销商信息表--乔春羽(2013.12.20)
-        public DataTable GetDataForExcel(string[] dealerIDs)
+        #region 根据需求不同，根据不同的条件，查询数据数量（tb_Dealer_Bank_List表与tb_Dealer_List表的联查）--乔春羽(2014.5.14)
+        public int GetRecordCountBySearch(string strWhere)
         {
-            StringBuilder where = new StringBuilder(string.Empty);
-            if (dealerIDs != null && dealerIDs.Length > 0)
-            {
-                foreach (string dealerID in dealerIDs)
-                {
-                    where.AppendFormat("'{0}',", dealerID);
-                }
-                where.Remove(where.Length - 1, 1);
-            }
-            return dal.GetDataForExcel(where.ToString());
+            return dal.GetRecordCountBySearch(strWhere);
+        }
+        #endregion
+
+        #region 需要导出Excel的数据（根据需要不同，可能导出一页或者全部的数据），将表头改成了文字，并且联查经销商信息表--乔春羽(2013.12.20)
+        public DataTable GetDataForExcel(string where, int rowBegin, int rowEnd)
+        {
+            return dal.GetDataForExcel(where, rowBegin, rowEnd);
         }
         #endregion
         #region 根据经销商id和银行id查询二网信息

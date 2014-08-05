@@ -33,13 +33,15 @@ namespace Citic_Web.Reminds
                 switch (RoleId)
                 {
                     case 1:         //1为超级管理员
-                       ds = new Remind().GetRemindByBankId("select distinct(B_L.BankName),B_L.BankID from  tb_Remind r left join tb_Bank_List B_L on B_L.BankID=r.BankID where 1=1 order by B_L.BankName asc");
+                        ds = new Remind().GetRemindByBankId("select distinct(B_L.BankName),B_L.BankID from  tb_Remind r left join tb_Bank_List B_L on B_L.BankID=r.BankID where 1=1 order by B_L.BankName asc");
                         break;
                     case 2:         //2为管理员
                         break;
                     case 3:         //3为业务经理
+                        ds = new Remind().GetRemindByBankId("select distinct(B_L.BankName),B_L.BankID from  tb_Remind r left join tb_Bank_List B_L on B_L.BankID=r.BankID where 1=1 order by B_L.BankName asc");
                         break;
                     case 4:         //4为市场经理
+                        ds = new Remind().GetRemindByBankId("select distinct(B_L.BankName),B_L.BankID from  tb_Remind r left join tb_Bank_List B_L on B_L.BankID=r.BankID where 1=1 order by B_L.BankName asc");
                         break;
                     case 5:         //5为市场专员
                         int UserID_5 = this.CurrentUser.UserId;
@@ -56,9 +58,11 @@ namespace Citic_Web.Reminds
                     case 9:         //9为厂家
                         break;
                     case 10:         //10为监管员
+                        int SupID = this.CurrentUser.RelationID.Value;
+                        ds = new Remind().GetRemindByBankId(string.Format("select distinct(t2.BankName),t2.BankID from tb_Remind t1 left join tb_Dealer_Bank_List t2 on t1.DealerID=t2.DealerID where t2.DealerID in (select DealerID from tb_Dealer_List where SupervisorID='{0}')", SupID.ToString()));
                         break;
                 }
-                
+
                 DataView dv = ds.Tables[0].DefaultView;
                 foreach (DataRowView dsTree in dv)
                 {
@@ -87,9 +91,18 @@ namespace Citic_Web.Reminds
         /// <param name="e"></param>
         protected void T_Bank_OnNodeCommand(object sender, FineUI.TreeCommandEventArgs e)
         {
+            DataSet ds;
+            if (this.CurrentUser.RoleId == 10)
+            {
+                ds = BankIDByRemind(this.CurrentUser.RelationID.Value);
+            }
+            else
+            {
+                ds = BankIDByRemind(T_Bank.SelectedNode.NodeID);
+            }
             this.Panel4.Title = "提醒类容—<span style='color:Red'>" + e.Node.Text + "</span>";
             EnabledTab(false);
-            DataSet ds = BankIDByRemind(T_Bank.SelectedNode.NodeID);
+             
             Remind1.DataSource = ds.Tables[0].Select("Status=1");
             Remind1.DataBind();
             Remind2.DataSource = ds.Tables[0].Select("Status=2");
@@ -226,6 +239,25 @@ namespace Citic_Web.Reminds
             try
             {
                 DataSet ds = new Remind().GetList("BankID='" + BankID + "' and Status between 1 and 15");
+                return ds;
+            }
+            catch
+            {
+
+            }
+            return new DataSet();
+
+        }
+        /// <summary>
+        /// 查询银行提醒信息
+        /// </summary>
+        /// <param name="SupID">监管员id</param>
+        /// <returns></returns>
+        private DataSet BankIDByRemind(int SupID)
+        {
+            try
+            {
+                DataSet ds = new Remind().GetList(string.Format("DealerID in (select DealerID from tb_Dealer_Bank_List where DealerID in (select DealerID from tb_Dealer_List where SupervisorID='{0}')) and Status between 1 and 15",SupID));
                 return ds;
             }
             catch

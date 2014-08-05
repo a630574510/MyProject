@@ -34,8 +34,7 @@
                     </Items>
                 </x:SimpleForm>
                 <x:Grid ID="grid_List" runat="server" ShowHeader="false" EnableBackgroundColor="true" CssStyle="padding-top:5px"
-                    BoxFlex="2" EnableCheckBoxSelect="true" AllowPaging="true" DataKeyNames="row" IsDatabasePaging="true"
-                    OnPageIndexChange="grid_List_PageIndexChange" EnableTextSelection="true" PageSize="20">
+                    BoxFlex="2" EnableTextSelection="true">
                     <Toolbars>
                         <x:Toolbar ID="Toolbar1" runat="server">
                             <Items>
@@ -56,19 +55,6 @@
                         <x:BoundField ColumnID="szyd" HeaderText="私自移动" DataField="szyd" Width="60px" />
                         <x:BoundField ColumnID="xswhk" HeaderText="销售未还款" DataField="xswhk" Width="60px" />
                     </Columns>
-                    <PageItems>
-                        <x:ToolbarSeparator ID="ToolbarSeparator1" runat="server">
-                        </x:ToolbarSeparator>
-                        <x:ToolbarText ID="TtxtPage" runat="server" Text="每页数：">
-                        </x:ToolbarText>
-                        <x:DropDownList runat="server" ID="ddlPageSize" Width="45px" AutoPostBack="true"
-                            OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
-                            <x:ListItem Text="5" Value="5" />
-                            <x:ListItem Text="10" Value="10" Selected="true" />
-                            <x:ListItem Text="15" Value="15" />
-                            <x:ListItem Text="20" Value="20" />
-                        </x:DropDownList>
-                    </PageItems>
                 </x:Grid>
             </Items>
         </x:Panel>

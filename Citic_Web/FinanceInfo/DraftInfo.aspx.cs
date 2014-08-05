@@ -29,7 +29,6 @@ namespace Citic_Web.FinanceInfo
                     DraftDataBind();
                     CarDataBind();
                     RoleValidate();
-
                 }
             }
         }
@@ -42,10 +41,17 @@ namespace Citic_Web.FinanceInfo
         private const string DRAFTNO = "no";
         private const string TABLENAME = "tableName";
         private const string MODEL = "model";
+
+        private string TableName
+        {
+            get
+            {
+                return ViewState[TABLENAME].ToString();
+            }
+        }
         #endregion
 
         #region 绑定数据--乔春羽
-
         /// <summary>
         /// 显示汇票信息
         /// </summary>
@@ -67,6 +73,11 @@ namespace Citic_Web.FinanceInfo
                 this.num_Ratio.Text = model.Ratio.ToString();
                 this.lbl_HKMoney.Text = model.HKMoney.ToString();
             }
+            else
+            {
+                AlertShowInTop("该汇票号已经不存在！");
+                return;
+            }
         }
 
         /// <summary>
@@ -74,20 +85,20 @@ namespace Citic_Web.FinanceInfo
         /// </summary>
         private void CarDataBind()
         {
-            //where条件
-            string where = ConditionInit();
+            try
+            {
+                //where条件
+                string where = ConditionInit();
 
-            //设置表格的总数据量
-            this.grid_List.RecordCount = GetCountBySearch(where);
+                DataTable dt = CarBll.GetAllList(where, TableName).Tables[0];
 
-            int pageIndex = grid_List.PageIndex;
-            int pageSize = grid_List.PageSize;
-            int rowbegin = pageIndex * pageSize + 1;
-            int rowend = (pageIndex + 1) * pageSize;
-            DataTable dt = CarBll.GetListByPage(where, "CreateTime DESC", rowbegin, rowend, ViewState[TABLENAME].ToString()).Tables[0];
-
-            grid_List.DataSource = dt;
-            grid_List.DataBind();
+                grid_List.DataSource = dt;
+                grid_List.DataBind();
+            }
+            catch (Exception e)
+            {
+                Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "CarDataBind()");
+            }
         }
 
         /// <summary>
@@ -110,16 +121,6 @@ namespace Citic_Web.FinanceInfo
         private int GetCountBySearch(string where)
         {
             return CarBll.GetRecordCount(where, ViewState[TABLENAME].ToString());
-        }
-        #endregion
-
-        #region 行命令事件--乔春羽
-        protected void grid_List_RowCommand(object sender, FineUI.GridCommandEventArgs e)
-        {
-            if (e.CommandName != null && e.CommandName != string.Empty)
-            {
-
-            }
         }
         #endregion
 
@@ -164,39 +165,6 @@ namespace Citic_Web.FinanceInfo
         }
         #endregion
 
-        #region 每页显示数量改变事件--乔春羽
-        /// <summary>
-        /// 每页显示数量改变事件--乔春羽
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            grid_List.PageSize = int.Parse(ddlPageSize.SelectedValue);
-            CarDataBind();
-        }
-
-        #endregion
-
-        #region 翻页事件--乔春羽
-        /// <summary>
-        /// 翻页事件--乔春羽
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void grid_List_PageIndexChange(object sender, FineUI.GridPageEventArgs e)
-        {
-            SyncSelectedRowIndexArrayToHiddenField(grid_List, hfSelectedIDS);
-            grid_List.PageIndex = e.NewPageIndex;
-
-            //乔春羽
-            CarDataBind();
-            //乔春羽
-
-            UpdateSelectedRowIndexArray(grid_List, hfSelectedIDS);
-        }
-        #endregion
-
         #region 保存修改--乔春羽
         protected void btn_SaveAndClose_Click(object sender, EventArgs e)
         {
@@ -220,17 +188,16 @@ namespace Citic_Web.FinanceInfo
                 bool flag = DraftBll.Update(model);
                 if (flag)
                 {
-                    Alert.ShowInTop("修改成功！");
+                    AlertShowInTop("修改成功！");
                 }
                 else
                 {
-                    Alert.ShowInTop("修改失败！");
+                    AlertShowInTop("修改失败！");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Logging.WriteLog(e, HttpContext.Current.Request.Url.AbsolutePath, "Save()");
             }
         }
         #endregion
@@ -268,7 +235,6 @@ namespace Citic_Web.FinanceInfo
             {
                 urls.Add(row["MenuUrl"].ToString());
             }
-            ViewState.Add("roles", urls);
             if (urls.Contains("Modify41"))
             {
                 btn_Modify.Enabled = true;

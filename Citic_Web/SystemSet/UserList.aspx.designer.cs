@@ -40,22 +40,112 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Panel PanelUser;
         
         /// <summary>
-        /// FormSelect 控件。
+        /// sf_SearchInfo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.Form FormSelect;
+        protected global::FineUI.SimpleForm sf_SearchInfo;
         
         /// <summary>
-        /// ttbSearch 控件。
+        /// Panel1 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TwinTriggerBox ttbSearch;
+        protected global::FineUI.Panel Panel1;
+        
+        /// <summary>
+        /// Label1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label1;
+        
+        /// <summary>
+        /// txt_UserName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextBox txt_UserName;
+        
+        /// <summary>
+        /// Label2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label2;
+        
+        /// <summary>
+        /// txt_TrueName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.TextBox txt_TrueName;
+        
+        /// <summary>
+        /// Label3 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label3;
+        
+        /// <summary>
+        /// ddl_Role 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.DropDownList ddl_Role;
+        
+        /// <summary>
+        /// Panel2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Panel Panel2;
+        
+        /// <summary>
+        /// Label4 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Label Label4;
+        
+        /// <summary>
+        /// ddl_Type 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.DropDownList ddl_Type;
+        
+        /// <summary>
+        /// btn_Search 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button btn_Search;
         
         /// <summary>
         /// Panel8 控件。
@@ -85,13 +175,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btnAddUser;
         
         /// <summary>
-        /// ToolbarSeparator2 控件。
+        /// tbs_Add 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator2;
+        protected global::FineUI.ToolbarSeparator tbs_Add;
         
         /// <summary>
         /// btn_Modify 控件。
@@ -103,13 +193,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btn_Modify;
         
         /// <summary>
-        /// ToolbarSeparator5 控件。
+        /// tbs_Modify 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator5;
+        protected global::FineUI.ToolbarSeparator tbs_Modify;
         
         /// <summary>
         /// btnDeleteUser 控件。
@@ -121,31 +211,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btnDeleteUser;
         
         /// <summary>
-        /// ToolbarSeparator4 控件。
+        /// tbs_Delete 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator4;
-        
-        /// <summary>
-        /// btn_Match 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Button btn_Match;
-        
-        /// <summary>
-        /// ToolbarSeparator3 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator3;
+        protected global::FineUI.ToolbarSeparator tbs_Delete;
         
         /// <summary>
         /// btn_ToRole 控件。
@@ -157,13 +229,31 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btn_ToRole;
         
         /// <summary>
-        /// ToolbarSeparator6 控件。
+        /// tbs_ToRole 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator6;
+        protected global::FineUI.ToolbarSeparator tbs_ToRole;
+        
+        /// <summary>
+        /// btn_ToBank 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button btn_ToBank;
+        
+        /// <summary>
+        /// tbs_ToBank 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.ToolbarSeparator tbs_ToBank;
         
         /// <summary>
         /// btnExport 控件。
@@ -236,6 +326,15 @@ namespace Citic_Web.SystemSet {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.Window WindowToRole;
+        
+        /// <summary>
+        /// WIndowToBank 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Window WIndowToBank;
         
         /// <summary>
         /// WindowAddUser 控件。

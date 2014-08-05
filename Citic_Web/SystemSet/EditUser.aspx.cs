@@ -34,9 +34,7 @@ namespace Citic_Web.SystemSet
             {
                 DepartmentBll = new Department();
             }
-            int depid = this.CurrentUser.DeptId;
-            int type = DepartmentBll.GetDepTypeByID(depid);
-            string where = string.Format(" Type={0} or Type=0", type);
+            string where = " PDID = 1 AND TYPE = 1 ";
             ddlDept.DataSource = DepartmentBll.GetList(where);
             ddlDept.DataValueField = "ID";
             ddlDept.DataTextField = "DName";
@@ -46,15 +44,15 @@ namespace Citic_Web.SystemSet
 
         private void UserInfoBind(int UserId)
         {
-            DataSet ds = UserBll.GetList("UserId=" + UserId);
-            this.lblUserName.Text = ds.Tables[0].Rows[0]["UserName"].ToString();
-            this.txtPassword.Text = ds.Tables[0].Rows[0]["Password"].ToString();
-            this.txtUPassword.Text = ds.Tables[0].Rows[0]["Password"].ToString();
-            this.txtTrueName.Text = ds.Tables[0].Rows[0]["TrueName"].ToString();
-            this.ddlDept.SelectedValue = ds.Tables[0].Rows[0]["DeptId"].ToString();
-            this.txtEmail.Text = ds.Tables[0].Rows[0]["Email"].ToString();
-            this.txtMobileNo.Text = ds.Tables[0].Rows[0]["MobileNo"].ToString();
-            this.rbUserType.SelectedValue = ds.Tables[0].Rows[0]["UserType"].ToString();
+            Citic.Model.User model = UserBll.GetModel(UserId);
+            this.lblUserName.Text = model.UserName;
+            this.txtPassword.Text = model.Password;
+            this.txtUPassword.Text = model.Password;
+            this.txtTrueName.Text = model.TrueName;
+            this.ddlDept.SelectedValue = model.DeptId.ToString();
+            this.txtEmail.Text = model.Email;
+            this.txtMobileNo.Text = model.MobileNo;
+            this.rbUserType.SelectedValue = model.UserType.ToString();
         }
         /// <summary>
         /// 保存并关闭
@@ -85,6 +83,7 @@ namespace Citic_Web.SystemSet
             UserInfo.UserType = Convert.ToInt32(this.rbUserType.SelectedValue);
             UserInfo.UpdateUser = CurrentUser.UserId;
             UserInfo.UpdateTime = DateTime.Now;
+            
             bool result = UserBll.Update(UserInfo);
             if (result)
             {

@@ -45,7 +45,8 @@
                                         <Toolbars>
                                             <x:Toolbar ID="Toolbar13" runat="server">
                                                 <Items>
-                                                    <x:Button ID="btn_Remind1" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All" IconAlign="Right">
+                                                    <x:Button ID="btn_Remind1" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All"
+                                                        IconAlign="Right">
                                                     </x:Button>
                                                 </Items>
                                             </x:Toolbar>
@@ -68,7 +69,8 @@
                                         <Toolbars>
                                             <x:Toolbar ID="Toolbar14" runat="server">
                                                 <Items>
-                                                    <x:Button ID="btn_Remind2" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All" IconAlign="Right">
+                                                    <x:Button ID="btn_Remind2" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All"
+                                                        IconAlign="Right">
                                                     </x:Button>
                                                 </Items>
                                             </x:Toolbar>
@@ -91,15 +93,16 @@
                                         <Toolbars>
                                             <x:Toolbar ID="Toolbar15" runat="server">
                                                 <Items>
-                                                    <x:Button ID="btn_Remind3" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All" IconAlign="Right">
+                                                    <x:Button ID="btn_Remind3" runat="server" Text="确定" Icon="Tick" OnClick="Btn_All"
+                                                        IconAlign="Right">
                                                     </x:Button>
                                                 </Items>
                                             </x:Toolbar>
                                         </Toolbars>
                                         <Columns>
-                                            <x:BoundField HeaderText="合作行" DataField="BankName"  ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName"  ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="品牌" DataField="BrandName"  ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="合作行" DataField="BankName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="品牌" DataField="BrandName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="监管费截止日期" DataField="SupervisionFeeAsDate" DataFormatString="{0:yyyy-MM-dd}" />
                                             <x:BoundField HeaderText="备注" DataField="Remark" />
                                         </Columns>
@@ -143,9 +146,9 @@
                                             </x:Toolbar>
                                         </Toolbars>
                                         <Columns>
-                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName"  ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="品牌" DataField="BrandName"  ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="合作行" DataField="BankName"  ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="品牌" DataField="BrandName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="合作行" DataField="BankName" ExpandUnusedSpace="true" />
                                         </Columns>
                                     </x:Grid>
                                 </Items>
@@ -153,7 +156,7 @@
                             <x:Tab ID="Tab6" runat="server" EnableClose="true" Title="经销商剩余10台车提醒" Layout="Fit">
                                 <Items>
                                     <x:Grid ID="Remind6" runat="server" Title="详细信息" AllowPaging="true" EnableCheckBoxSelect="true"
-                                        EnableRowNumber="true" DataKeyNames="ID"> 
+                                        EnableRowNumber="true" DataKeyNames="ID">
                                         <Toolbars>
                                             <x:Toolbar ID="Toolbar11" runat="server">
                                                 <Items>
@@ -234,7 +237,7 @@
                                             </x:Toolbar>
                                         </Toolbars>
                                         <Columns>
-                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true"  />
+                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="品牌" DataField="BrandName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="合作行" DataField="BankName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="票号" DataField="DraftNo" ExpandUnusedSpace="true" />
@@ -256,8 +259,8 @@
                                             </x:Toolbar>
                                         </Toolbars>
                                         <Columns>
-                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName"  ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="合作行" DataField="BankName"  ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="合作行" DataField="BankName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="更换日期" DataField="ReplaceDate" DataFormatString="{0:yyyy-MM-dd}" />
                                             <x:BoundField HeaderText="原监管员" DataField="OriginalSupervision" />
                                             <x:BoundField HeaderText="现任监管员" DataField="NowSupervision" />
@@ -267,8 +270,8 @@
                             </x:Tab>
                             <x:Tab ID="Tab12" runat="server" EnableClose="true" Title="开票15日未收质押物提醒" Layout="Fit">
                                 <Items>
-                                    <x:Grid ID="Remind12" runat="server" Title="详细信息" AllowPaging="true"
-                                        EnableCheckBoxSelect="true" EnableRowNumber="true" DataKeyNames="ID">
+                                    <x:Grid ID="Remind12" runat="server" Title="详细信息" AllowPaging="true" EnableCheckBoxSelect="true"
+                                        EnableRowNumber="true" DataKeyNames="ID">
                                         <Toolbars>
                                             <x:Toolbar ID="Toolbar2" runat="server">
                                                 <Items>
@@ -306,7 +309,7 @@
                                             <x:BoundField HeaderText="合作行" DataField="BankName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="品牌" DataField="BrandName" ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="票号" DataField="DraftNo"  ExpandUnusedSpace="true"/>
+                                            <x:BoundField HeaderText="票号" DataField="DraftNo" ExpandUnusedSpace="true" />
                                             <x:BoundField HeaderText="票面金额" DataField="DraftMoney" />
                                             <x:BoundField HeaderText="开票日期" DataField="BeginDraftDate" DataFormatString="{0:yyyy-MM-dd}" />
                                             <x:BoundField HeaderText="已押金额" DataField="PledgeMoney" />
@@ -381,8 +384,8 @@
                                             </x:Toolbar>
                                         </Toolbars>
                                         <Columns>
-                                            <x:BoundField HeaderText="经销商名称" DataField="Jxs_Name" ExpandUnusedSpace="true" />
-                                            <x:BoundField HeaderText="拟驻店日期" DataField="TIME_KP" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="经销商名称" DataField="DealerName" ExpandUnusedSpace="true" />
+                                            <x:BoundField HeaderText="拟驻店日期" DataField="EnteringDate" DataFormatString="{0:yyyy-MM-dd}" />
                                         </Columns>
                                     </x:Grid>
                                 </Items>

@@ -33,8 +33,8 @@
                         </x:Panel>
                         <x:Panel ID="Panel3" runat="server" BodyPadding="5px" ShowBorder="false" Height="35px" ShowHeader="false" EnableBackgroundColor="true" Layout="HBox">
                             <Items>
-                                <x:Label ID="Label3" runat="server" Text="区域：" CssStyle="padding-right:41px;padding-left:0px"></x:Label>
-                                <x:DropDownList ID="ddl_Area" runat="server" ShowLabel="true" Label="选择区域" Width="200px"></x:DropDownList>
+                                <x:Label ID="Label3" runat="server" Text="部门：" CssStyle="padding-right:41px;padding-left:0px"></x:Label>
+                                <x:DropDownList ID="ddl_Area" runat="server" ShowLabel="true" Width="200px"></x:DropDownList>
                                 <x:Label ID="Label4" runat="server" Text="巡店时间：" CssStyle="padding-right:5px;padding-left:10px"></x:Label>
                                 <x:DatePicker ID="dp_Time" runat="server" EnableEdit="false" Width="100px"></x:DatePicker>
                                 <x:Label ID="Label5" runat="server" Text="至" CssStyle="padding-right:5px;padding-left:5px"></x:Label>
@@ -58,7 +58,7 @@
                         <x:HyperLinkField DataNavigateUrlFields="FileName" DataTextField="FileName" HeaderText="文件名" DataNavigateUrlFormatString="~/Office/巡店报告/{0}" Width="430px" />
                         <x:BoundField DataField="DealerName" HeaderText="经销商" Width="300px" />
                         <x:BoundField DataField="BankName" HeaderText="合作行" Width="200px" />
-                        <x:BoundField DataField="Area" HeaderText="区域" Width="100px" />
+                        <x:BoundField DataField="Area" HeaderText="部门" Width="100px" />
                         <x:BoundField DataField="InspectTime" HeaderText="巡店时间" Width="120px" />
                         <x:BoundField DataField="Remark" HeaderText="备注" Width="200px" />
                     </Columns>

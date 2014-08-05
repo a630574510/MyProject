@@ -526,6 +526,20 @@ namespace Citic.DAL
             return DbHelperSQL.Query(strSql.ToString());
         }
         /// <summary>
+        /// 获得数据列表 前多少条 2014年5月23日
+        /// </summary>
+        public DataSet GetList(string strWhere, string tb_Name,int Top)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.AppendFormat("select top {0} ID,Vin,DraftNo,BankID,BankName,Statu,QualifiedNoDate,DealerID,DealerName,BrandID,BrandName,StorageID,StorageName,CarColor,CarModel,EngineNo,QualifiedNo,KeyCount,KeyNumber,CarCost,ReturnCost,Remarks,TransitTime,MoveTime,OutTime,CreateID,CreateTime,UpdateID,UpdateTime,DeleteID,DeleteTime,IsDelete,IsPort,GD_ID,ZX_ID,CarClass,Displacement ",Top);
+            strSql.Append(" FROM " + tb_Name + " ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+        /// <summary>
         /// 根据sql查询返回集合 张繁 2013年8月21日
         /// </summary>
         public DataSet GetList(string strSql)
@@ -723,10 +737,10 @@ namespace Citic.DAL
 d.PledgeNo,
 GuaranteeNo,
 d.DraftNo,
-d.BeginTime,
-d.EndTime,
+CONVERT(VARCHAR(12),d.BeginTime,111) BeginTime,
+CONVERT(VARCHAR(12),d.EndTime,111) EndTime,
 d.DarftMoney,
-QualifiedNoDate,
+CONVERT(VARCHAR(12),QualifiedNoDate,111) QualifiedNoDate,
 CarModel,
 CarClass,
 Displacement,
@@ -736,13 +750,13 @@ Vin,
 QualifiedNo,
 KeyNumber,
 CarCost,
-car.CreateTime,
-TransitTime,
+CONVERT(VARCHAR(12),car.CreateTime,111) CreateTime,
+CONVERT(VARCHAR(12),TransitTime,111) TransitTime,
 CASE Statu WHEN 0 THEN '出库' WHEN 1 THEN '在库' WHEN 2 THEN '移动' WHEN 3 THEN '在途' WHEN 4 THEN '申请中' WHEN 5 THEN '异常' END Statu,
-OutTime,
-MoveTime,
+CONVERT(VARCHAR(12),OutTime,111) OutTime,
+CONVERT(VARCHAR(12),MoveTime,111) MoveTime,
 car.Remarks");
-            strSql.Append(" FROM " + tbName + "(NOLOCK) car left join tb_Draft_List d on car.DraftNo=d.DraftNo");
+            strSql.Append(" FROM " + tbName + "(NOLOCK) car left join tb_Draft_List d on car.DraftNo=d.DraftNo and car.BankID=d.BankID and car.DealerID=d.DealerID");
             if (strWhere.Trim() != string.Empty)
             {
                 strSql.Append(" where " + strWhere);

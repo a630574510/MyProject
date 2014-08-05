@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citic_Web", "Citic_Web\Citic_Web.csproj", "{E1BF4EA2-F959-42C8-8482-EB6E190565D5}"
 EndProject
@@ -12,25 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{9FE00521-3A8B-42B1-814E-585E99407B2E}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 6
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = BLL\\BLL.csproj
-		SccLocalPath1 = .
-		SccProjectFilePathRelativizedFromConnection1 = BLL\\
-		SccProjectUniqueName2 = Citic_Web\\Citic_Web.csproj
-		SccLocalPath2 = .
-		SccProjectFilePathRelativizedFromConnection2 = Citic_Web\\
-		SccProjectUniqueName3 = DAL\\DAL.csproj
-		SccLocalPath3 = .
-		SccProjectFilePathRelativizedFromConnection3 = DAL\\
-		SccProjectUniqueName4 = DBUtility\\DBUtility.csproj
-		SccLocalPath4 = .
-		SccProjectFilePathRelativizedFromConnection4 = DBUtility\\
-		SccProjectUniqueName5 = Model\\Model.csproj
-		SccLocalPath5 = .
-		SccProjectFilePathRelativizedFromConnection5 = Model\\
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

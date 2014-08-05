@@ -26,9 +26,9 @@
                     <Items>
                         <x:Panel ID="Panel2" runat="server" CssClass="x-form-item" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="监管员姓名:" CssClass="inline"></x:Label>
-                                <x:TextBox ID="txt_SName" runat="server" Width="400px" ShowLabel="true" Text="" CssClass="inline"></x:TextBox>
-                                <x:Button ID="btn_Search" runat="server" Text="查询" CssClass="inline" OnClick="btn_Search_Click"></x:Button>
+                                <x:Label ID="Label1" runat="server" Text="监管员姓名:" CssClass="inline" CssStyle="padding-right:5px"></x:Label>
+                                <x:TextBox ID="txt_SName" runat="server" Width="400px" ShowLabel="true" CssStyle="font-size:13px" Height="25px" Text=""></x:TextBox>
+                                <x:Button ID="btn_Search" runat="server" Text="查询" CssStyle="padding-left:5px" OnClick="btn_Search_Click"></x:Button>
                             </Items>
                         </x:Panel>
                     </Items>

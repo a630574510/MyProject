@@ -31,15 +31,7 @@ namespace Citic_Web.SystemSet
             if (UserInfo.RoleId != 0)
             {
                 CBToUser.SelectedValue = UserInfo.RoleId.ToString();
-                //if (UserInfo.RoleId.IndexOf(",") < 0)
-                //{
 
-                //    CBToUser.SelectedValueArray = new string[] { "" + UserInfo.RoleId + "" };
-                //}
-                //else
-                //{
-                //    CBToUser.SelectedValueArray = UserInfo.RoleId.Split(',');
-                //}
             }
 
 
@@ -62,31 +54,25 @@ namespace Citic_Web.SystemSet
         private void SaveToUser()
         {
             // 1. 这里放置保存窗体中数据的逻辑
-            
+
             int UserId = Convert.ToInt32(Request.QueryString["UserId"]);
             string MenuList = CBToUser.SelectedValue;
+            string RoleName = CBToUser.SelectedItem.Text;
             if (MenuList != "")
             {
-
-                Citic.Model.User UserInfo = UserBll.GetModel(UserId.ToString());
+                Citic.Model.User UserInfo = UserBll.GetModel(UserId);
                 UserInfo.RoleId = int.Parse(MenuList);
-                UserBll.Update(UserInfo);
+                UserInfo.Post = RoleName;
+                bool flag = UserBll.Update(UserInfo);
+                if (flag)
+                {
+                    AlertShowInTop("分配成功！");
+                }
+                else
+                {
+                    AlertShowInTop("分配失败！");
+                }
             }
         }
-        //private string GetCheckedValuesString(string[] array)
-        //{
-        //    if (array.Length == 0)
-        //    {
-        //        return "无";
-        //    }
-
-        //    StringBuilder sb = new StringBuilder();
-        //    foreach (string item in array)
-        //    {
-        //        sb.Append(item);
-        //        sb.Append(",");
-        //    }
-        //    return sb.ToString().TrimEnd(',');
-        //}
     }
 }

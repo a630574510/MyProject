@@ -76,13 +76,13 @@ namespace Citic_Web.Financing {
         protected global::FineUI.Label Label1;
         
         /// <summary>
-        /// txt_Bank 控件。
+        /// txt_Dealer 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox txt_Bank;
+        protected global::FineUI.TextBox txt_Dealer;
         
         /// <summary>
         /// Label2 控件。
@@ -94,13 +94,13 @@ namespace Citic_Web.Financing {
         protected global::FineUI.Label Label2;
         
         /// <summary>
-        /// ddl_Dealer 控件。
+        /// ddl_Bank 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.DropDownList ddl_Dealer;
+        protected global::FineUI.DropDownList ddl_Bank;
         
         /// <summary>
         /// Label5 控件。
@@ -229,6 +229,15 @@ namespace Citic_Web.Financing {
         protected global::FineUI.Button btn_Add;
         
         /// <summary>
+        /// tbs_Add 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.ToolbarSeparator tbs_Add;
+        
+        /// <summary>
         /// btn_Delete 控件。
         /// </summary>
         /// <remarks>
@@ -236,6 +245,42 @@ namespace Citic_Web.Financing {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.Button btn_Delete;
+        
+        /// <summary>
+        /// tbs_Delete 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.ToolbarSeparator tbs_Delete;
+        
+        /// <summary>
+        /// btn_Clear 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button btn_Clear;
+        
+        /// <summary>
+        /// ToolbarSeparator2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.ToolbarSeparator ToolbarSeparator2;
+        
+        /// <summary>
+        /// HyperLink1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.HyperLink HyperLink1;
         
         /// <summary>
         /// ToolbarFill2 控件。
@@ -256,13 +301,13 @@ namespace Citic_Web.Financing {
         protected global::FineUI.Button btn_Import;
         
         /// <summary>
-        /// ToolbarSeparator2 控件。
+        /// tbs_Excel 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator2;
+        protected global::FineUI.ToolbarSeparator tbs_Excel;
         
         /// <summary>
         /// btn_Export 控件。
@@ -299,15 +344,6 @@ namespace Citic_Web.Financing {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.HyperLink hl_ExportAll;
-        
-        /// <summary>
-        /// lb_Clear 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lb_Clear;
         
         /// <summary>
         /// ToolbarSeparator1 控件。

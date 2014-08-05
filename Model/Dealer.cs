@@ -235,6 +235,16 @@ namespace Citic.Model
             get { return _BankList; }
             set { _BankList = value; }
         }
+
+        private string _jc;
+        /// <summary>
+        /// 经销商简称
+        /// </summary>
+        public string JC
+        {
+            get { return _jc; }
+            set { _jc = value; }
+        }
         #endregion
     }
 }

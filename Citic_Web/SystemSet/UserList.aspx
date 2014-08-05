@@ -18,18 +18,18 @@
                         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="用户名：" CssStyle="padding-right:12px"></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="用户名：" CssClass="inline" CssStyle="padding-right:12px"></x:Label>
                                 <x:TextBox ID="txt_UserName" runat="server" Text="" Width="200px" CssStyle="font-size:15px"></x:TextBox>
-                                <x:Label ID="Label2" runat="server" Text="真实姓名：" CssStyle="padding-left:10px"></x:Label>
+                                <x:Label ID="Label2" runat="server" Text="真实姓名：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
                                 <x:TextBox ID="txt_TrueName" runat="server" Text="" Width="200px" CssStyle="font-size:15px"></x:TextBox>
-                                <x:Label ID="Label3" runat="server" Text="角色：" CssStyle="padding-left:10px"></x:Label>
+                                <x:Label ID="Label3" runat="server" Text="角色：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
                                 <x:DropDownList ID="ddl_Role" runat="server" Width="200px" CssStyle="font-size:15px"></x:DropDownList>
                             </Items>
                         </x:Panel>
                         <x:Panel ID="Panel2" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label4" runat="server" Text="是否停用："></x:Label>
+                                <x:Label ID="Label4" runat="server" CssClass="inline" Text="是否停用："></x:Label>
                                 <x:DropDownList ID="ddl_Type" Width="100px" runat="server" CssStyle="font-size:15px">
                                     <x:ListItem Text="请选择" Value="-1" />
                                     <x:ListItem Text="已启用" Value="1" />

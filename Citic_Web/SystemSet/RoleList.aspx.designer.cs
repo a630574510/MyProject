@@ -94,13 +94,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btnAddRole;
         
         /// <summary>
-        /// ToolbarSeparator2 控件。
+        /// tbs_Add 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator2;
+        protected global::FineUI.ToolbarSeparator tbs_Add;
         
         /// <summary>
         /// btn_Modify 控件。
@@ -112,13 +112,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btn_Modify;
         
         /// <summary>
-        /// ToolbarSeparator3 控件。
+        /// tbs_Modify 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator3;
+        protected global::FineUI.ToolbarSeparator tbs_Modify;
         
         /// <summary>
         /// btnDeleteRole 控件。
@@ -130,13 +130,13 @@ namespace Citic_Web.SystemSet {
         protected global::FineUI.Button btnDeleteRole;
         
         /// <summary>
-        /// ToolbarSeparator4 控件。
+        /// tbs_Delete 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.ToolbarSeparator ToolbarSeparator4;
+        protected global::FineUI.ToolbarSeparator tbs_Delete;
         
         /// <summary>
         /// btn_ToMenu 控件。

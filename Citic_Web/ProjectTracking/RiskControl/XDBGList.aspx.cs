@@ -22,6 +22,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
                 this.dp_Time.SelectedDate = DateTime.Now.AddDays(-1);
                 this.dp_End.SelectedDate = DateTime.Now;
                 btn_Modify.OnClientClick = grid_List.GetNoSelectionAlertInTopReference("未选择数据！");
+                BankDataBind();
                 AreaDataBind();
             }
         }
@@ -214,15 +215,18 @@ namespace Citic_Web.ProjectTracking.RiskControl
         public void BankDataBind()
         {
             ddl_Bank.Items.Clear();
-            string dealerID = this.txt_Dealer.Text.Split('_')[1];
-            string where = string.Format(" DealerID='{0}'", dealerID);
-            DataTable dt = Dealer_BankBll.GetList(where).Tables[0];
-            if (dt != null && dt.Rows.Count > 0)
+            if (!string.IsNullOrEmpty(this.txt_Dealer.Text))
             {
-                ddl_Bank.DataTextField = "BankName";
-                ddl_Bank.DataValueField = "BankID";
-                ddl_Bank.DataSource = dt;
-                ddl_Bank.DataBind();
+                string dealerID = this.txt_Dealer.Text.Split('_')[1];
+                string where = string.Format(" DealerID='{0}'", dealerID);
+                DataTable dt = Dealer_BankBll.GetList(where).Tables[0];
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    ddl_Bank.DataTextField = "BankName";
+                    ddl_Bank.DataValueField = "BankID";
+                    ddl_Bank.DataSource = dt;
+                    ddl_Bank.DataBind();
+                }
             }
             AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
         }
@@ -239,7 +243,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
         }
         #endregion
 
-        #region 加载区域--乔春羽(2013.12.25)
+        #region 加载部门--乔春羽(2013.12.25)
         public void AreaDataBind()
         {
             ddl_Area.Items.Clear();

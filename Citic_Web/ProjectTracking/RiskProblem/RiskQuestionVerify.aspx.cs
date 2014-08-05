@@ -12,6 +12,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
 {
     public partial class RiskQuestionVerify : BasePage
     {
+        #region Page_Load
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -20,6 +21,91 @@ namespace Citic_Web.ProjectTracking.RiskControl
                 btn_Verify.OnClientClick = grid_List.GetNoSelectionAlertReference("未选择数据！");
             }
         }
+        #endregion
+
+        #region Page_Init
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            //获得“问题提交人”的上级角色ID
+            int currentRole = this.CurrentUser.RoleId;
+            //int bossRoleID = int.Parse(this.DeptToRole.GetBossRoleID(currentRole.ToString()));
+            switch (currentRole)
+            {
+                case 27:    //风控专员
+                    //风控部意见
+                    ORCD.HideMode = HideMode.Display;
+                    ORCD.Hidden = false;
+                    txt_ORCD.Enabled = true;
+                    //发现问题部门意见
+                    OPFD.HideMode = HideMode.Display;
+                    OPFD.Hidden = false;
+                    txt_OPFD.Enabled = true;
+
+                    SQ_Content.HideMode = HideMode.Display;
+                    SQ_Content.Hidden = false;
+                    txt_SQ_Content.Enabled = true;
+                    break;
+                case 28:    //风控经理
+                    //风控部意见
+                    ORCD.HideMode = HideMode.Display;
+                    ORCD.Hidden = false;
+                    txt_ORCD.Enabled = true;
+                    //发现问题部门意见
+                    OPFD.HideMode = HideMode.Display;
+                    OPFD.Hidden = false;
+                    txt_OPFD.Enabled = true;
+                    //风控部负责人签字
+                    ORCDPIC.HideMode = HideMode.Display;
+                    ORCDPIC.Hidden = false;
+                    break;
+                case 6:     //业务专员
+                    //业务部意见
+                    OBD.HideMode = HideMode.Display;
+                    OBD.Hidden = false;
+                    txt_OBD.Enabled = true;
+                    break;
+                case 3:     //业务经理
+                    //业务部意见
+                    OBD.HideMode = HideMode.Display;
+                    OBD.Hidden = false;
+                    txt_OBD.Enabled = true;
+                    OBDPIC.HideMode = HideMode.Display;
+                    OBDPIC.Hidden = false;
+                    break;
+                case 29:    //运营经理
+                    Result.HideMode = HideMode.Display;
+                    Result.Hidden = false;
+                    txt_Result.Enabled = true;
+                    ResultPIC.HideMode = HideMode.Display;
+                    ResultPIC.Hidden = false;
+                    break;
+                case 30:    //运营专员
+                    Result.HideMode = HideMode.Display;
+                    Result.Hidden = false;
+                    txt_Result.Enabled = true;
+                    break;
+                case 1:     //超级管理员
+                    OPFD.HideMode = HideMode.Display;
+                    OPFD.Hidden = false;
+                    OPFDPIC.HideMode = HideMode.Display;
+                    OPFDPIC.Hidden = false;
+                    ORCD.HideMode = HideMode.Display;
+                    ORCD.Hidden = false;
+                    ORCDPIC.HideMode = HideMode.Display;
+                    ORCDPIC.Hidden = false;
+                    OBD.HideMode = HideMode.Display;
+                    OBD.Hidden = false;
+                    OBDPIC.HideMode = HideMode.Display;
+                    OBDPIC.Hidden = false;
+                    Result.HideMode = HideMode.Display;
+                    Result.Hidden = false;
+                    ResultPIC.HideMode = HideMode.Display;
+                    ResultPIC.Hidden = false;
+                    break;
+            }
+        }
+        #endregion
+
         #region PrivateField--乔春羽(2013.12.9)
         public DataTable DtSource
         {
@@ -52,7 +138,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
             int pageSize = grid_List.PageSize;
             int rowbegin = pageIndex * pageSize + 1;
             int rowend = (pageIndex + 1) * pageSize;
-            DtSource = RQBLL.GetListByPage(where, "ID", rowbegin, rowend).Tables[0];
+            DtSource = this.RSDBLL.GetListByPage(where, "ID", rowbegin, rowend).Tables[0];
 
             grid_List.DataSource = DtSource;
             grid_List.DataBind();
@@ -66,41 +152,47 @@ namespace Citic_Web.ProjectTracking.RiskControl
         /// <returns></returns>
         private int GetCountBySearch(string where)
         {
-            return RQBLL.GetRecordCount(where);
+            return this.RSDBLL.GetRecordCount(where);
         }
-
-
-        /// <summary>
-        /// 绑定银行信息--乔春羽
-        /// </summary>
-        //private void BankDataBind()
-        //{
-        //    ddl_Bank.Items.Clear();
-        //    string val = this.txt_DealerName.Text;
-        //    if (!string.IsNullOrEmpty(val))
-        //    {
-        //        if (val.IndexOf('_') >= 0)
-        //        {
-        //            DataTable dt = Dealer_BankBll.GetList(string.Format(" DealerID='{0}' and CollaborateType=1", val.Split('_')[1])).Tables[0];
-
-        //            this.ddl_Bank.DataTextField = "BankName";
-        //            this.ddl_Bank.DataValueField = "BankID";
-        //            this.ddl_Bank.DataSource = dt;
-        //            this.ddl_Bank.DataBind();
-        //        }
-        //    }
-        //    AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
-        //}
 
         /// <summary>
         /// 得到查询条件--乔春羽
         /// </summary>
         private string ConditionInit()
         {
-            StringBuilder where = new StringBuilder("");
+            StringBuilder where = new StringBuilder("1=1");
+            string dealerVal = this.txt_Dealer.Text;
+            if (!string.IsNullOrEmpty(dealerVal) && dealerVal.IndexOf('_') > 0)
+            {
+                where.AppendFormat(" AND (SQ_ShopID = '{0}' or SQ_Shop like '%{1}%') ", dealerVal.Split('_')[1], dealerVal.Split('_')[0]);
+            }
             if (this.ddl_Status.SelectedValue != "-1")
             {
-                where.AppendFormat(" Status={0}", this.ddl_Status.SelectedValue);
+                where.AppendFormat(" AND Status={0}", this.ddl_Status.SelectedValue);
+            }
+            //权限过滤
+            switch (this.CurrentUser.RoleId)
+            {
+                case 27:    //风控专员
+                    where.Append(" AND (OPFD = '' or OPFD IS NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD = '' or ORCD IS NULL) and (ORCDPIC = 0 or ORCDPIC IS NULL) and (OBD = '' or OBD IS NULL) and (OBDPIC = 0 or OBDPIC IS NULL) and (Result = '' or Result IS NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 28:    //风控经理
+                    where.Append(" AND (OPFD <> '' or OPFD IS NOT NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD <> '' or ORCD IS NOT NULL) and (ORCDPIC = 0 or ORCDPIC IS NULL) and (OBD = '' or OBD IS NULL) and (OBDPIC = 0 or OBDPIC IS NULL) and (Result = '' or Result IS NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 6:     //业务专员
+                    where.Append(" AND (OPFD <> '' or OPFD IS NOT NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD <> '' or ORCD IS NOT NULL) and ORCDPIC = 1 and (OBD = '' or OBD IS NULL) and (OBDPIC = 0 or OBDPIC IS NULL) and (Result = '' or Result IS NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 3:     //业务经理
+                    where.Append(" AND (OPFD <> '' or OPFD IS NOT NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD <> '' or ORCD IS NOT NULL) and ORCDPIC = 1 and (OBD <> '' or OBD IS NOT NULL) and (OBDPIC = 0 or OBDPIC IS NULL) and (Result = '' or Result IS NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 29:    //运营经理
+                    where.Append(" AND (OPFD <> '' or OPFD IS NOT NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD <> '' or ORCD IS NOT NULL) and ORCDPIC = 1 and (OBD <> '' or OBD IS NOT NULL) and OBDPIC = 1 and (Result <> '' or Result IS NOT NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 30:    //运营专员
+                    where.Append(" AND (OPFD <> '' or OPFD IS NOT NULL) and (OPFDPIC = 0 or OPFDPIC IS NULL) and (ORCD <> '' or ORCD IS NOT NULL) and ORCDPIC = 1 and (OBD <> '' or OBD IS NOT NULL) and OBDPIC = 1 and (Result = '' or Result IS NULL) and (ResultPIC = 0 or ResultPIC IS NULL) ");
+                    break;
+                case 1:     //超级管理员
+                    break;
             }
             return where.ToString();
         }
@@ -183,65 +275,79 @@ namespace Citic_Web.ProjectTracking.RiskControl
                 }
             }
 
+            List<Citic.Model.RisksSolveDocuments> models = new List<Citic.Model.RisksSolveDocuments>();
             foreach (int index in selectedIndex)
             {
                 int rowID = Convert.ToInt32(grid_List.DataKeys[index][0]);
                 DataRow row = FindRowByID(rowID);
+                Citic.Model.RisksSolveDocuments model = RSDBLL.DataRowToModel(row);
                 Dictionary<string, string> dict = modifiedDict[index];
-                if (dict.ContainsKey("WTCLBF"))
+                if (dict.ContainsKey("SQ_Content"))
                 {
-                    row["WTCLBF"] = dict["WTCLBF"];
+                    //row["SQ_Content"] = dict["SQ_Content"];
+                    model.SQ_Content = dict["SQ_Content"];
                 }
-                if (dict.ContainsKey("FXWTBMQZ"))
+                if (dict.ContainsKey("OPFD"))
                 {
-                    row["FXWTBMQZ"] = dict["FXWTBMQZ"];
+                    //row["OPFD"] = dict["OPFD"];
+                    model.OPFD = dict["OPFD"];
+                    model.OPFD_OptionID = this.CurrentUser.UserId;
                 }
-                if (dict.ContainsKey("QCJRZXYJ"))
+                if (dict.ContainsKey("OPFDPIC"))
                 {
-                    row["QCJRZXYJ"] = dict["QCJRZXYJ"];
+                    //row["OPFDPIC"] = dict["OPFDPIC"];
+                    model.OPFDPIC = Convert.ToBoolean(dict["OPFDPIC"]);
+                    model.OPFDPIC_OptionID = this.CurrentUser.UserId;
                 }
-                if (dict.ContainsKey("QCJRZXQZ"))
+                if (dict.ContainsKey("ORCD"))
                 {
-                    row["QCJRZXQZ"] = dict["QCJRZXQZ"];
+                    //row["ORCD"] = dict["ORCD"];
+                    model.ORCD = dict["ORCD"];
+                    model.ORCD_OptionID = this.CurrentUser.UserId;
                 }
-                if (dict.ContainsKey("GLZXYJ"))
+                if (dict.ContainsKey("ORCDPIC"))
                 {
-                    row["GLZXYJ"] = dict["GLZXYJ"];
+                    //row["ORCDPIC"] = dict["ORCDPIC"];
+                    model.ORCDPIC = Convert.ToBoolean(dict["ORCDPIC"]);
+                    model.ORCDPIC_OptionID = this.CurrentUser.UserId;
                 }
-                if (dict.ContainsKey("GLZXQZ"))
+                if (dict.ContainsKey("OBD"))
                 {
-                    row["GLZXQZ"] = dict["GLZXQZ"];
+                    //row["OBD"] = dict["OBD"];
+                    model.OBD = dict["OBD"];
+                    model.OBD_OptionID = this.CurrentUser.UserId;
                 }
-            }
+                if (dict.ContainsKey("OBDPIC"))
+                {
+                    //row["OBDPIC"] = dict["OBDPIC"];
+                    model.OBDPIC = Convert.ToBoolean(dict["OBDPIC"]);
+                    model.OBDPIC_OptionID = this.CurrentUser.UserId;
+                }
+                if (dict.ContainsKey("Result"))
+                {
+                    //row["Result"] = dict["Result"];
+                    model.Result = dict["Result"];
+                    model.Result_OptionID = this.CurrentUser.UserId;
+                }
+                if (dict.ContainsKey("ResultPIC"))
+                {
+                    //row["ResultPIC"] = dict["ResultPIC"];
+                    model.ResultPIC = Convert.ToBoolean(dict["ResultPIC"]);
+                    model.ResultPIC_OptionID = this.CurrentUser.UserId;
+                }
 
-
-            List<Citic.Model.RiskQuestion> models = new List<Citic.Model.RiskQuestion>();
-            foreach (int index in selectedIndex)
-            {
-                int rowID = Convert.ToInt32(grid_List.DataKeys[index][0]);
-                DataRow row = FindRowByID(rowID);
-                Citic.Model.RiskQuestion model = new Citic.Model.RiskQuestion()
-                {
-                    ID = Convert.ToInt32(row["ID"]),
-                    WTCLBF = row["WTCLBF"].ToString(),
-                    FXWTBMQZ = row["FXWTBMQZ"].ToString(),
-                    QCJRZXYJ = row["QCJRZXYJ"].ToString(),
-                    QCJRZXQZ = row["QCJRZXQZ"].ToString(),
-                    GLZXYJ = row["GLZXYJ"].ToString(),
-                    GLZXQZ = row["GLZXQZ"].ToString()
-                };
                 models.Add(model);
             }
 
-            int num = RQBLL.UpdateRange(models.ToArray());
+            int num = RSDBLL.UpdateRange(models, this.CurrentUser.RoleId);
             if (num > 0)
             {
-                Alert.ShowInTop("审核通过！");
+                AlertShowInTop("提交成功！");
                 GridBind();
             }
             else
             {
-                Alert.ShowInTop("审核失败！");
+                AlertShowInTop("提交失败！");
             }
         }
 

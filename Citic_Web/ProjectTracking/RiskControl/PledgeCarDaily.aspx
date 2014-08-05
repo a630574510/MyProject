@@ -26,29 +26,22 @@
             <Items>
                 <x:SimpleForm ID="SimpleForm1" runat="server" BodyPadding="5px" ShowHeader="false" EnableBackgroundColor="true" BoxFlex="1" Height="60px">
                     <Items>
-                        <%--<x:Panel ID="Panel2" runat="server" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column"
-                            CssClass="x-form-item">
-                            <Items>
-                                <x:Label ID="Label1" runat="server" Text="选择经销商：" CssStyle="padding-right:5px"></x:Label>
-                                <x:TextBox ID="txt_Dealer" runat="server" ShowLabel="false" AutoPostBack="true" OnTextChanged="txt_Dealer_TextChanged" Width="300px" Text=""></x:TextBox>
-                                <x:Label ID="Label2" runat="server" Text="选择合作行：" CssStyle="padding-right:5px;padding-left:10px"></x:Label>
-                                <x:DropDownList ID="ddl_Bank" runat="server" Width="300px"></x:DropDownList>
-                            </Items>
-                        </x:Panel>--%>
                         <x:Panel ID="Panel2" runat="server" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column"
                             CssClass="x-form-item">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="选择合作行：" CssStyle="padding-right:5px"></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="选择合作行：" CssClass="inline" CssStyle="padding-right:5px"></x:Label>
                                 <x:TextBox ID="txt_Bank" runat="server" ShowLabel="false" AutoPostBack="true" OnTextChanged="txt_Dealer_TextChanged" Width="300px" Text=""></x:TextBox>
-                                <x:Label ID="Label2" runat="server" Text="选择经销商：" CssStyle="padding-right:5px;padding-left:10px"></x:Label>
+                                <x:Label ID="Label2" runat="server" Text="选择经销商："  CssClass="inline" CssStyle="padding-right:5px;padding-left:10px"></x:Label>
                                 <x:DropDownList ID="ddl_Dealer" runat="server" Width="300px"></x:DropDownList>
                             </Items>
                         </x:Panel>
                         <x:Panel ID="Panel3" runat="server" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true" Layout="Column"
                             CssClass="x-form-item">
                             <Items>
-                                <x:Label ID="Label3" runat="server" Label="Label" Text="车架号：" CssStyle="padding-right:24px"></x:Label>
-                                <x:TextBox ID="txt_Vin" runat="server" Width="200px" Text="" CssStyle="margin-left:5px" CssClass="inline"></x:TextBox>
+                                <x:Label ID="Label3" runat="server" Text="车架号：" CssClass="inline"  CssStyle="padding-right:24px"></x:Label>
+                                <x:TextBox ID="txt_Vin" runat="server" Width="200px" Text="" CssStyle="margin-left:5px"></x:TextBox>
+                                <x:Label ID="Label4" runat="server" Text="品牌：" CssClass="inline"  CssStyle="padding-right:10px;padding-left:10px"></x:Label>
+                                <x:TextBox ID="txt_Brand" runat="server" Width="100px" Text="" CssStyle="margin-left:5px"></x:TextBox>
                                 <x:Button ID="btn_Search" runat="server" Text="查询" Icon="SystemSearch" OnClick="btn_Search_Click" Visible="false" CssStyle="margin-left:5px"></x:Button>
                             </Items>
                         </x:Panel>
@@ -104,15 +97,14 @@
     <script type="text/javascript">
         function onReady() {
             var textbox1ID = '<%= txt_Bank.ClientID %>';
-            
+
             var cache = {};
 
             $('#' + textbox1ID).autocomplete({
                 source: function (request, response) {
                     var term = request.term;
-                    
+
                     $.getJSON("search.ashx?_from=pcd", request, function (data, status, xhr) {
-                       
                         response(data);
                     });
                 }

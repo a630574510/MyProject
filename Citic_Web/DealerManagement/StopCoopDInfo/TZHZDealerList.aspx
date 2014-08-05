@@ -18,13 +18,13 @@
                         <x:Panel ID="Panel1" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
-                                <x:Label ID="Label1" runat="server" Text="企业名称："></x:Label>
-                                <x:TextBox ID="txt_DealerName" runat="server" ShowLabel="true" Label="企业名称" CssStyle="padding-left:0px;height:20px;font-size:15px" />
-                                <x:Label ID="Label2" runat="server" Text="驻店日期：" CssStyle="padding-left:10px"></x:Label>
+                                <x:Label ID="Label1" runat="server" Text="企业名称：" CssClass="inline"></x:Label>
+                                <x:TextBox ID="txt_DealerName" runat="server" ShowLabel="true" Label="企业名称" CssStyle="padding-left:0px;height:20px;font-size:15px" Width="300px" />
+                                <x:Label ID="Label2" runat="server" Text="驻店日期：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
                                 <x:DatePicker ID="dp_Start" runat="server" />
-                                <x:Label ID="Label3" runat="server" Text="至：" CssStyle="padding-left:10px"></x:Label>
+                                <x:Label ID="Label3" runat="server" Text="至：" CssClass="inline" CssStyle="padding-left:10px"></x:Label>
                                 <x:DatePicker ID="dp_End" runat="server" Label="至" />
-                                <x:Button ID="btn_Search" runat="server" Text="搜索" Visible="false" OnClick="btn_Search_Click" CssStyle="padding-left:5px"></x:Button>
+                                <x:Button ID="btn_Search" runat="server" Text="搜索" Visible="false" Icon="SystemSearch" OnClick="btn_Search_Click" CssStyle="padding-left:5px"></x:Button>
                             </Items>
                         </x:Panel>
                     </Items>
@@ -32,8 +32,8 @@
                 <x:Panel ID="Panel8" ShowBorder="True" ShowHeader="false" BoxFlex="1" Layout="Fit"
                     runat="server">
                     <Items>
-                        <x:Grid ID="grid_List" Title="停止合企业信息" PageSize="15" ShowBorder="false" ShowHeader="false"
-                            AllowPaging="true" runat="server" EnableCheckBoxSelect="True" DataKeyNames="ID,BankID,DealerID"
+                        <x:Grid ID="grid_List" Title="停止合企业信息" PageSize="20" ShowBorder="false" ShowHeader="false"
+                            AllowPaging="true" runat="server" DataKeyNames="ID,BankID,DealerID"
                             IsDatabasePaging="true" OnPageIndexChange="grid_List_PageIndexChange" EnableRowNumber="True" EnableTextSelection="true"
                             ClearSelectedRowsAfterPaging="false" ForceFitAllTime="false" OnRowDataBound="grid_List_RowDataBound">
                             <Columns>
@@ -44,7 +44,6 @@
                                 <x:BoundField DataField="DispatchTime" HeaderText="驻店日期" Width="150px" />
                                 <x:BoundField DataField="SSMoney" HeaderText="监管费用（元）" />
                                 <x:BoundField DataField="PaymentCycle" HeaderText="缴费周期" Width="60px" />
-                                <x:BoundField DataField="FinancingMode" HeaderText="融资模式" Width="200px" />
                                 <x:BoundField DataField="StopTime" HeaderText="停止合作时间" Width="150px" />
                             </Columns>
                             <PageItems>
@@ -55,9 +54,9 @@
                                 <x:DropDownList runat="server" ID="ddlPageSize" Width="40px" AutoPostBack="true"
                                     OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
                                     <x:ListItem Text="5" Value="5" />
-                                    <x:ListItem Text="10" Value="10" Selected="true" />
+                                    <x:ListItem Text="10" Value="10" />
                                     <x:ListItem Text="15" Value="15" />
-                                    <x:ListItem Text="20" Value="20" />
+                                    <x:ListItem Text="20" Value="20" Selected="true" />
                                 </x:DropDownList>
                             </PageItems>
                         </x:Grid>

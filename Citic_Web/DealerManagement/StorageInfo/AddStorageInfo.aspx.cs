@@ -45,6 +45,30 @@ namespace Citic_Web.DealerManagement.StorageInfo
         /// 经过URL传过来的StorageID
         /// </summary>
         private const string STORAGEID = "s_i_d";
+        private int StorageID
+        {
+            get
+            {
+                int storageID = 0;
+                if (ViewState[STORAGEID] != null)
+                {
+                    storageID = Convert.ToInt32(ViewState[STORAGEID]);
+                }
+                return storageID;
+            }
+        }
+        private string DealerID
+        {
+            get
+            {
+                string temp = string.Empty;
+                if (ViewState[DEALERID] != null)
+                {
+                    temp = ViewState[DEALERID].ToString();
+                }
+                return temp;
+            }
+        }
         #endregion
 
         #region 加载二网信息，“修改”操作下调用的函数--乔春羽(2013.11.29)
@@ -149,6 +173,67 @@ namespace Citic_Web.DealerManagement.StorageInfo
         {
             string DealerName = this.ttb_DealerName.Text;
             StringBuilder where = new StringBuilder("IsDelete=0");
+            string[] dealerIDs = null;
+
+            //权限过滤
+            int roleID = this.CurrentUser.RoleId;
+            switch (roleID)
+            {
+                case 10:    //监管员
+                    //根据监管员ID，查询其所监管的经销商
+                    where.AppendFormat(" AND SupervisorID = '{0}'", this.CurrentUser.RelationID);
+                    break;
+
+                case 8:     //银行
+                    DataSet ds = this.UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId));
+                    string bankID = string.Empty;
+                    if (ds != null && ds.Tables.Count > 0)
+                    {
+                        DataTable dt = ds.Tables[0];
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            bankID = dt.Rows[0]["MappingID"].ToString();
+                        }
+                    }
+                    dealerIDs = Dealer_BankBll.GetDealerIDsByBankID(string.IsNullOrEmpty(bankID) ? 0 : int.Parse(bankID));
+                    if (dealerIDs != null && dealerIDs.Length > 0)
+                    {
+                        where.AppendFormat(" AND DealerID in ({0})", string.Join(",", dealerIDs));
+                    }
+                    else
+                    {
+                        where.Append(" AND DealerID = 0");
+                    }
+                    break;
+                case 5:     //市场专员
+                case 6:     //品牌专员
+                    StringBuilder ids = new StringBuilder(string.Empty);
+                    ids.Append(" BankID in (");
+                    DataTable _dt = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId)).Tables[0];
+                    if (_dt != null && _dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in _dt.Rows)
+                        {
+                            ids.AppendFormat("{0},", row["MappingID"].ToString());
+                        }
+                        ids.Remove(ids.Length - 1, 1);
+                    }
+                    else
+                    {
+                        ids.Append("0");
+                    }
+                    ids.Append(")");
+
+                    if (ids != null && ids.Length != 0)
+                    {
+                        dealerIDs = Dealer_BankBll.GetDealerIDBySearch(ids.ToString());
+                        where.AppendFormat(" AND DealerID in ({0})", string.Join(",", dealerIDs));
+                    }
+                    break;
+                case 9:     //厂家
+                    break;
+            }
+
             if (DealerName != null && DealerName != string.Empty)
             {
                 where.AppendFormat(" and DealerName like '%{0}%'", DealerName);
@@ -235,7 +320,8 @@ namespace Citic_Web.DealerManagement.StorageInfo
                 e.Values[index] = dealerType;
                 //是否是集团性质
                 index = 2;
-                bool isGroup = Convert.ToBoolean(e.Values[index]);
+
+                bool isGroup = string.IsNullOrEmpty(e.Values[index].ToString()) ? false : Convert.ToBoolean(e.Values[index]);
                 e.Values[index] = isGroup ? "是" : "否";
                 index = 3;
                 string hasOtherIndustries = Convert.ToString(e.Values[index]);
@@ -267,8 +353,12 @@ namespace Citic_Web.DealerManagement.StorageInfo
         #region 保存仓库信息--乔春羽
         protected void btn_SaveAndClose_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(DealerID))
+            {
+                AlertShowInTop("请选择经销商！");
+                return;
+            }
             Save();
-            PageContext.RegisterStartupScript(ActiveWindow.GetHideRefreshReference());
         }
 
         /// <summary>
@@ -277,7 +367,7 @@ namespace Citic_Web.DealerManagement.StorageInfo
         private void Save()
         {
             //“添加”操作
-            if (ViewState[DEALERID] == null)
+            if (StorageID == 0)
             {
                 Citic.Model.Storage model = new Citic.Model.Storage();
                 model.StorageName = this.txt_StorageName.Text;
@@ -294,6 +384,7 @@ namespace Citic_Web.DealerManagement.StorageInfo
                 model.LinkManName = this.txt_LinkmanName.Text;
                 model.LinkPhone = this.num_Phone.Text;
                 model.LinkType = Convert.ToInt32(Citic_Web.Common.LinkType.StorageLinkman);
+                model.ConnectID = string.Empty;
 
                 try
                 {
@@ -320,6 +411,7 @@ namespace Citic_Web.DealerManagement.StorageInfo
                     model.StorageName = this.txt_StorageName.Text;
                     model.Address = GetAddress();
                     model.UpdateID = this.CurrentUser.UserId;
+                    model.UpdateTime = DateTime.Now;
                     model.DealerID = Convert.ToInt32(ViewState[DEALERID]);
                     model.DealerName = lbl_DealerName.Text;
                     model.IsDelete = false;
@@ -348,6 +440,7 @@ namespace Citic_Web.DealerManagement.StorageInfo
                 }
                 else { AlertShowInTop("内存数据有异常！"); }
             }
+            PageContext.RegisterStartupScript(ActiveWindow.GetHideReference());
         }
 
         /// <summary>

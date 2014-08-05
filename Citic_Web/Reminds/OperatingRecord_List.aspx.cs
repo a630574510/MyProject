@@ -59,11 +59,11 @@ namespace Citic_Web.Reminds
         private string ConditionInit()
         {
             StringBuilder where = new StringBuilder(" (Status = 1 or Status = 3)");
-            if (this.ddl_Bank.SelectedValue != null && this.ddl_Bank.SelectedValue != "0")
+            if (this.ddl_Bank.SelectedValue != "-1")
             {
-                where.AppendFormat(" and BankID = {0}", ddl_Bank.SelectedValue);
+                where.AppendFormat(" And BankID = '{0}' ", this.ddl_Bank.SelectedValue);
             }
-            if (this.ddl_Dealer.SelectedValue != null && this.ddl_Dealer.SelectedValue != "0")
+            if (this.ddl_Dealer.SelectedValue != null && this.ddl_Dealer.SelectedValue != "-1")
             {
                 if (!string.IsNullOrEmpty(this.txt_DealerName.Text))
                 {
@@ -85,6 +85,64 @@ namespace Citic_Web.Reminds
             {
                 where.AppendFormat(" and Vin like '%{0}%'", this.txt_Vin.Text);
             }
+            //权限过滤
+            switch (this.CurrentUser.RoleId)
+            {
+                case 8:     //银行
+                    //where.Append(" AND (IsBMLook <> '' AND IsBMLook is not null) ");
+                    where.Append(" AND (IsBMLook <> '') ");
+                    if (this.ddl_Bank.SelectedValue == "-1")
+                    {
+                        DataSet ds = this.UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId));
+                        if (ds != null && ds.Tables.Count > 0)
+                        {
+                            DataTable dt = ds.Tables[0];
+                            if (dt != null && dt.Rows.Count > 0)
+                            {
+                                where.AppendFormat(" And BankID = '{0}' ", dt.Rows[0]["MappingID"].ToString());
+                            }
+                            else
+                            {
+                                where.Append(" And BankID = '0' ");
+                            }
+                        }
+                    }
+                    break;
+                case 5:     //市场专员
+                case 6:     //业务专员
+                    StringBuilder ids = new StringBuilder(string.Empty);
+                    DataTable _dt = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId)).Tables[0];
+                    if (_dt != null && _dt.Rows.Count > 0)
+                    {
+                        ids.Append(" AND BankID in (");
+                        foreach (DataRow row in _dt.Rows)
+                        {
+                            ids.AppendFormat("{0},", row["MappingID"].ToString());
+                        }
+                        ids.Remove(ids.Length - 1, 1);
+                        ids.Append(")");
+                        where.Append(ids);
+                    }
+                    else
+                    {
+                        ids.Append(" AND BankID = '0' ");
+                    }
+                    where.Append(ids);
+                    break;
+                case 10:    //监管员
+                    where.Replace(" (Status = 1 or Status = 3)", " (IsSupervisorLook <> '') ");
+                    //where.Append(" AND (IsSupervisorLook <> '' AND IsSupervisorLook is not null)");
+                    string[] tempIDs = DealerBll.GetDealerIDsBySupervisorID(this.CurrentUser.RelationID.Value);
+                    if (tempIDs != null && tempIDs.Length > 0)
+                    {
+                        where.AppendFormat(" AND DealerID in ({0})", string.Join(",", tempIDs));
+                    }
+                    else
+                    {
+                        where.Append(" DealerID = '0' ");
+                    }
+                    break;
+            }
             return where.ToString();
         }
 
@@ -102,32 +160,93 @@ namespace Citic_Web.Reminds
         #region 加载合作银行信息--乔春羽
         private void BankDataBind()
         {
-            DataTable dt = BankBll.GetBankIDAndBankName("IsDelete=0");
-
-            ddl_Bank.DataTextField = "BankName";
-            ddl_Bank.DataValueField = "BankID";
-            ddl_Bank.DataSource = dt;
-            ddl_Bank.DataBind();
-
-            ddl_Bank.Items.Insert(0, new FineUI.ListItem("请选择", "0"));
-
+            DataTable dt = null;
+            //监管员
+            if (this.CurrentUser.RoleId == 10)
+            {
+                dt = Dealer_BankBll.GetBankIDAndNameFilterRole(this.CurrentUser.RelationID.Value).Tables[0];
+            }
+            //银行
+            else if (this.CurrentUser.RoleId == 8)
+            {
+                Citic.Model.UserMapping model = UMBLL.GetModelByCondition(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId));
+                if (model != null)
+                {
+                    dt = BankBll.GetList(string.Format(" BankID='{0}' ", model.MappingID.Value.ToString())).Tables[0];
+                }
+            }
+            //5.市场专员，6.业务专员
+            else if (this.CurrentUser.RoleId == 5 || this.CurrentUser.RoleId == 6)
+            {
+                StringBuilder ids = new StringBuilder(string.Empty);
+                DataTable _dt = UMBLL.GetList(string.Format(" UserID='{0}' and RoleID='{1}' and MappingType='Bank' ", this.CurrentUser.UserId, this.CurrentUser.RoleId)).Tables[0];
+                if (_dt != null && _dt.Rows.Count > 0)
+                {
+                    ids.Append(" T.BankID in (");
+                    foreach (DataRow row in _dt.Rows)
+                    {
+                        ids.AppendFormat("{0},", row["MappingID"].ToString());
+                    }
+                    ids.Remove(ids.Length - 1, 1);
+                    ids.Append(")");
+                    dt = BankBll.GetList(ids.ToString()).Tables[0];
+                }
+            }
+            else
+            {
+                dt = BankBll.GetList("IsDelete=0").Tables[0];
+            }
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                ddl_Bank.DataTextField = "BankName";
+                ddl_Bank.DataValueField = "BankID";
+                ddl_Bank.DataSource = dt;
+                ddl_Bank.DataBind();
+            }
+            AddItemByInsert(ddl_Bank, "请选择", "-1", 0);
         }
         #endregion
 
         #region 加载企业信息（经销商）--乔春羽
         private void DealerDataBind()
         {
-            string val = ddl_Bank.SelectedValue;
-            if (val != null && val != string.Empty)
+            ddl_Dealer.Items.Clear();
+            DataSet ds = null;
+            StringBuilder strWhere = new StringBuilder(" A.CollaborateType = 1 ");
+            if (this.ddl_Bank.SelectedValue != "-1")
             {
-                DataTable dt = Dealer_BankBll.GetDealerByBankForDataTable(int.Parse(val), string.Empty);
-
-                ddl_Dealer.DataTextField = "DealerName";
-                ddl_Dealer.DataValueField = "DealerID";
-                ddl_Dealer.DataSource = dt;
-                ddl_Dealer.DataBind();
+                strWhere.AppendFormat(" AND A.BankID = {0} ", this.ddl_Bank.SelectedValue);
             }
-            ddl_Dealer.Items.Insert(0, new FineUI.ListItem("请选择", "0"));
+            switch (this.CurrentUser.RoleId)
+            {
+                case 10:    //监管员
+                    string[] tempIDs = DealerBll.GetDealerIDsBySupervisorID(this.CurrentUser.RelationID.Value);
+
+                    strWhere.AppendFormat(" AND A.DealerID in ({0}) ", string.Join(",", tempIDs));
+                    ds = Dealer_BankBll.GetList(strWhere.ToString());
+                    break;
+                case 5:     //市场专员
+                case 6:     //业务专员
+                case 8:     //银行
+                case 1:
+                    ds = Dealer_BankBll.GetList(strWhere.ToString());
+                    break;
+            }
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0] != null && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataTable dt = ds.Tables[0];
+
+                    ddl_Dealer.DataTextField = "DealerName";
+                    ddl_Dealer.DataValueField = "DealerID";
+                    ddl_Dealer.DataSource = dt;
+                    ddl_Dealer.DataBind();
+                }
+            }
+
+            AddItemByInsert(ddl_Dealer, "请选择", "-1", 0);
         }
         #endregion
 
@@ -183,28 +302,18 @@ namespace Citic_Web.Reminds
             DataRowView row = e.DataItem as DataRowView;
             if (row != null)
             {
-                int type = Convert.ToInt32(e.Values[3]);
-                switch (type)
-                {
-                    case 1:
-                        e.Values[3] = "出库申请";
-                        break;
-                    case 2:
-                        e.Values[3] = "移动申请";
-                        break;
-                }
-
-                type = Convert.ToInt32(e.Values[6]);
+                int type = 0;
+                type = Convert.ToInt32(e.Values[5]);
                 switch (type)
                 {
                     case 1: //状态为“通过”
-                        e.Values[6] = "通过";
+                        e.Values[5] = "通过";
                         break;
                     case 2:
-                        e.Values[6] = "处理中";
+                        e.Values[5] = "处理中";
                         break;
                     case 3:
-                        e.Values[6] = "未通过";
+                        e.Values[5] = "未通过";
                         break;
                 }
             }

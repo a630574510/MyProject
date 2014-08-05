@@ -193,7 +193,7 @@ namespace Citic.BLL
             return dal.CreateSupervisor(model);
         }
         #endregion
-        
+
         #region 修改监管员的信息，同时也修改监管员对应账号的信息。--乔春羽(2013.11.28)
         public int ModifySupervisor(Citic.Model.Supervisor model)
         {
@@ -227,9 +227,9 @@ namespace Citic.BLL
         #endregion
 
         #region 获得监管员的所有信息，替换了所有的数字字段--乔春羽(2013.12.20)
-        public DataSet GetAllListByProcess()
+        public DataSet GetAllListByProcess(string where, int startIndex, int endIndex)
         {
-            return dal.GetAllListByProcess();
+            return dal.GetAllListByProcess(where, startIndex, endIndex);
         }
         #endregion
         #endregion  ExtensionMethod

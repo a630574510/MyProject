@@ -40,6 +40,15 @@ namespace Citic_Web.Car {
         protected global::FineUI.Panel Panel_Transit;
         
         /// <summary>
+        /// Panel1 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Panel Panel1;
+        
+        /// <summary>
         /// Form2 控件。
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace Citic_Web.Car {
         protected global::FineUI.Form Form2;
         
         /// <summary>
+        /// Toolbar2 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Toolbar Toolbar2;
+        
+        /// <summary>
         /// Btn_Search 控件。
         /// </summary>
         /// <remarks>
@@ -56,6 +74,24 @@ namespace Citic_Web.Car {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.Button Btn_Search;
+        
+        /// <summary>
+        /// Btn_Generate 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.Button Btn_Generate;
+        
+        /// <summary>
+        /// hl_ExportExcel 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::FineUI.HyperLink hl_ExportExcel;
         
         /// <summary>
         /// ddl_Dealer 控件。
@@ -265,12 +301,12 @@ namespace Citic_Web.Car {
         protected global::FineUI.TextBox txtCarCost;
         
         /// <summary>
-        /// txtRemark 控件。
+        /// txtRemarks 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.TextBox txtRemark;
+        protected global::FineUI.TextArea txtRemarks;
     }
 }

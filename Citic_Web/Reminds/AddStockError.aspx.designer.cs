@@ -58,13 +58,13 @@ namespace Citic_Web.Reminds {
         protected global::FineUI.Button btn_SaveAndClose;
         
         /// <summary>
-        /// SimpleForm1 控件。
+        /// sf_BasicInfo 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.SimpleForm SimpleForm1;
+        protected global::FineUI.SimpleForm sf_BasicInfo;
         
         /// <summary>
         /// txt_Dealer 控件。
@@ -85,22 +85,13 @@ namespace Citic_Web.Reminds {
         protected global::FineUI.DropDownList ddl_Bank;
         
         /// <summary>
-        /// ddl_DraftNo 控件。
+        /// txt_Vin 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::FineUI.DropDownList ddl_DraftNo;
-        
-        /// <summary>
-        /// ddl_Vin 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.DropDownList ddl_Vin;
+        protected global::FineUI.TextBox txt_Vin;
         
         /// <summary>
         /// cbl_Status 控件。
@@ -110,15 +101,6 @@ namespace Citic_Web.Reminds {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::FineUI.CheckBoxList cbl_Status;
-        
-        /// <summary>
-        /// Label1 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::FineUI.Label Label1;
         
         /// <summary>
         /// cbl_EO 控件。

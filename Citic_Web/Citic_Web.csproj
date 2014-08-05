@@ -25,10 +25,14 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -107,6 +111,83 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BankInterface\GD_Q401.aspx.cs">
+      <DependentUpon>GD_Q401.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q401.aspx.designer.cs">
+      <DependentUpon>GD_Q401.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q402.aspx.cs">
+      <DependentUpon>GD_Q402.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q402.aspx.designer.cs">
+      <DependentUpon>GD_Q402.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q403.aspx.cs">
+      <DependentUpon>GD_Q403.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q403.aspx.designer.cs">
+      <DependentUpon>GD_Q403.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q406.aspx.cs">
+      <DependentUpon>GD_Q406.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q406.aspx.designer.cs">
+      <DependentUpon>GD_Q406.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q412.aspx.cs">
+      <DependentUpon>GD_Q412.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q412.aspx.designer.cs">
+      <DependentUpon>GD_Q412.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q414.aspx.cs">
+      <DependentUpon>GD_Q414.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\GD_Q414.aspx.designer.cs">
+      <DependentUpon>GD_Q414.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\UpDealerBank.aspx.cs">
+      <DependentUpon>UpDealerBank.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\UpDealerBank.aspx.designer.cs">
+      <DependentUpon>UpDealerBank.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZX_CustomerInformation.aspx.cs">
+      <DependentUpon>ZX_CustomerInformation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZX_CustomerInformation.aspx.designer.cs">
+      <DependentUpon>ZX_CustomerInformation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZX_Financing.aspx.cs">
+      <DependentUpon>ZX_Financing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZX_Financing.aspx.designer.cs">
+      <DependentUpon>ZX_Financing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZX_ShowSCF.aspx.cs">
+      <DependentUpon>ZX_ShowSCF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZX_ShowSCF.aspx.designer.cs">
+      <DependentUpon>ZX_ShowSCF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZX_Storage.aspx.cs">
+      <DependentUpon>ZX_Storage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZX_Storage.aspx.designer.cs">
+      <DependentUpon>ZX_Storage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="BasicInfoManagement\AddBank.aspx.cs">
       <DependentUpon>AddBank.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -268,6 +349,7 @@
     <Compile Include="Common\Common.cs" />
     <Compile Include="Common\ExcelToTable.cs" />
     <Compile Include="Common\InsertPicToExcel.cs" />
+    <Compile Include="Common\NPOIHelper.cs" />
     <Compile Include="Common\OperateConfigFile.cs" />
     <Compile Include="Common\TxtFileEncoding.cs" />
     <Compile Include="Common\ConfigSetting.cs" />
@@ -347,13 +429,6 @@
     <Compile Include="DealerManagement\DealerInfo\AddDealer.aspx.designer.cs">
       <DependentUpon>AddDealer.aspx</DependentUpon>
     </Compile>
-    <Compile Include="DealerManagement\DealerInfo\DealerList.aspx.cs">
-      <DependentUpon>DealerList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DealerManagement\DealerInfo\DealerList.aspx.designer.cs">
-      <DependentUpon>DealerList.aspx</DependentUpon>
-    </Compile>
     <Compile Include="DealerManagement\DealerInfo\EditDealer.aspx.cs">
       <DependentUpon>EditDealer.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -383,33 +458,19 @@
     <Compile Include="Handlers\searchDealer.ashx.cs">
       <DependentUpon>searchDealer.ashx</DependentUpon>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTable.aspx.cs">
-      <DependentUpon>InspectionDayTable.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionList.aspx.cs">
+      <DependentUpon>InspectionList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTable.aspx.designer.cs">
-      <DependentUpon>InspectionDayTable.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionList.aspx.designer.cs">
+      <DependentUpon>InspectionList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableAdd.aspx.cs">
-      <DependentUpon>InspectionDayTableAdd.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionAdd.aspx.cs">
+      <DependentUpon>InspectionAdd.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableAdd.aspx.designer.cs">
-      <DependentUpon>InspectionDayTableAdd.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableDelete.aspx.cs">
-      <DependentUpon>InspectionDayTableDelete.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableDelete.aspx.designer.cs">
-      <DependentUpon>InspectionDayTableDelete.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableUpdate.aspx.cs">
-      <DependentUpon>InspectionDayTableUpdate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionDayTableUpdate.aspx.designer.cs">
-      <DependentUpon>InspectionDayTableUpdate.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionAdd.aspx.designer.cs">
+      <DependentUpon>InspectionAdd.aspx</DependentUpon>
     </Compile>
     <Compile Include="InspectionFrequency\InspectionDelete.aspx.cs">
       <DependentUpon>InspectionDelete.aspx</DependentUpon>
@@ -418,19 +479,12 @@
     <Compile Include="InspectionFrequency\InspectionDelete.aspx.designer.cs">
       <DependentUpon>InspectionDelete.aspx</DependentUpon>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionList.aspx.cs">
-      <DependentUpon>InspectionList.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionProcessing.aspx.cs">
+      <DependentUpon>InspectionProcessing.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="InspectionFrequency\InspectionList.aspx.designer.cs">
-      <DependentUpon>InspectionList.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionMonthTable.aspx.cs">
-      <DependentUpon>InspectionMonthTable.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InspectionFrequency\InspectionMonthTable.aspx.designer.cs">
-      <DependentUpon>InspectionMonthTable.aspx</DependentUpon>
+    <Compile Include="InspectionFrequency\InspectionProcessing.aspx.designer.cs">
+      <DependentUpon>InspectionProcessing.aspx</DependentUpon>
     </Compile>
     <Compile Include="InspectionFrequency\InspectionSearch.ashx.cs">
       <DependentUpon>InspectionSearch.ashx</DependentUpon>
@@ -441,13 +495,6 @@
     </Compile>
     <Compile Include="InspectionFrequency\InspectionUpdate.aspx.designer.cs">
       <DependentUpon>InspectionUpdate.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="InspectionFrequency\TrackTabel.aspx.cs">
-      <DependentUpon>TrackTabel.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="InspectionFrequency\TrackTabel.aspx.designer.cs">
-      <DependentUpon>TrackTabel.aspx</DependentUpon>
     </Compile>
     <Compile Include="Ledger\Electron_Ledger.aspx.cs">
       <DependentUpon>Electron_Ledger.aspx</DependentUpon>
@@ -497,13 +544,6 @@
     </Compile>
     <Compile Include="ProjectTracking\HZProjectsFollow\HZProjectFollowVerify.aspx.designer.cs">
       <DependentUpon>HZProjectFollowVerify.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ProjectTracking\QueryWHFrequency\AddQueryWH.aspx.cs">
-      <DependentUpon>AddQueryWH.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ProjectTracking\QueryWHFrequency\AddQueryWH.aspx.designer.cs">
-      <DependentUpon>AddQueryWH.aspx</DependentUpon>
     </Compile>
     <Compile Include="ProjectTracking\rcquesbyday\AddHZXMGJ.aspx.cs">
       <DependentUpon>AddHZXMGJ.aspx</DependentUpon>
@@ -774,10 +814,22 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Confirmation\视频检查文件\" />
     <Folder Include="UpExcel\导入数据库的汇票信息\" />
     <Folder Include="UploadImage\日查库照片\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BankInterface\GD_Q401.aspx" />
+    <Content Include="BankInterface\GD_Q402.aspx" />
+    <Content Include="BankInterface\GD_Q403.aspx" />
+    <Content Include="BankInterface\GD_Q406.aspx" />
+    <Content Include="BankInterface\GD_Q412.aspx" />
+    <Content Include="BankInterface\GD_Q414.aspx" />
+    <Content Include="BankInterface\UpDealerBank.aspx" />
+    <Content Include="BankInterface\ZX_CustomerInformation.aspx" />
+    <Content Include="BankInterface\ZX_Financing.aspx" />
+    <Content Include="BankInterface\ZX_ShowSCF.aspx" />
+    <Content Include="BankInterface\ZX_Storage.aspx" />
     <Content Include="BasicInfoManagement\AddBank.aspx" />
     <Content Include="BasicInfoManagement\AddFactory.aspx" />
     <Content Include="BasicInfoManagement\AddLinkMan.aspx" />
@@ -1357,7 +1409,6 @@
     <Content Include="FinanceInfo\FinanceInfoList.aspx" />
     <Content Include="FinanceInfo\ImportDrafts.aspx" />
     <Content Include="DealerManagement\DealerInfo\AddDealer.aspx" />
-    <Content Include="DealerManagement\DealerInfo\DealerList.aspx" />
     <Content Include="DealerManagement\DealerInfo\EditDealer.aspx" />
     <Content Include="DealerManagement\StorageInfo\StorageList.aspx" />
     <Content Include="Global.asax" />
@@ -3159,15 +3210,11 @@
     <Content Include="Images\snapshot\cascade_window.jpg" />
     <Content Include="Images\success.png" />
     <Content Include="Images\ui-anim_basic_16x16.gif" />
-    <Content Include="InspectionFrequency\InspectionDayTable.aspx" />
-    <Content Include="InspectionFrequency\InspectionDayTableAdd.aspx" />
-    <Content Include="InspectionFrequency\InspectionDayTableDelete.aspx" />
-    <Content Include="InspectionFrequency\InspectionDayTableUpdate.aspx" />
-    <Content Include="InspectionFrequency\InspectionDelete.aspx" />
     <Content Include="InspectionFrequency\InspectionList.aspx" />
-    <Content Include="InspectionFrequency\InspectionMonthTable.aspx" />
+    <Content Include="InspectionFrequency\InspectionAdd.aspx" />
+    <Content Include="InspectionFrequency\InspectionDelete.aspx" />
+    <Content Include="InspectionFrequency\InspectionProcessing.aspx" />
     <Content Include="InspectionFrequency\InspectionUpdate.aspx" />
-    <Content Include="InspectionFrequency\TrackTabel.aspx" />
     <Content Include="jqueryui\css\ui-lightness\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="jqueryui\css\ui-lightness\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="jqueryui\css\ui-lightness\images\ui-bg_flat_10_000000_40x100.png" />
@@ -3675,7 +3722,6 @@
     <Content Include="Office\LoadOffice.aspx" />
     <Content Include="Office\upload.aspx" />
     <Content Include="ProjectTracking\HZProjectsFollow\HZProjectFollowVerify.aspx" />
-    <Content Include="ProjectTracking\QueryWHFrequency\AddQueryWH.aspx" />
     <Content Include="ProjectTracking\rcquesbyday\AddHZXMGJ.aspx" />
     <Content Include="ProjectTracking\rcquesbyday\AddRCQuesByDay.aspx" />
     <Content Include="ProjectTracking\rcquesbyday\AddRiskQues.aspx" />
@@ -3751,6 +3797,14 @@
     <Content Include="Confirmation\质押车入库导入明细表.xls" />
     <Content Include="Confirmation\钥匙交接表.xls" />
     <Content Include="Confirmation\钥匙借用登记表.xls" />
+    <None Include="Confirmation\模版文件\二网申请书.xls" />
+    <None Include="Confirmation\模版文件\出库申请书.xls" />
+    <None Include="Confirmation\模版文件\手工台帐.xls" />
+    <None Include="Confirmation\模版文件\确认书.xls" />
+    <None Include="Confirmation\模版文件\视频检查日报表模版.xls" />
+    <None Include="Confirmation\模版文件\质押车入库导入明细表.xls" />
+    <None Include="Confirmation\模版文件\钥匙交接表.xls" />
+    <None Include="Confirmation\模版文件\钥匙借用登记表.xls" />
     <None Include="DownExcel\厂商信息.xls" />
     <None Include="DownExcel\合作行信息.xls" />
     <None Include="DownExcel\总账.xls" />

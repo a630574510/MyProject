@@ -34,12 +34,10 @@
                             <Items>
                                 <x:Label ID="Label1" runat="server" Text="合作行：" CssStyle="padding-right:20px"></x:Label>
                                 <x:DropDownList ID="ddl_Bank" runat="server" Width="300px" AutoPostBack="true" OnSelectedIndexChanged="ddl_Bank_SelectedIndexChanged"></x:DropDownList>
-
                                 <x:Label ID="Label2" runat="server" Text="企业名称：" CssStyle="padding-left:20px;padding-right:30px"></x:Label>
                                 <x:DropDownList ID="ddl_Dealer" runat="server" Width="300px"></x:DropDownList>
                             </Items>
                         </x:Panel>
-
                         <x:Panel ID="Panel3" runat="server" BodyPadding="0px" ShowBorder="false" ShowHeader="false" EnableBackgroundColor="true"
                             CssClass="x-form-item" Layout="Column">
                             <Items>
@@ -53,19 +51,14 @@
                             CssClass="x-form-item" Layout="Column">
                             <Items>
                                 <x:Label ID="Label5" runat="server" Text="状态：" CssStyle="padding-right:32px"></x:Label>
-                                <x:DropDownList ID="ddl_Status" runat="server" Width="80px">
-                                    <x:ListItem Value="-1" Text="请选择" Selected="true" />
-                                    <x:ListItem Value="1" Text="通过" />
-                                    <x:ListItem Value="2" Text="处理中" />
-                                    <x:ListItem Value="3" Text="未通过" />
-                                </x:DropDownList>
-                                <x:Button ID="btn_Search" runat="server" Text="查询" Icon="SystemSearch" CssStyle="padding-left:10px" Visible="false" OnClick="btn_Search_Click"></x:Button>
+                                
+                                <x:Button ID="btn_Search" runat="server" Text="查询" Icon="SystemSearch" CssStyle="padding-left:0px" Visible="false" OnClick="btn_Search_Click"></x:Button>
                             </Items>
                         </x:Panel>
                     </Items>
                 </x:SimpleForm>
                 <x:Grid ID="grid_List" runat="server" ShowHeader="false" EnableBackgroundColor="true" EnableTextSelection="true"
-                    BoxFlex="1" EnableCheckBoxSelect="true" AllowPaging="true" DataKeyNames="ID,Vin,BankID,DealerID,ReqType" IsDatabasePaging="true" PageSize="15"
+                    BoxFlex="1" EnableCheckBoxSelect="true" AllowPaging="true" DataKeyNames="ID,Vin,BankID,DealerID,ReqType,Status,Content,IsBMLook,TargetUser" IsDatabasePaging="true" PageSize="15"
                     OnPageIndexChange="grid_List_PageIndexChange" OnRowDataBound="grid_List_RowDataBound" OnRowCommand="grid_List_RowCommand">
                     <Toolbars>
                         <x:Toolbar ID="Toolbar1" runat="server">
@@ -81,7 +74,6 @@
                         <x:BoundField HeaderText="经销商" DataField="DealerName" Width="200px" />
                         <x:BoundField HeaderText="票号" DataField="DraftNo" Width="200px" />
                         <x:BoundField HeaderText="车架号" DataField="Vin" Width="200px" />
-                        <x:BoundField HeaderText="事项" DataField="ReqType" Width="60px" />
                         <x:BoundField HeaderText="具体内容" DataField="Content" Width="300px" />
                         <x:BoundField HeaderText="申请时间" DataField="CreateTime" />
                         <x:BoundField HeaderText="状态" DataField="Status" Width="50px" />

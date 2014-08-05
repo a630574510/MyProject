@@ -38,13 +38,15 @@ namespace Citic.DAL
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into tb_Dealer_Bank_List(");
-            strSql.Append("DealerID,DealerName,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID)");
+            strSql.Append("DealerID,DealerName,JC,BC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID)");
             strSql.Append(" values (");
-            strSql.Append("@DealerID,@DealerName,@BankID,@BankName,@BrandID,@BrandName,@BusinessMode,@FinancingMode,@CollaborateType,@SSMoney,@YSMoney,@PaymentCycle,@DispatchTime,@CreateID,@CreateTime,@IsDelete,@StopTime,@GD_ID,@ZX_ID)");
+            strSql.Append("@DealerID,@DealerName,@JC,@BC,@BankID,@BankName,@BrandID,@BrandName,@BusinessMode,@FinancingMode,@CollaborateType,@SSMoney,@YSMoney,@PaymentCycle,@DispatchTime,@CreateID,@CreateTime,@IsDelete,@StopTime,@GD_ID,@ZX_ID)");
             strSql.Append(";select @@IDENTITY");
             SqlParameter[] parameters = {
 					new SqlParameter("@DealerID", SqlDbType.Int,4),
 					new SqlParameter("@DealerName", SqlDbType.NVarChar,200),
+					new SqlParameter("@JC", SqlDbType.NVarChar,20),
+					new SqlParameter("@BC", SqlDbType.Int,4),
 					new SqlParameter("@BankID", SqlDbType.Int,4),
 					new SqlParameter("@BankName", SqlDbType.NVarChar,200),
 					new SqlParameter("@BrandID", SqlDbType.Int,4),
@@ -64,23 +66,25 @@ namespace Citic.DAL
 					new SqlParameter("@ZX_ID", SqlDbType.NVarChar,100)};
             parameters[0].Value = model.DealerID;
             parameters[1].Value = model.DealerName;
-            parameters[2].Value = model.BankID;
-            parameters[3].Value = model.BankName;
-            parameters[4].Value = model.BrandID;
-            parameters[5].Value = model.BrandName;
-            parameters[6].Value = model.BusinessMode;
-            parameters[7].Value = model.FinancingMode;
-            parameters[8].Value = model.CollaborateType;
-            parameters[9].Value = model.SSMoney;
-            parameters[10].Value = model.YSMoney;
-            parameters[11].Value = model.PaymentCycle;
-            parameters[12].Value = model.DispatchTime;
-            parameters[13].Value = model.CreateID;
-            parameters[14].Value = model.CreateTime;
-            parameters[15].Value = model.IsDelete;
-            parameters[16].Value = model.StopTime;
-            parameters[17].Value = model.GD_ID;
-            parameters[18].Value = model.ZX_ID;
+            parameters[2].Value = model.JC;
+            parameters[3].Value = model.BC;
+            parameters[4].Value = model.BankID;
+            parameters[5].Value = model.BankName;
+            parameters[6].Value = model.BrandID;
+            parameters[7].Value = model.BrandName;
+            parameters[8].Value = model.BusinessMode;
+            parameters[9].Value = model.FinancingMode;
+            parameters[10].Value = model.CollaborateType;
+            parameters[11].Value = model.SSMoney;
+            parameters[12].Value = model.YSMoney;
+            parameters[13].Value = model.PaymentCycle;
+            parameters[14].Value = model.DispatchTime;
+            parameters[15].Value = model.CreateID;
+            parameters[16].Value = model.CreateTime;
+            parameters[17].Value = model.IsDelete;
+            parameters[18].Value = model.StopTime;
+            parameters[19].Value = model.GD_ID;
+            parameters[20].Value = model.ZX_ID;
 
             object obj = DbHelperSQL.GetSingle(strSql.ToString(), parameters);
             if (obj == null)
@@ -101,6 +105,8 @@ namespace Citic.DAL
             strSql.Append("update tb_Dealer_Bank_List set ");
             strSql.Append("DealerID=@DealerID,");
             strSql.Append("DealerName=@DealerName,");
+            strSql.Append("JC=@JC,");
+            strSql.Append("BC=@BC,");
             strSql.Append("BankID=@BankID,");
             strSql.Append("BankName=@BankName,");
             strSql.Append("BrandID=@BrandID,");
@@ -122,6 +128,8 @@ namespace Citic.DAL
             SqlParameter[] parameters = {
 					new SqlParameter("@DealerID", SqlDbType.Int,4),
 					new SqlParameter("@DealerName", SqlDbType.NVarChar,200),
+					new SqlParameter("@JC", SqlDbType.NVarChar,20),
+					new SqlParameter("@BC", SqlDbType.Int,4),
 					new SqlParameter("@BankID", SqlDbType.Int,4),
 					new SqlParameter("@BankName", SqlDbType.NVarChar,200),
 					new SqlParameter("@BrandID", SqlDbType.Int,4),
@@ -142,24 +150,26 @@ namespace Citic.DAL
 					new SqlParameter("@ID", SqlDbType.Int,4)};
             parameters[0].Value = model.DealerID;
             parameters[1].Value = model.DealerName;
-            parameters[2].Value = model.BankID;
-            parameters[3].Value = model.BankName;
-            parameters[4].Value = model.BrandID;
-            parameters[5].Value = model.BrandName;
-            parameters[6].Value = model.BusinessMode;
-            parameters[7].Value = model.FinancingMode;
-            parameters[8].Value = model.CollaborateType;
-            parameters[9].Value = model.SSMoney;
-            parameters[10].Value = model.YSMoney;
-            parameters[11].Value = model.PaymentCycle;
-            parameters[12].Value = model.DispatchTime;
-            parameters[13].Value = model.CreateID;
-            parameters[14].Value = model.CreateTime;
-            parameters[15].Value = model.IsDelete;
-            parameters[16].Value = model.StopTime;
-            parameters[17].Value = model.GD_ID;
-            parameters[18].Value = model.ZX_ID;
-            parameters[19].Value = model.ID;
+            parameters[2].Value = model.JC;
+            parameters[3].Value = model.BC;
+            parameters[4].Value = model.BankID;
+            parameters[5].Value = model.BankName;
+            parameters[6].Value = model.BrandID;
+            parameters[7].Value = model.BrandName;
+            parameters[8].Value = model.BusinessMode;
+            parameters[9].Value = model.FinancingMode;
+            parameters[10].Value = model.CollaborateType;
+            parameters[11].Value = model.SSMoney;
+            parameters[12].Value = model.YSMoney;
+            parameters[13].Value = model.PaymentCycle;
+            parameters[14].Value = model.DispatchTime;
+            parameters[15].Value = model.CreateID;
+            parameters[16].Value = model.CreateTime;
+            parameters[17].Value = model.IsDelete;
+            parameters[18].Value = model.StopTime;
+            parameters[19].Value = model.GD_ID;
+            parameters[20].Value = model.ZX_ID;
+            parameters[21].Value = model.ID;
 
             int rows = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
             if (rows > 0)
@@ -222,8 +232,8 @@ namespace Citic.DAL
         public Citic.Model.Dealer_Bank GetModel(int ID)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select  top 1 ID,DealerID,DealerName,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID from tb_Dealer_Bank_List ");
-            strSql.Append(" where ID=@ID");
+            strSql.Append("SELECT TOP 1 ID,DealerID,DealerName,JC,BC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID from tb_Dealer_Bank_List ");
+            strSql.Append(" WHERE ID=@ID");
             SqlParameter[] parameters = {
 					new SqlParameter("@ID", SqlDbType.Int,4)
 			};
@@ -261,6 +271,14 @@ namespace Citic.DAL
                 if (row["DealerName"] != null)
                 {
                     model.DealerName = row["DealerName"].ToString();
+                }
+                if (row["JC"] != null)
+                {
+                    model.JC = row["JC"].ToString();
+                }
+                if (row["BC"] != null && row["BC"].ToString() != "")
+                {
+                    model.BC = int.Parse(row["BC"].ToString());
                 }
                 if (row["BankID"] != null && row["BankID"].ToString() != "")
                 {
@@ -347,8 +365,23 @@ namespace Citic.DAL
         public DataSet GetList(string strWhere)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ID,DealerID,DealerName,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,CONVERT(VARCHAR(12),DispatchTime,111) DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID ");
-            strSql.Append(" FROM tb_Dealer_Bank_List ");
+            strSql.Append("SELECT ID,DealerID,DealerName,JC,BC,A.BankID,A.BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,StopTime,GD_ID,ZX_ID,B.ConnectID,A.CreateID,A.CreateTime ");
+            strSql.Append("FROM tb_Dealer_Bank_List A left join tb_Bank_List B on A.BankID = B.BankID ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" where " + strWhere);
+            }
+            return DbHelperSQL.Query(strSql.ToString());
+        }
+
+        /// <summary>
+        /// 获得数据列表 张繁 2014年6月11日
+        /// </summary>
+        public DataSet GetListAll(string strWhere)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT ID,DealerID,DealerName,JC,BC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,StopTime,GD_ID,ZX_ID,CreateID,CreateTime ");
+            strSql.Append("FROM tb_Dealer_Bank_List");
             if (strWhere.Trim() != "")
             {
                 strSql.Append(" where " + strWhere);
@@ -362,12 +395,12 @@ namespace Citic.DAL
         public DataSet GetList(int Top, string strWhere, string filedOrder)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select ");
+            strSql.Append("SELECT ");
             if (Top > 0)
             {
-                strSql.Append(" top " + Top.ToString());
+                strSql.Append(" TOP " + Top.ToString());
             }
-            strSql.Append(" ID,DealerID,DealerName,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID ");
+            strSql.Append(" ID,DealerID,DealerName,JC,BC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID ");
             strSql.Append(" FROM tb_Dealer_Bank_List ");
             if (strWhere.Trim() != "")
             {
@@ -413,15 +446,15 @@ namespace Citic.DAL
             }
             else
             {
-                strSql.Append("order by T.ID desc");
+                strSql.Append("order by T.ID DESC");
             }
-            strSql.Append(")AS Row, T.*  from tb_Dealer_Bank_List T ");
+            strSql.Append(")AS Row, T.*,D.[Address],D.SupervisorID,D.SupervisorName FROM tb_Dealer_Bank_List T Left Join tb_Dealer_List D ON T.DealerID = D.DealerID");
             if (!string.IsNullOrEmpty(strWhere.Trim()))
             {
                 strSql.Append(" WHERE " + strWhere);
             }
             strSql.Append(" ) TT");
-            strSql.AppendFormat(" WHERE TT.Row between {0} and {1}", startIndex, endIndex);
+            strSql.AppendFormat(" WHERE TT.Row between {0} and {1} order by TT.DealerName,TT.CreateTime", startIndex, endIndex);
             return DbHelperSQL.Query(strSql.ToString());
         }
 
@@ -527,8 +560,8 @@ namespace Citic.DAL
             DataSet ds = null;
             try
             {
-                string sql = @"select distinct BankID,BankName from tb_Dealer_Bank_List where DealerID in 
-(select DealerID from tb_Dealer_List where SupervisorID=@SupervisorID)";
+                string sql = @"SELECT DISTINCT BankID,BankName FROM tb_Dealer_Bank_List WHERE DealerID in 
+(SELECT DealerID FROM tb_Dealer_List WHERE SupervisorID=@SupervisorID) AND CollaborateType = 1";
                 SqlParameter param = new SqlParameter("@SupervisorID", supervisorID);
                 ds = DbHelperSQL.Query(sql, param);
             }
@@ -610,6 +643,7 @@ namespace Citic.DAL
             {
                 sql = sql + " AND " + where;
             }
+            sql += " Order By DealerName ";
             try
             {
                 dt = DbHelperSQL.Query(sql, param).Tables[0];
@@ -676,12 +710,13 @@ namespace Citic.DAL
                         SqlParameter[] spCar = null;
                         SqlParameter[] spQ = null;
                         strSql.Append("Insert into tb_Dealer_Bank_List(");
-                        strSql.Append("DealerID,DealerName,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,GD_ID,ZX_ID)");
+                        strSql.Append("DealerID,DealerName,JC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,GD_ID,ZX_ID)");
                         //添加经销商与银行合作数据
-                        strSql.AppendLine("values (@DealerID,@DealerName,@BankID,@BankName,@BrandID,@BrandName,@BusinessMode,@FinancingMode,@CollaborateType,@SSMoney,@YSMoney,@PaymentCycle,@DispatchTime,@CreateID,@CreateTime,0,@GD_ID,@ZX_ID )");
+                        strSql.AppendLine("values (@DealerID,@DealerName,@JC,@BankID,@BankName,@BrandID,@BrandName,@BusinessMode,@FinancingMode,@CollaborateType,@SSMoney,@YSMoney,@PaymentCycle,@DispatchTime,@CreateID,@CreateTime,0,@GD_ID,@ZX_ID )");
                         spDealer_Bank = new SqlParameter[]{
                             new SqlParameter("@DealerID",model.DealerID),
                             new SqlParameter("@DealerName",model.DealerName),
+                            new SqlParameter("@JC",model.JC),
                             new SqlParameter("@BankID",model.BankID),
                             new SqlParameter("@BankName",model.BankName),
                             new SqlParameter("@BrandID",model.BrandID),
@@ -756,34 +791,33 @@ namespace Citic.DAL
                 {
                     if (!isExists.Contains(model))
                     {
-                        StringBuilder strSql = new StringBuilder("Update tb_Dealer_Bank_List Set ");
-                        strSql.Append("DealerID=@DealerID,");
-                        strSql.Append("DealerName=@DealerName,");
-                        strSql.Append("BankID=@BankID,");
-                        strSql.Append("BankName=@BankName,");
-                        strSql.Append("BrandID=@BrandID,");
-                        strSql.Append("BrandName=@BrandName,");
-                        strSql.Append("BusinessMode=@BusinessMode,");
-                        strSql.Append("FinancingMode=@FinancingMode,");
-                        strSql.Append("CollaborateType=@CollaborateType,");
-                        strSql.Append("SSMoney=@SSMoney,");
-                        strSql.Append("YSMoney=@YSMoney,");
-                        strSql.Append("PaymentCycle=@PaymentCycle,");
-                        strSql.Append("DispatchTime=@DispatchTime,");
-                        strSql.Append("CreateID=@CreateID,");
-                        strSql.Append("CreateTime=@CreateTime,");
-                        strSql.Append("IsDelete=@IsDelete,");
-                        strSql.Append("StopTime=@StopTime,");
-                        strSql.Append("GD_ID=@GD_ID,");
-                        strSql.Append("ZX_ID=@ZX_ID");
-                        strSql.Append(" where ID=@ID");
+                        string select_Sql = string.Format("select count(1) from tb_Dealer_Bank_List where BankID={0} and DealerID={1} and BrandName='{2}'", model.BankID, model.DealerID, model.BrandName);
+                        Object obj = DbHelperSQL.GetSingle(select_Sql);
+                        if (obj != null && Convert.ToInt32(obj) > 0)
+                        {
 
-                        SqlParameter[] parameters = {
-					        new SqlParameter("@DealerID", SqlDbType.Int,4),
+                            StringBuilder strSql = new StringBuilder("Update tb_Dealer_Bank_List Set ");
+                            strSql.Append("DealerName=@DealerName,");
+                            strSql.Append("BankName=@BankName,");
+                            strSql.Append("BrandName=@BrandName,");
+                            strSql.Append("BusinessMode=@BusinessMode,");
+                            strSql.Append("FinancingMode=@FinancingMode,");
+                            strSql.Append("CollaborateType=@CollaborateType,");
+                            strSql.Append("SSMoney=@SSMoney,");
+                            strSql.Append("YSMoney=@YSMoney,");
+                            strSql.Append("PaymentCycle=@PaymentCycle,");
+                            strSql.Append("DispatchTime=@DispatchTime,");
+                            strSql.Append("CreateID=@CreateID,");
+                            strSql.Append("CreateTime=@CreateTime,");
+                            strSql.Append("IsDelete=@IsDelete,");
+                            strSql.Append("StopTime=@StopTime,");
+                            strSql.Append("GD_ID=@GD_ID,");
+                            strSql.Append("ZX_ID=@ZX_ID");
+                            strSql.Append(" where BankID=@BankID AND DealerID=@DealerID AND BrandID = @BrandID ");
+
+                            SqlParameter[] parameters = {
 					        new SqlParameter("@DealerName", SqlDbType.NVarChar,200),
-					        new SqlParameter("@BankID", SqlDbType.Int,4),
 					        new SqlParameter("@BankName", SqlDbType.NVarChar,200),
-					        new SqlParameter("@BrandID", SqlDbType.Int,4),
 					        new SqlParameter("@BrandName", SqlDbType.NVarChar,100),
 					        new SqlParameter("@BusinessMode", SqlDbType.Int,4),
 					        new SqlParameter("@FinancingMode", SqlDbType.NVarChar,50),
@@ -798,29 +832,85 @@ namespace Citic.DAL
 					        new SqlParameter("@StopTime", SqlDbType.DateTime),
 					        new SqlParameter("@GD_ID", SqlDbType.NVarChar,100),
 					        new SqlParameter("@ZX_ID", SqlDbType.NVarChar,100),
-					        new SqlParameter("@ID", SqlDbType.Int,4)};
-                        parameters[0].Value = model.DealerID;
-                        parameters[1].Value = model.DealerName;
-                        parameters[2].Value = model.BankID;
-                        parameters[3].Value = model.BankName;
-                        parameters[4].Value = model.BrandID;
-                        parameters[5].Value = model.BrandName;
-                        parameters[6].Value = model.BusinessMode;
-                        parameters[7].Value = model.FinancingMode;
-                        parameters[8].Value = model.CollaborateType;
-                        parameters[9].Value = model.SSMoney;
-                        parameters[10].Value = model.YSMoney;
-                        parameters[11].Value = model.PaymentCycle;
-                        parameters[12].Value = model.DispatchTime;
-                        parameters[13].Value = model.CreateID;
-                        parameters[14].Value = model.CreateTime;
-                        parameters[15].Value = model.IsDelete;
-                        parameters[16].Value = model.StopTime;
-                        parameters[17].Value = model.GD_ID;
-                        parameters[18].Value = model.ZX_ID;
-                        parameters[19].Value = model.ID;
+					        new SqlParameter("@BankID", SqlDbType.Int,4),
+					        new SqlParameter("@DealerID", SqlDbType.Int,4),
+					        new SqlParameter("@BrandID", SqlDbType.Int,4)};
+                            parameters[0].Value = model.DealerName;
+                            parameters[1].Value = model.BankName;
+                            parameters[2].Value = model.BrandName;
+                            parameters[3].Value = model.BusinessMode;
+                            parameters[4].Value = model.FinancingMode;
+                            parameters[5].Value = model.CollaborateType;
+                            parameters[6].Value = model.SSMoney;
+                            parameters[7].Value = model.YSMoney;
+                            parameters[8].Value = model.PaymentCycle;
+                            parameters[9].Value = model.DispatchTime;
+                            parameters[10].Value = model.CreateID;
+                            parameters[11].Value = model.CreateTime;
+                            parameters[12].Value = model.IsDelete;
+                            parameters[13].Value = model.StopTime;
+                            parameters[14].Value = model.GD_ID;
+                            parameters[15].Value = model.ZX_ID;
+                            parameters[16].Value = model.BankID;
+                            parameters[17].Value = model.DealerID;
+                            parameters[18].Value = model.BrandID;
 
-                        cmdList.Add(new CommandInfo(strSql.ToString(), parameters));
+                            cmdList.Add(new CommandInfo(strSql.ToString(), parameters));
+                        }
+                        else
+                        {
+                            StringBuilder strSql = new StringBuilder();
+                            strSql.Append("insert into tb_Dealer_Bank_List(");
+                            strSql.Append("DealerID,DealerName,JC,BC,BankID,BankName,BrandID,BrandName,BusinessMode,FinancingMode,CollaborateType,SSMoney,YSMoney,PaymentCycle,DispatchTime,CreateID,CreateTime,IsDelete,StopTime,GD_ID,ZX_ID)");
+                            strSql.Append(" values (");
+                            strSql.Append("@DealerID,@DealerName,@JC,@BC,@BankID,@BankName,@BrandID,@BrandName,@BusinessMode,@FinancingMode,@CollaborateType,@SSMoney,@YSMoney,@PaymentCycle,@DispatchTime,@CreateID,@CreateTime,@IsDelete,@StopTime,@GD_ID,@ZX_ID)");
+                            strSql.Append(";select @@IDENTITY");
+                            SqlParameter[] parameters = {
+					new SqlParameter("@DealerID", SqlDbType.Int,4),
+					new SqlParameter("@DealerName", SqlDbType.NVarChar,200),
+					new SqlParameter("@JC", SqlDbType.NVarChar,20),
+					new SqlParameter("@BC", SqlDbType.Int,4),
+					new SqlParameter("@BankID", SqlDbType.Int,4),
+					new SqlParameter("@BankName", SqlDbType.NVarChar,200),
+					new SqlParameter("@BrandID", SqlDbType.Int,4),
+					new SqlParameter("@BrandName", SqlDbType.NVarChar,100),
+					new SqlParameter("@BusinessMode", SqlDbType.Int,4),
+					new SqlParameter("@FinancingMode", SqlDbType.NVarChar,50),
+					new SqlParameter("@CollaborateType", SqlDbType.Int,4),
+					new SqlParameter("@SSMoney", SqlDbType.Money,8),
+					new SqlParameter("@YSMoney", SqlDbType.Money,8),
+					new SqlParameter("@PaymentCycle", SqlDbType.Int,4),
+					new SqlParameter("@DispatchTime", SqlDbType.DateTime),
+					new SqlParameter("@CreateID", SqlDbType.Int,4),
+					new SqlParameter("@CreateTime", SqlDbType.DateTime),
+					new SqlParameter("@IsDelete", SqlDbType.Bit,1),
+					new SqlParameter("@StopTime", SqlDbType.DateTime),
+					new SqlParameter("@GD_ID", SqlDbType.NVarChar,100),
+					new SqlParameter("@ZX_ID", SqlDbType.NVarChar,100)};
+                            parameters[0].Value = model.DealerID;
+                            parameters[1].Value = model.DealerName;
+                            parameters[2].Value = model.JC;
+                            parameters[3].Value = model.BC;
+                            parameters[4].Value = model.BankID;
+                            parameters[5].Value = model.BankName;
+                            parameters[6].Value = model.BrandID;
+                            parameters[7].Value = model.BrandName;
+                            parameters[8].Value = model.BusinessMode;
+                            parameters[9].Value = model.FinancingMode;
+                            parameters[10].Value = model.CollaborateType;
+                            parameters[11].Value = model.SSMoney;
+                            parameters[12].Value = model.YSMoney;
+                            parameters[13].Value = model.PaymentCycle;
+                            parameters[14].Value = model.DispatchTime;
+                            parameters[15].Value = model.CreateID;
+                            parameters[16].Value = model.CreateTime;
+                            parameters[17].Value = model.IsDelete;
+                            parameters[18].Value = model.StopTime;
+                            parameters[19].Value = model.GD_ID;
+                            parameters[20].Value = model.ZX_ID;
+
+                            cmdList.Add(new CommandInfo(strSql.ToString(), parameters));
+                        }
                     }
                 }
 
@@ -917,7 +1007,7 @@ namespace Citic.DAL
         public DataTable GetDealerIDBySearch(string where)
         {
             DataTable dt = null;
-            string sql = "SELECT DealerID FROM tb_Dealer_Bank_List(NOLOCK) ";
+            string sql = "SELECT DealerID FROM tb_Dealer_Bank_List(NOLOCK) T ";
             if (!string.IsNullOrEmpty(where))
             {
                 sql = sql + " WHERE " + where;
@@ -1072,11 +1162,34 @@ namespace Citic.DAL
         }
         #endregion
 
+        #region 根据需求不同，根据不同的条件，查询数据数量（tb_Dealer_Bank_List表与tb_Dealer_List表的联查）--乔春羽(2014.5.14)
+        public int GetRecordCountBySearch(string strWhere)
+        {
+            int count = 0;
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT COUNT(1) FROM tb_Dealer_Bank_List A INNER JOIN tb_Dealer_List B ON A.DealerID = B.DealerID  ");
+            if (strWhere.Trim() != "")
+            {
+                strSql.Append(" WHERE " + strWhere);
+            }
+            object obj = DbHelperSQL.GetSingle(strSql.ToString());
+            if (obj == null)
+            {
+                count = 0;
+            }
+            else
+            {
+                count = Convert.ToInt32(obj);
+            }
+            return count;
+        }
+        #endregion
+
         #region 需要导出Excel的数据（根据需要不同，可能导出一页或者全部的数据），将表头改成了文字，并且联查经销商信息表--乔春羽(2013.12.20)
-        public DataTable GetDataForExcel(string dealerIDs)
+        public DataTable GetDataForExcel(string where, int startIndex, int endIndex)
         {
             DataTable dt = null;
-            StringBuilder sql = new StringBuilder(@"SELECT DB.DealerName 经销商,DB.BankName 合作行,DB.BrandName 合作品牌,
+            StringBuilder sql = new StringBuilder(@"SELECT * FROM (SELECT ROW_NUMBER() OVER(order by DB.ID) Row, DB.DealerName 经销商,DB.BankName 合作行,DB.BrandName 合作品牌,
 CASE DB.BusinessMode WHEN 1 THEN '车证模式' WHEN 2 THEN '合格证模式' WHEN 3 THEN '巡库模式' END 业务模式,
 dbo.changeFinancingMode(DB.FinancingMode,'fm') 融资模式,
 CASE DB.CollaborateType WHEN 0 THEN '停止合作' WHEN 1 THEN '正在合作' END 合作状态,
@@ -1089,11 +1202,15 @@ T.SupervisorName 监管员,T.SupervisorDispatchTime 监管员驻店时间,
 T.GotoworkTime 上班时间,T.GoffworkTime 下班时间,T.Address 地址
 FROM tb_Dealer_List T
 LEFT JOIN tb_Dealer_Bank_List DB ON T.DealerID=DB.DealerID");
-            if (!string.IsNullOrEmpty(dealerIDs))
+            if (!string.IsNullOrEmpty(where))
             {
-                sql.AppendFormat(" WHERE T.DealerID in ({0}) ", dealerIDs);
+                sql.AppendFormat(" WHERE {0} ", where);
             }
-            sql.Append(" Order by T.DealerName");
+            sql.Append(") TT");
+            if (startIndex > 0 && endIndex > 0)
+            {
+                sql.AppendFormat(" WHERE TT.Row BETWEEN {0} AND {1}", startIndex, endIndex);
+            }
             try
             {
                 dt = DbHelperSQL.Query(sql.ToString()).Tables[0];
@@ -1119,7 +1236,6 @@ LEFT JOIN tb_Dealer_Bank_List DB ON T.DealerID=DB.DealerID");
             return DbHelperSQL.Query(sql);
         }
         #endregion
-
         #endregion  ExtensionMethod
     }
 }

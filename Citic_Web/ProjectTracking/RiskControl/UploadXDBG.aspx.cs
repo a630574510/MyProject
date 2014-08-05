@@ -50,6 +50,17 @@ namespace Citic_Web.ProjectTracking.RiskControl
         {
             if (file_Upload.HasFile)
             {
+                if (string.IsNullOrEmpty(this.txt_Dealer.Text)) 
+                {
+                    AlertShowInTop("请选择经销商！");
+                    return;
+                }
+                if (this.ddl_Bank.SelectedValue == "-1")
+                {
+                    AlertShowInTop("请选择合作行！");
+                    return;
+                }
+
                 //控件所去到的文件的名字
                 string fileName = file_Upload.ShortFileName;
                 //得到文件扩展名
@@ -57,7 +68,7 @@ namespace Citic_Web.ProjectTracking.RiskControl
                 //验证上传的文件是否为word文档
                 if (!ValidateUpload(ext))
                 {
-                    Alert.ShowInTop("文件格式有误，请重新上传Word文档！");
+                    AlertShowInTop("文件格式有误，请重新上传Word文档！");
                     // 清空文件上传组件
                     file_Upload.Reset();
                     return;
@@ -139,12 +150,17 @@ namespace Citic_Web.ProjectTracking.RiskControl
                     //二者兼备，才是“文件上传成功！”。
                     if (result > 0)
                     {
-                        Alert.Show("上传成功！");
+                        AlertShow("上传成功！");
                     }
                 }
 
                 // 清空文件上传组件
                 file_Upload.Reset();
+                SimpleForm2.Reset();
+            }
+            else 
+            {
+                AlertShow("没有选择文件！");
             }
         }
         #endregion

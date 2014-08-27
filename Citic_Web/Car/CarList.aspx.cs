@@ -22,6 +22,7 @@ namespace Citic_Web.Car
             {
                 BindDealer();
             }
+
         }
         #endregion
 
@@ -159,12 +160,14 @@ namespace Citic_Web.Car
             try
             {
                 DataBind_List();
+                
             }
             catch
             {
                 //2014年5月23日
                 FineUI.Alert.ShowInTop("数据量太大,请选择条件查询", FineUI.MessageBoxIcon.Error);
             }
+
 
         }
 
@@ -253,7 +256,7 @@ namespace Citic_Web.Car
             {
                 FineUI.Alert.ShowInTop("无法查询到输入条件的车辆信息", FineUI.MessageBoxIcon.Information);
             }
-            
+
         }
         #endregion
 

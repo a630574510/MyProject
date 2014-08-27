@@ -79,6 +79,10 @@
                                     <x:Button ID="Btn_ZX" runat="server" Text="提交中信入库" OnClick="Btn_ZX_Click" Icon="Tick"
                                         IconAlign="Right" Enabled="true">
                                     </x:Button>
+                                    <%--浙商银行对接--%>
+                                    <x:Button ID="Btn_ZS" runat="server" Text="提交浙商入库" OnClick="Btn_ZS_Click" Icon="Tick"
+                                        IconAlign="Right" Enabled="true">
+                                    </x:Button>
                                 </Items>
                             </x:Toolbar>
                         </Toolbars>

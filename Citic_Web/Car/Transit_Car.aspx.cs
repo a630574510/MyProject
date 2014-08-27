@@ -50,7 +50,8 @@ namespace Citic_Web.Car
             {
                 DataRow[] dr = ((System.Data.DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and BankName='{1}'", this.ddl_Dealer.SelectedText.ToString(), this.DDL_Bank.SelectedText.ToString()));
                 string tb_Name = string.Format("tb_Car_{0}_{1}", dr[0].ItemArray[2].ToString(), dr[0].ItemArray[0].ToString());
-                StringBuilder sb = new StringBuilder("Statu='3'  and DraftNo like '%" + DDL_Number_Order.SelectedText.ToString() + "%' ");
+                //StringBuilder sb = new StringBuilder("Statu='3'  and DraftNo like '%" + DDL_Number_Order.SelectedText.ToString() + "%' ");
+                StringBuilder sb = new StringBuilder("Statu='3' ");
                 //StringBuilder sb = new StringBuilder("select Vin,DraftNo,BankID,BankName,Statu,QualifiedNoDate,DealerID,DealerName,BrandID,BankName,StorageID,StorageName,CarColor,CarModel,EngineNo,QualifiedNo,KeyCount,KeyNumber,CarCost,ReturnCost,Remarks,CreateTime,TransitTime,OutTime,MoveTime from tb_Car_lisr where DealerID='" + tb_Name_Count[1].ToString() + "' and Statu='3'");
                 if (!string.IsNullOrEmpty(this.txt_Vin.Text.Trim()))        //车架号           2014年5月14日
                 {
@@ -306,6 +307,19 @@ namespace Citic_Web.Car
                         this.Btn_ZX.Hidden = false;     //中信显示
                     }
 
+                }
+                else if (dr[0].ItemArray[9].ToString().Length > 0)
+                {
+                    if (dr[0].ItemArray[9].ToString() == "-1")
+                    {
+                        FineUI.Alert.ShowInTop("该经销商跟中信浙商银行对接失败，请联系中信银行！", FineUI.MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        this.Btn_GD.Hidden = true;      //光大隐藏
+                        this.Btn_Again_Bind.Hidden = true;      //正常提交隐藏
+                        this.Btn_ZX.Hidden = true;     //中信显示
+                    }
                 }
                 else
                 {
@@ -817,20 +831,20 @@ namespace Citic_Web.Car
                 string CarListCount = string.Empty; //生成车辆模版信息
                 DataSet ds = StorageBll.GetList(string.Format("DealerID='{0}' and IsLocalStorage=1", dr[0].ItemArray[0].ToString())); //2014年4月30日
                 /////////////////////////////////////////////////////////////
-                StringBuilder sb = new StringBuilder();
-                sb.Append("<?xml version=\"1.0\" encoding=\"GBK\"?><stream>");      //2014年5月4日
-                sb.Append("<action>DLCDIGSM</action>");     //交易代码      
-                sb.Append("<userName>ZXXT</userName>");   //登录名
-                sb.AppendFormat("<hostNo>{0}</hostNo>", dr[0].ItemArray[8].ToString());     //借款企业id 
-                sb.AppendFormat("<oprtName>{0}</oprtName>", CurrentUser.TrueName); //操作人名称
-                sb.AppendFormat("<orderNo>{0}</orderNo>", DateTime.Now.ToString("yyyyMMddHHmmssffff") + Statu_Count);       //交易流水号     唯一
-                sb.Append("<pcgrtntNo></pcgrtntNo>");        // 纸质担保合同编号        可空
-                sb.Append("<cmgrtcntNo></cmgrtcntNo>");     //动产质押担保合同编号        可空
-                sb.AppendFormat("<whCode>{0}</whCode>", ds.Tables[0].Rows[0]["ConnectID"].ToString());             //仓库代码 
-                sb.Append("<remark></remark>");             //备注
-                sb.AppendFormat("<field1></field1><field2></field2><field3>{0}</field3>", "1");
-                sb.AppendFormat("<totnum></totnum>");      //总记录数
-                sb.AppendFormat("<list name=\"lst\">");
+                //StringBuilder sb = new StringBuilder();
+                //sb.Append("<?xml version=\"1.0\" encoding=\"GBK\"?><stream>");      //2014年5月4日
+                //sb.Append("<action>DLCDIGSM</action>");     //交易代码      
+                //sb.Append("<userName>ZXXT</userName>");   //登录名
+                //sb.AppendFormat("<hostNo>{0}</hostNo>", dr[0].ItemArray[8].ToString());     //借款企业id 
+                //sb.AppendFormat("<oprtName>{0}</oprtName>", CurrentUser.TrueName); //操作人名称
+                //sb.AppendFormat("<orderNo>{0}</orderNo>", DateTime.Now.ToString("yyyyMMddHHmmssffff") + Statu_Count);       //交易流水号     唯一
+                //sb.Append("<pcgrtntNo></pcgrtntNo>");        // 纸质担保合同编号        可空
+                //sb.Append("<cmgrtcntNo></cmgrtcntNo>");     //动产质押担保合同编号        可空
+                //sb.AppendFormat("<whCode>{0}</whCode>", ds.Tables[0].Rows[0]["ConnectID"].ToString());             //仓库代码 
+                //sb.Append("<remark></remark>");             //备注
+                //sb.AppendFormat("<field1></field1><field2></field2><field3>{0}</field3>", "1");
+                //sb.AppendFormat("<totnum></totnum>");      //总记录数
+                //sb.AppendFormat("<list name=\"lst\">");
                 /////////////////////////////////////////////////////////////
                 foreach (int rowIndex in modifiedDict.Keys)
                 {
@@ -871,20 +885,20 @@ namespace Citic_Web.Car
                                 //list.Add(string.Format("update {0} set KeyCount='{1}',TransitTime=getdate(),Statu=1,Remarks='{2}' where Vin='{3}'", tb_Name, values[1].ToString(), values[11].ToString(), Vin));
                                 CarListCount += string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}|", values[8].Trim().ToString(), values[4].Trim().ToString(), values[7].Trim().ToString(), values[9].Trim().ToString(), values[1].Trim().ToString(), "良好", values[3].Trim().ToString(), values[5].Trim().ToString(), values[6].Trim().ToString(), values[9].Trim().ToString(), ddl_Dealer.SelectedValue.ToString());
                                 Statu_Count++;
-                                //StringBuilder sb = new StringBuilder();
-                                //sb.Append("<?xml version=\"1.0\" encoding=\"GBK\"?><stream>");      //2014年5月4日
-                                //sb.Append("<action>DLCDIGSM</action>");     //交易代码      
-                                //sb.Append("<userName>ZXXT</userName>");   //登录名
-                                //sb.AppendFormat("<hostNo>{0}</hostNo>", dr[0].ItemArray[8].ToString());     //借款企业id 
-                                //sb.AppendFormat("<oprtName>{0}</oprtName>", CurrentUser.TrueName); //操作人名称
-                                //sb.AppendFormat("<orderNo>{0}</orderNo>", DateTime.Now.ToString("yyyyMMddHHmmssffff") + Statu_Count);       //交易流水号     唯一
-                                //sb.Append("<pcgrtntNo></pcgrtntNo>");        // 纸质担保合同编号        可空
-                                //sb.Append("<cmgrtcntNo></cmgrtcntNo>");     //动产质押担保合同编号        可空
-                                //sb.AppendFormat("<whCode>{0}</whCode>", ds.Tables[0].Rows[0]["ConnectID"].ToString());             //仓库代码 
-                                //sb.Append("<remark></remark>");             //备注
-                                //sb.AppendFormat("<field1></field1><field2></field2><field3>{0}</field3>", "1");
-                                //sb.AppendFormat("<totnum></totnum>");      //总记录数
-                                //sb.AppendFormat("<list name=\"lst\">");
+                                StringBuilder sb = new StringBuilder();
+                                sb.Append("<?xml version=\"1.0\" encoding=\"GBK\"?><stream>");      //2014年5月4日
+                                sb.Append("<action>DLCDIGSM</action>");     //交易代码      
+                                sb.Append("<userName>ZXXT</userName>");   //登录名
+                                sb.AppendFormat("<hostNo>{0}</hostNo>", dr[0].ItemArray[8].ToString());     //借款企业id 
+                                sb.AppendFormat("<oprtName>{0}</oprtName>", CurrentUser.TrueName); //操作人名称
+                                sb.AppendFormat("<orderNo>{0}</orderNo>", DateTime.Now.ToString("yyyyMMddHHmmssffff") + Statu_Count);       //交易流水号     唯一
+                                sb.Append("<pcgrtntNo></pcgrtntNo>");        // 纸质担保合同编号        可空
+                                sb.Append("<cmgrtcntNo></cmgrtcntNo>");     //动产质押担保合同编号        可空
+                                sb.AppendFormat("<whCode>{0}</whCode>", ds.Tables[0].Rows[0]["ConnectID"].ToString());             //仓库代码 
+                                sb.Append("<remark></remark>");             //备注
+                                sb.AppendFormat("<field1></field1><field2></field2><field3>{0}</field3>", "1");
+                                sb.AppendFormat("<totnum></totnum>");      //总记录数
+                                sb.AppendFormat("<list name=\"lst\">");
                                 sb.AppendFormat("<row><cmdCode>{0}</cmdCode>", "");       //商品代码
                                 sb.AppendFormat("<stkNum>{0}</stkNum>", "1");      //入库数量
                                 sb.AppendFormat("<istkPrc>{0}</istkPrc>", values[10]);    //入库单价
@@ -893,8 +907,8 @@ namespace Citic_Web.Car
                                 sb.AppendFormat("<carPrice>{0}</carPrice>", values[10]);   //车价
                                 sb.AppendFormat("<loanCode>{0}</loanCode>", values[3]);   //融资编号
                                 sb.AppendFormat("<field4></field4><field5></field5><field6></field6><field7></field7><field8></field8><field9></field9><field10></field10><field11></field11><field12></field12><field13></field13></row>");
-                                
-                                //list.Add(string.Format("insert into ZX_SCF ([action],RequestXml,RequestDate,RequestID,[Status]) values ('DLCDIGSM','{0}',GETDATE(),'{1}',0)", sb.ToString(), CurrentUser.UserId));
+                                sb.Append("</list></stream>").Replace("<totnum></totnum>", string.Format("<totnum>{0}</totnum>", "1"));
+                                list.Add(string.Format("insert into ZX_SCF ([action],RequestXml,RequestDate,RequestID,[Status]) values ('DLCDIGSM','{0}',GETDATE(),'{1}',0)", sb.ToString(), CurrentUser.UserId));
                             }
                             else
                             {
@@ -916,8 +930,8 @@ namespace Citic_Web.Car
                         if (list.Count > 0)
                         {
                             //////////////////////////////////
-                            sb.Append("</list></stream>").Replace("<totnum></totnum>", string.Format("<totnum>{0}</totnum>", Statu_Count));
-                            list.Add(string.Format("insert into ZX_SCF ([action],RequestXml,RequestDate,RequestID,[Status]) values ('DLCDIGSM','{0}',GETDATE(),'{1}',0)", sb.ToString(), CurrentUser.UserId));
+                            //sb.Append("</list></stream>").Replace("<totnum></totnum>", string.Format("<totnum>{0}</totnum>", Statu_Count));
+                            //list.Add(string.Format("insert into ZX_SCF ([action],RequestXml,RequestDate,RequestID,[Status]) values ('DLCDIGSM','{0}',GETDATE(),'{1}',0)", sb.ToString(), CurrentUser.UserId));
                             /////////////////////////////////
                             list.Add(string.Format(@"insert into tb_CarMasterplate (DealerID,DealerName,BankID,BankName,CarList,CountCar,CreateID,CreateName,CreateTime,TypeID,isDel) values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}',getdate(),'1','0')", dr[0].ItemArray[0].ToString(), ddl_Dealer.SelectedValue.ToString(), dr[0].ItemArray[2].ToString(), dr[0].ItemArray[3].ToString(), CarListCount, Statu_Count, CurrentUser.UserId, CurrentUser.TrueName));
 

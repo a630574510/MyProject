@@ -15,6 +15,6 @@ D:\中信二期项目\Citic_Pledge_Manage\DAL\bin\Debug\Citic.Model.dll
 D:\中信二期项目\Citic_Pledge_Manage\DAL\bin\Debug\System.Data.SQLite.dll
 D:\中信二期项目\Citic_Pledge_Manage\DAL\bin\Debug\Citic.Model.pdb
 D:\中信二期项目\Citic_Pledge_Manage\DAL\bin\Debug\Citic.DBUtility.pdb
-D:\中信二期项目\Citic_Pledge_Manage\DAL\obj\Debug\ResolveAssemblyReference.cache
 D:\中信二期项目\Citic_Pledge_Manage\DAL\obj\Debug\Citic.DAL.dll
 D:\中信二期项目\Citic_Pledge_Manage\DAL\obj\Debug\Citic.DAL.pdb
+D:\中信二期项目\Citic_Pledge_Manage\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache

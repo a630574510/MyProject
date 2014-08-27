@@ -52,8 +52,8 @@ D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\bin\NPOI.OOXML.xml
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\bin\NPOI.OpenXml4Net.xml
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\bin\Citic.DAL.pdb
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\bin\Citic.DBUtility.pdb
-D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\ResolveAssemblyReference.cache
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\RdlCompile.cache
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\RdlCompile.compiled
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\Citic_Web.dll
 D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\Citic_Web.pdb
+D:\中信二期项目\Citic_Pledge_Manage\Citic_Web\obj\Debug\Citic_Web.csprojResolveAssemblyReference.cache

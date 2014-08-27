@@ -93,8 +93,8 @@
                         ShowHeader="false" Layout="Fit">
                         <Items>
                             <x:Grid ID="grid_List" Title="表格" PageSize="10" ShowBorder="true" ShowHeader="false"
-                                AutoHeight="true" SortDirection="ASC" AllowPaging="true" AllowSorting="true" IsDatabasePaging="true"
-                                runat="server" DataKeyNames="Vin,DraftNo" OnPageIndexChange="grid_List_PageIndexChange"
+                                AutoHeight="true" SortDirection="ASC" AllowPaging="true" AllowSorting="true"
+                                IsDatabasePaging="true" runat="server" DataKeyNames="Vin,DraftNo" OnPageIndexChange="grid_List_PageIndexChange"
                                 EnableRowNumber="false" OnRowDataBound="grid_List_RowDataBound" EnableHeaderMenu="false"
                                 EnableBackgroundColor="true" EnableRowSelectEvent="false" EnableColumnLines="true"
                                 EnableTextSelection="true">

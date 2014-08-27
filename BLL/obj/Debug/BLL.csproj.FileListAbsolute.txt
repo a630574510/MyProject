@@ -21,6 +21,6 @@ D:\中信二期项目\Citic_Pledge_Manage\BLL\bin\Debug\MySql.Data.dll
 D:\中信二期项目\Citic_Pledge_Manage\BLL\bin\Debug\Citic.DAL.pdb
 D:\中信二期项目\Citic_Pledge_Manage\BLL\bin\Debug\Citic.Model.pdb
 D:\中信二期项目\Citic_Pledge_Manage\BLL\bin\Debug\Citic.DBUtility.pdb
-D:\中信二期项目\Citic_Pledge_Manage\BLL\obj\Debug\ResolveAssemblyReference.cache
 D:\中信二期项目\Citic_Pledge_Manage\BLL\obj\Debug\Citic.BLL.dll
 D:\中信二期项目\Citic_Pledge_Manage\BLL\obj\Debug\Citic.BLL.pdb
+D:\中信二期项目\Citic_Pledge_Manage\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache

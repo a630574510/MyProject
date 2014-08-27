@@ -4,6 +4,5 @@ E:\工作项目\中信二期项目\Citic_Pledge_Manage\Model\obj\Debug\Citic.Mod
 E:\工作项目\中信二期项目\Citic_Pledge_Manage\Model\obj\Debug\Citic.Model.pdb
 D:\中信二期项目\Citic_Pledge_Manage\Model\bin\Debug\Citic.Model.dll
 D:\中信二期项目\Citic_Pledge_Manage\Model\bin\Debug\Citic.Model.pdb
-D:\中信二期项目\Citic_Pledge_Manage\Model\obj\Debug\ResolveAssemblyReference.cache
 D:\中信二期项目\Citic_Pledge_Manage\Model\obj\Debug\Citic.Model.dll
 D:\中信二期项目\Citic_Pledge_Manage\Model\obj\Debug\Citic.Model.pdb

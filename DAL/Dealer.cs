@@ -503,7 +503,7 @@ namespace Citic.DAL
         {
             //2014年5月14日 张繁 2014年6月10日
             //strSql = "select (CONVERT(nvarchar,BankID )+'_'+CONVERT(nvarchar,D_L.DealerID)+'_'+CONVERT(nvarchar,BankName)+'_'+CONVERT(nvarchar,BrandName)+'_'+CONVERT(nvarchar,BusinessMode)) as DealerID,D_L.DealerName,D_B_L.BankName,D_B_L.GD_ID,D_B_L.ZX_ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
-            strSql = "select D_B_L.DealerID,D_L.DealerName,D_B_L.BankID,D_B_L.BankName,D_B_L.BrandID, D_B_L.BrandName,D_B_L.BusinessMode,D_B_L.GD_ID,D_B_L.ZX_ID,D_B_L.ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
+            strSql = "select D_B_L.DealerID,D_L.DealerName,D_B_L.BankID,D_B_L.BankName,D_B_L.BrandID, D_B_L.BrandName,D_B_L.BusinessMode,D_B_L.GD_ID,D_B_L.ZX_ID,D_B_L.ZS_ID,D_B_L.ID  from tb_Dealer_List D_L left join tb_Dealer_Bank_List D_B_L on D_L.DealerID=D_B_L.DealerID where  1=1 " + strSql;
             return DbHelperSQL.Query(strSql.ToString());
         }
         #endregion

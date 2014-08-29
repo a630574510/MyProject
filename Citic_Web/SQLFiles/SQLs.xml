@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SQLCommands>
+  <sql ID="sqlstr1">
+    <![CDATA[
+    --总账查询
+    SELECT * FROM (
+    SELECT ROW_NUMBER() OVER(ORDER BY {OrderBy}) as row,T.ID,BankID,BankName,DealerID,DealerName,BrandID,BrandName
+    ,CarAllCount=(
+    SELECT count(1) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) <> 6 --6表示状态为“出库处理”
+    )	--车辆库存台数（状态为“非出库”）
+    ,CarAllMoney=(
+    ISNULL(
+    (SELECT SUM(CONVERT(MONEY,cl.CarCost)) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) <> 6) --6表示状态为“出库处理”
+    ,0.00)
+    )	--车辆库存金额
+    ,CarILCount=(
+    SELECT count(1) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 3 --3表示状态为“在库”
+    )	--在库车辆台数（状态为“在库”）
+    ,CarILMoney=(
+    ISNULL(
+    (SELECT SUM(CONVERT(MONEY,cl.CarCost)) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 3) --3表示状态为“在库”
+    ,0.00)
+    )	--在库车辆金额（状态为“在库”）
+    ,CarITCount=(
+    SELECT count(1) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 1 --1表示状态为“在途”
+    )	--在途车辆数量（状态为“在途”）
+    ,CarITMoney=(
+    ISNULL(
+    (SELECT SUM(CONVERT(MONEY,cl.CarCost)) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 1) --1表示状态为“在途”
+    ,0.00)
+    )	--在途车辆金额（状态为“在途”）
+    ,CarMoveCount=(
+    SELECT count(1) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 4 --4表示状态为“移动处理”
+    )	--移动车辆数量（状态为“移动”）
+    ,CarMoveMoney=(
+    ISNULL(
+    (SELECT SUM(CONVERT(MONEY,cl.CarCost)) FROM tb_Car_List cl where cl.DraftNo in
+    (SELECT DraftNo FROM tb_Draft_List dl where dl.DealerID=T.DealerID and dl.BankID=T.BankID)
+    and cl.BrandID=T.BrandID
+    and (SELECT cs.StatusType FROM tb_Car_Status cs where cs.Vin=cl.Vin) = 4) --4表示状态为“移动处理”
+    ,0.00)
+    )	--移动车辆金额（状态为“移动”）
+    FROM tb_Dealer_Bank_List T {Where}
+    ) TT WHERE row BETWEEN {Start} AND {End}
+    ]]>
+  </sql>
+  <sql ID="sqlstr2">
+    SELECT
+
+    BankName,DealerName,BrandName,CarAllCount=0,CarAllMONey=0.00,CarILCount=0,CarILMONey=0.00,CarITCount=0,CarITMONey=0.00,CarM
+
+    oveCount=0,CarMoveMONey=0.00 FROM tb_Dealer_Bank_List
+  </sql>
+  <sql ID="sqlstr3">
+    <![CDATA[
+    SELECT T.BankID,T.BankName,T.DealerID,T.DealerName,T.BrandID,T.BrandName
+    ,CarAllCount=(SELECT COUNT(*) FROM {TableName}(NOLOCK) Where (Statu = 1 or Statu = 2))
+    ,CarAllMoney=(SELECT ISNULL(SUM(CONVERT(MONey,CarCost)),0.0000) FROM {TableName}(NOLOCK) Where (Statu = 1 or Statu = 2))
+	,CarILCount=(SELECT COUNT(*) FROM {TableName}(NOLOCK) Where Statu = 1)
+    ,CarILMoney=(SELECT ISNULL(SUM(CONVERT(MONey,CarCost)),0.0000) FROM {TableName}(NOLOCK) Where Statu = 1)
+    ,CarITCount=(SELECT COUNT(*) FROM {TableName}(NOLOCK) Where Statu = 3)
+    ,CarITMoney=(SELECT ISNULL(SUM(CONVERT(MONey,CarCost)),0.0000) FROM {TableName}(NOLOCK) Where Statu = 3)
+    ,CarMoveCount=(SELECT COUNT(*) FROM {TableName}(NOLOCK) Where Statu = 2)
+    ,CarMoveMoney=(SELECT ISNULL(SUM(CONVERT(MONey,CarCost)),0.0000) FROM {TableName}(NOLOCK) Where Statu = 2)
+    FROM {TableName} T {Where} GROUP BY BankID,BankName,DealerID,DealerName,BrandID,BrandName
+    ]]>
+  </sql>
+  <sql ID="Dealer_CarList">
+    <![CDATA[
+    SELECT * FROM (
+    SELECT ROW_NUMBER() OVER(ORDER BY d.DraftNo asc) row, 
+    d.PledgeNo,
+GuaranteeNo,
+d.DraftNo,
+CONVERT(VARCHAR(12),d.BeginTime,111) BeginTime,
+CONVERT(VARCHAR(12),d.EndTime,111) EndTime,
+d.DarftMoney,
+CONVERT(VARCHAR(12),QualifiedNoDate,111) QualifiedNoDate,
+CarModel,
+CarClass,
+Displacement,
+CarColor,
+EngineNo,
+Vin,
+car.QualifiedNo,
+KeyNumber,
+CarCost,
+CONVERT(VARCHAR(12),car.CreateTime,111) CreateTime,
+CONVERT(VARCHAR(12),TransitTime,111) TransitTime,
+Statu,
+CONVERT(VARCHAR(12),OutTime,111) OutTime,
+CONVERT(VARCHAR(12),MoveTime,111) MoveTime,
+car.Remarks
+    FROM {TableName}(NOLOCK) car LEFT JOIN tb_Draft_List d ON car.DraftNo=d.DraftNo
+    and car.BankID=d.BankID and car.DealerID=d.DealerID
+    {Where}
+    ) T Where T.row BETWEEN {Start} AND {End}
+    ]]>
+  </sql>
+
+  <sql ID="ser">
+    <![CDATA[
+    SELECT * FROM (
+	  SELECT ROW_NUMBER() over(order by T.DealerID) row
+,D.Address,T.DealerID,T.DealerName,T.BankID,T.BankName,T.BrandID,B.BrandName,
+    szyd=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自移动' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    szsm=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自售卖' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    xswhk=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '销售未还款' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    )
+    FROM tb_StockError_List T INNER JOIN tb_Dealer_List D ON T.DealerID=D.DealerID LEFT JOIN tb_Brand_List B ON 
+
+T.BrandID=B.BrandID
+    WHERE {Where}
+    GROUP BY T.BankID,T.BankName,T.DealerID,T.DealerName,D.Address,T.BrandID,B.BrandName
+    ) TT  WHERE TT.row BETWEEN {Start} AND {End} ORDER BY TT.row
+    ]]>
+  </sql>
+  <sql ID="ser_all">
+    <![CDATA[
+    SELECT * FROM (
+	  SELECT ROW_NUMBER() over(order by ID) 
+
+row,ID,D.Address,T.DealerID,T.DealerName,T.BankID,T.BankName,T.BrandID,B.BrandName,
+    szyd=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自移动' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    szsm=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自售卖' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    xswhk=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '销售未还款' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    )
+    FROM tb_StockError_List T INNER JOIN tb_Dealer_List D ON T.DealerID=D.DealerID LEFT JOIN tb_Brand_List B ON 
+
+T.BrandID=B.BrandID
+
+    GROUP BY T.ID,T.BankID,T.BankName,T.DealerID,T.DealerName,D.Address,T.BrandID,B.BrandName
+    ) TT 
+    ]]>
+  </sql>
+  <sql ID="ser_like">
+    <![CDATA[
+    SELECT D.Address,T.DealerID,T.DealerName,T.BankID,T.BankName,T.BrandID,B.BrandName,
+    szyd=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther like '%移动%' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    szsm=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther like '%售卖%' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    ),
+    xswhk=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther like '%未还款%' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID
+    )
+    FROM tb_StockError_List T INNER JOIN tb_Dealer_List D ON T.DealerID=D.DealerID LEFT JOIN tb_Brand_List B ON 
+
+T.BrandID=B.BrandID
+    WHERE {Where}
+    GROUP BY T.BankID,T.BankName,T.DealerID,T.DealerName,D.Address,T.BrandID,B.BrandName
+    ]]>
+  </sql>
+  <sql ID="ser_O">
+    <![CDATA[
+    SELECT ROW_NUMBER() Over(Order by temp.BankID) No,* FROM (
+    SELECT distinct T.BankID,T.BankName,T.DealerID,T.DealerName,isnull(dbl.BrandID,0) BrandID,isnull(dbl.BrandName,'') 
+
+BrandName,
+    szydcount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自移动' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    ),
+    szsmcount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '私自售卖' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    ),
+    xswhkcount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '销售未还款' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    ),
+    zsclcount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '质损车辆' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    ),
+    zyczsjccount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '质押车做试驾车' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    ),
+    zyclbcount=
+    (
+	    SELECT COUNT(1) FROM tb_StockError_List WHERE ErrorOther = '质押车零部件被拆卸' AND BankID=T.BankID AND 
+
+DealerID=T.DealerID AND BrandID=T.BrandID
+    )
+    FROM tb_StockError_List T 
+    left join tb_Dealer_Bank_List dbl on T.BankID=dbl.BankID and T.DealerID=dbl.DealerID 
+     ) temp {Where}
+    ]]>
+  </sql>
+  <sql ID="dbinnerfrequency">
+    <![CDATA[
+    SELECT * FROM ( 
+	  SELECT ROW_NUMBER() OVER (order by T.{OrderBy} desc)AS Row, 
+
+T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,Q.CheckFrequency,Q.Description,ISNULL(Q.ApplyTime,'2014-01-23') 
+
+ApplyTime,Q.Remark 
+	  FROM tb_Dealer_Bank_List(NOLOCK) T LEFT JOIN tb_QueryWH(NOLOCK) Q 
+	  ON T.DealerID=Cast(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','1') AS INT ) 
+	  AND T.BankID=CAST(dbo.fun_GetStrArrayStrOfIndex(Q.DB_ID,'_','2') AS INT )
+	  {Where}
+	  GROUP BY T.ID,T.DealerID,T.DealerName,T.BankID,T.BankName,Q.CheckFrequency,Q.Description,Q.ApplyTime,Q.Remark
+    ) TT WHERE TT.Row between {Start} and {End}
+    ]]>
+  </sql>
+  <sql ID="RQ">
+    <![CDATA[
+    SELECT d.SupervisorID,d.SupervisorName,s.LinkPhone FROM tb_Dealer_List(NOLOCK) d INNER JOIN tb_Supervisor_List(NOLOCK) 
+
+s
+    ON d.SupervisorID=s.SupervisorID {Where}
+    ]]>
+  </sql>
+</SQLCommands>

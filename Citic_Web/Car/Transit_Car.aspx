@@ -80,9 +80,9 @@
                                         IconAlign="Right" Enabled="true">
                                     </x:Button>
                                     <%--浙商银行对接--%>
-                                    <x:Button ID="Btn_ZS" runat="server" Text="提交浙商入库" OnClick="Btn_ZS_Click" Icon="Tick"
+                                    <%--<x:Button ID="Btn_ZS" runat="server" Text="提交浙商入库" OnClick="Btn_ZS_Click" Icon="Tick"
                                         IconAlign="Right" Enabled="true">
-                                    </x:Button>
+                                    </x:Button>--%>
                                 </Items>
                             </x:Toolbar>
                         </Toolbars>

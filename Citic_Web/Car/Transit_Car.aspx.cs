@@ -273,7 +273,15 @@ namespace Citic_Web.Car
                 this.G_Car_Detail.DataSource = (System.Data.DataTable)ViewState["Car_Transit_List"];
                 this.G_Car_Detail.DataBind();
                 DataRow[] dr = ((System.Data.DataTable)ViewState["DealerName"]).Select(string.Format("DealerName='{0}' and BankName='{1}'", this.ddl_Dealer.SelectedText.ToString(), this.DDL_Bank.SelectedText.ToString()));
-                DataSet ds = DraftBll.GetList(string.Format("DealerID='{0}' and BankID='{1}' and DraftType=1 order by DraftNo desc", dr[0].ItemArray[0].ToString(), dr[0].ItemArray[2].ToString()));
+                DataSet ds;
+                if (dr[0].ItemArray[7].ToString().Length > 3)
+                {
+                    ds = DraftBll.GetList(1, string.Format("EndTime>=GETDATE() and DifferenceMoney>0 and DealerID='{0}' and DATEDIFF([day],getdate(),EndTime)>=1 ", dr[0].ItemArray[0].ToString()), "EndTime asc");
+                }
+                else
+                {
+                    ds = DraftBll.GetList(string.Format("DealerID='{0}' and BankID='{1}' and DraftType=1 order by DraftNo desc", dr[0].ItemArray[0].ToString(), dr[0].ItemArray[2].ToString()));
+                }
                 this.DDL_Number_Order.DataTextField = "DraftNo";
                 this.DDL_Number_Order.DataValueField = "DraftNo";
                 this.DDL_Number_Order.DataSource = ds.Tables[0];
@@ -290,7 +298,10 @@ namespace Citic_Web.Car
                         this.Btn_GD.Hidden = false;         //光大显示
                         this.Btn_Again_Bind.Hidden = true;      //正常提交隐藏
                         this.Btn_ZX.Hidden = true;     //中信隐藏
-
+                        if (ds.Tables[0].Rows.Count == 0)
+                        {
+                            FineUI.Alert.ShowInTop("该经销商跟光大银行对接系统找不到合适入库的汇票，请联系光大银行！", FineUI.MessageBoxIcon.Error);
+                        }
                     }
 
                 }

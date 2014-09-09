@@ -160,6 +160,27 @@
     <Compile Include="BankInterface\UpDealerBank.aspx.designer.cs">
       <DependentUpon>UpDealerBank.aspx</DependentUpon>
     </Compile>
+    <Compile Include="BankInterface\ZSList\ZS_gyl001.aspx.cs">
+      <DependentUpon>ZS_gyl001.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZSList\ZS_gyl001.aspx.designer.cs">
+      <DependentUpon>ZS_gyl001.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZSList\ZS_gyl025.aspx.cs">
+      <DependentUpon>ZS_gyl025.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZSList\ZS_gyl025.aspx.designer.cs">
+      <DependentUpon>ZS_gyl025.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BankInterface\ZS_Listing.aspx.cs">
+      <DependentUpon>ZS_Listing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BankInterface\ZS_Listing.aspx.designer.cs">
+      <DependentUpon>ZS_Listing.aspx</DependentUpon>
+    </Compile>
     <Compile Include="BankInterface\ZX_402.aspx.cs">
       <DependentUpon>ZX_402.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -833,6 +854,10 @@
     <Content Include="BankInterface\GD_Q412.aspx" />
     <Content Include="BankInterface\GD_Q414.aspx" />
     <Content Include="BankInterface\UpDealerBank.aspx" />
+    <Content Include="BankInterface\ZSList\ZS_gyl001.aspx" />
+    <Content Include="BankInterface\ZSList\ZS_gyl025.aspx" />
+    <Content Include="BankInterface\ZSList\ZS_Index.htm" />
+    <Content Include="BankInterface\ZS_Listing.aspx" />
     <Content Include="BankInterface\ZX_402.aspx" />
     <Content Include="BankInterface\ZX_CustomerInformation.aspx" />
     <Content Include="BankInterface\ZX_Financing.aspx" />

@@ -42,235 +42,246 @@ namespace Citic_Web.Car
         /// <param name="e"></param>
         protected void btn_Add_Car_Clike(object sender, EventArgs e)
         {
-            if (this.DDL_Company_Name.SelectedValue == "-1")
+            if (this.G_Car_Detail.Rows.Count != 0)
             {
-                FineUI.Alert.Show("请选择经销商！", FineUI.MessageBoxIcon.Error);
-            }
-            else if (DDL_Bank.SelectedValue == "-1")
-            {
-                FineUI.Alert.Show("请选择合作银行！", FineUI.MessageBoxIcon.Error);
-            }
-            else if (DDL_Number_Order.SelectedValue == "-1")
-            {
-                FineUI.Alert.Show("请选择汇票号！", FineUI.MessageBoxIcon.Error);
-            }
-            else
-            {
-                string ErrorTxt = string.Empty;    //记录错误信息 
-                if (ErrorTxt.Length == 0)
+                if (this.DDL_Company_Name.SelectedValue == "-1")
                 {
-                    DataTable dt = GetSourceData();
-
-                    for (int i = 0; i < G_Car_Detail.Rows.Count; i++)
+                    FineUI.Alert.Show("请选择经销商！", FineUI.MessageBoxIcon.Error);
+                }
+                else if (DDL_Bank.SelectedValue == "-1")
+                {
+                    FineUI.Alert.Show("请选择合作银行！", FineUI.MessageBoxIcon.Error);
+                }
+                else if (DDL_Number_Order.SelectedValue == "-1")
+                {
+                    FineUI.Alert.Show("请选择汇票号！", FineUI.MessageBoxIcon.Error);
+                }
+                else
+                {
+                    string ErrorTxt = string.Empty;    //记录错误信息 
+                    if (ErrorTxt.Length == 0)
                     {
-                        //获取当前行数据集合
-                        string[] Values = this.G_Car_Detail.Rows[i].Values;
-                        #region 车辆属性验证
-                        //车辆金额正则，大于0的浮点数
-                        string CheckingCarCost = @"^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
-                        if (!Regex.IsMatch(Values[9].ToString(), CheckingCarCost))
-                        {
-                            dt.Rows[i]["CarCost"] = "0";
-                            ErrorTxt = "第" + (i + 1) + "行车辆金额验证不通过，不是金额格式";
-                            break;
-                        }
-                        //else
-                        //{
-                        //    GetCarCountMoney(Values[9].ToString());
-                        //}
-                        //车架正则验证，大写26个字母和10个数字
-                        //string CheckingVin = @"^[A-Z0-9]+$";
-                        string CheckingVin = @"^[A-Z0-9]{17,18}$";     //2014年5月4日 
-                        if (!Regex.IsMatch(Values[6].ToString().Trim(), CheckingVin))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行车架验证不通过,车架号只能是17位或18位大写字母或数字位";
-                            break;
-                        }
+                        DataTable dt = GetSourceData();
 
-                        //车辆型号验证
-                        if (CheckBadStr(Values[1].ToString().Trim()))
+                        for (int i = 0; i < G_Car_Detail.Rows.Count; i++)
                         {
-                            ErrorTxt = "第" + (i + 1) + "行车辆型号验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //车辆分类
-                        if (CheckBadStr(Values[2].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行车辆分类验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //车辆排量验证
-                        if (CheckBadStr(Values[3].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行排量验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //颜色验证
-                        if (CheckBadStr(Values[4].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行颜色验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //发动机验证
-                        if (CheckBadStr(Values[5].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行发动机验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //合格证验证
-                        if (CheckBadStr(Values[7].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行合格证验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //钥匙号验证
-                        if (CheckBadStr(Values[8].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行钥匙号验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //备注验证
-                        if (CheckBadStr(Values[10].ToString().Trim()))
-                        {
-                            ErrorTxt = "第" + (i + 1) + "行备注验证不通过，包含特殊字符";
-                            break;
-                        }
-                        //验证合格证发证日期
-                        if (Values[0].ToString().Trim().Length != 0)
-                        {
-                            if (Values[0].ToString().Trim().Split('-').Length == 3 || Values[0].ToString().Trim().Split('/').Length == 3)
+                            //获取当前行数据集合
+                            string[] Values = this.G_Car_Detail.Rows[i].Values;
+                            #region 车辆属性验证
+                            //车辆金额正则，大于0的浮点数
+                            string CheckingCarCost = @"^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$";
+                            if (!Regex.IsMatch(Values[9].ToString(), CheckingCarCost))
                             {
-                                DateTime date;
-                                if (!DateTime.TryParse(Values[0].ToString().Trim(), out date))
+                                dt.Rows[i]["CarCost"] = "0";
+                                ErrorTxt = "第" + (i + 1) + "行车辆金额验证不通过，不是金额格式";
+                                break;
+                            }
+                            //else
+                            //{
+                            //    GetCarCountMoney(Values[9].ToString());
+                            //}
+                            //车架正则验证，大写26个字母和10个数字
+                            //string CheckingVin = @"^[A-Z0-9]+$";
+                            string CheckingVin = @"^[A-Z0-9]{17,18}$";     //2014年5月4日 
+                            if (!Regex.IsMatch(Values[6].ToString().Trim(), CheckingVin))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行车架验证不通过,车架号只能是17位或18位大写字母或数字位";
+                                break;
+                            }
+
+                            //车辆型号验证
+                            if (CheckBadStr(Values[1].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行车辆型号验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //车辆分类
+                            if (CheckBadStr(Values[2].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行车辆分类验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //车辆排量验证
+                            if (CheckBadStr(Values[3].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行排量验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //颜色验证
+                            if (CheckBadStr(Values[4].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行颜色验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //发动机验证
+                            if (CheckBadStr(Values[5].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行发动机验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //合格证验证
+                            if (CheckBadStr(Values[7].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行合格证验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //钥匙号验证
+                            if (CheckBadStr(Values[8].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行钥匙号验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //备注验证
+                            if (CheckBadStr(Values[10].ToString().Trim()))
+                            {
+                                ErrorTxt = "第" + (i + 1) + "行备注验证不通过，包含特殊字符";
+                                break;
+                            }
+                            //验证合格证发证日期
+                            if (Values[0].ToString().Trim().Length != 0)
+                            {
+                                if (Values[0].ToString().Trim().Split('-').Length == 3 || Values[0].ToString().Trim().Split('/').Length == 3)
                                 {
-                                    ErrorTxt = "第" + (i + 1) + "行备合格证发证日期有误";
-                                    break;
-                                }
-                                else
-                                {
-                                    int y = Convert.ToDateTime(Values[0].ToString().Trim()).Year;
-                                    if (y < 2000)
+                                    DateTime date;
+                                    if (!DateTime.TryParse(Values[0].ToString().Trim(), out date))
                                     {
                                         ErrorTxt = "第" + (i + 1) + "行备合格证发证日期有误";
                                         break;
                                     }
+                                    else
+                                    {
+                                        int y = Convert.ToDateTime(Values[0].ToString().Trim()).Year;
+                                        if (y < 2000)
+                                        {
+                                            ErrorTxt = "第" + (i + 1) + "行备合格证发证日期有误";
+                                            break;
+                                        }
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                ErrorTxt = "第" + (i + 1) + "行备合格证发证日期格式有误,正确格式如:2000-01-01";
-                                break;
-                            }
-                        }
-                        #endregion
-                        #region 当前车架号重复验证
-                        for (int j = 0; j < G_Car_Detail.Rows.Count; j++)
-                        {
-                            if (i != j)
-                            {
-                                string[] listValues = G_Car_Detail.Rows[j].Values;
-                                //判断当前dt是否存在重复车架号
-                                if (Values[6].ToString().Trim() == listValues[6].ToString().Trim())
+                                else
                                 {
-                                    ErrorTxt = "第" + (i + 1) + "行车架与第" + (j + 1) + "行车架号重复";
+                                    ErrorTxt = "第" + (i + 1) + "行备合格证发证日期格式有误,正确格式如:2000-01-01";
                                     break;
                                 }
                             }
-                        }
-                        if (ErrorTxt.Length != 0)
-                        {
-                            break;
-                        }
-                        #endregion
-
-                    }
-                    //车辆所有信息验证成功，以下数据库验证
-                    if (ErrorTxt.Length == 0)
-                    {
-                        DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("BankName='{0}' and BankID='{1}' and DealerName='{2}'", this.DDL_Bank.SelectedText.ToString(), this.DDL_Bank.SelectedValue.ToString(), this.DDL_Company_Name.SelectedValue.ToString()));
-                        //string[] DealerCount = this.DDL_Bank.SelectedValue.ToString().Split('_');   2014年5月14日
-                        string DealerID = dr[0].ItemArray[0].ToString();              //获取经销商id
-                        string BankID = dr[0].ItemArray[2].ToString();     //获取银行id
-                        string DealerName = DDL_Company_Name.SelectedText.ToString();       //获取经销商名称
-                        string BrandID = dr[0].ItemArray[4].ToString();             //获取品牌id
-                        string DraftNo = DDL_Number_Order.SelectedText.ToString();      //获取汇票号
-                        string BankName = this.DDL_Bank.SelectedText.ToString();     //获取银行名称
-                        string BrandName = dr[0].ItemArray[5].ToString();     //获取品牌
-                        string Date = DateTime.Now.ToString("yyyy-MM-dd");
-                        string UserName = CurrentUser.TrueName;
-                        string UserId = CurrentUser.UserId.ToString();
-
-                        string tb_Name = "tb_Car_" + BankID + "_" + DealerID;      //数据库表名
-                        List<string> list = new List<string>();
-
-                        string sql = "insert into " + tb_Name + " (Vin,DraftNo,BankID,BankName,Statu,QualifiedNoDate,DealerID,DealerName,BrandID,BrandName,StorageID,StorageName,CarColor,CarModel,EngineNo,QualifiedNo,KeyCount,KeyNumber,CarCost,ReturnCost,Remarks,CreateID,CreateTime,IsDelete,CarClass,Displacement) ";  //添加sql语句
-                        for (int i = 0; i < G_Car_Detail.Rows.Count; i++)
-                        {
-                            //获取当前行数据集合
-                            string[] Values = G_Car_Detail.Rows[i].Values;
-                            bool bl = CarBll.Exists(Values[6].ToString().Trim(), tb_Name);//判断数据库是否已经存在当前车辆信息
-                            if (bl)
+                            #endregion
+                            #region 当前车架号重复验证
+                            for (int j = 0; j < G_Car_Detail.Rows.Count; j++)
                             {
-                                ErrorTxt = "第" + (i + 1) + "行车架已经存在";
-                                break;
-                            }
-                            else
-                            {
-                                string QualifiedNoDate = Values[0].ToString().Trim(); //合格证发证日期
-                                string CarClass = Values[2].ToString().Trim(); //类型
-                                string CarModel = Values[1].ToString().Trim(); //型号
-                                string Displacement = Values[3].ToString().Trim(); //排量
-                                string CarColour = Values[4].ToString().Trim(); //颜色
-                                string EngineNo = Values[5].ToString().Trim(); //发动机
-                                string Vin = Values[6].ToString().Trim(); //车架
-                                string QualifiedNo = Values[7].ToString().Trim(); //合格证
-                                string KeyNumber = Values[8].ToString().Trim(); //钥匙号
-                                string CarCost = Values[9].ToString().Trim();     //车辆金额
-                                string Remark = Values[10].ToString().Trim();      //备注
-                                sql += string.Format("select '{0}','{1}','{2}','{3}','3','{4}','{5}','{6}','{7}','{8}','-1','本库','{9}','{10}','{11}','{12}','0','{13}','{14}','0','{15}','{16}',GETDATE(),0,'{17}','{18}' union all ", Vin, DraftNo, BankID, BankName, QualifiedNoDate, DealerID, DealerName, BrandID, BrandName, CarColour, CarModel, EngineNo, QualifiedNo, KeyNumber, CarCost, Remark, UserId, CarClass, Displacement);
-                                if (dr[0].ItemArray[7].ToString().Length != 0)
+                                if (i != j)
                                 {
-                                    list.Add(string.Format(@"if exists(select * from GD_DispatchCarInfo  where DJ_NO='{0}') Begin update GD_DispatchCarInfo set DJ_NO='{1}' where DJ_NO='{2}' End else Begin  insert into GD_DispatchCarInfo (JXS_ID,DJ_NO,BF_ID,CreateTime,SEND_CAR_ID) values ('{3}','{4}',(select GD_ID from tb_Draft_List where DraftNo='{5}'),getdate(),'{6}') End", Vin, Vin, Vin, dr[0].ItemArray[7].ToString(), Vin, DraftNo, "AAA" + DateTime.Now.ToString("yyyyMMddmmssHHffff")));
+                                    string[] listValues = G_Car_Detail.Rows[j].Values;
+                                    //判断当前dt是否存在重复车架号
+                                    if (Values[6].ToString().Trim() == listValues[6].ToString().Trim())
+                                    {
+                                        ErrorTxt = "第" + (i + 1) + "行车架与第" + (j + 1) + "行车架号重复";
+                                        break;
+                                    }
                                 }
                             }
+                            if (ErrorTxt.Length != 0)
+                            {
+                                break;
+                            }
+                            #endregion
+
                         }
+                        //车辆所有信息验证成功，以下数据库验证
                         if (ErrorTxt.Length == 0)
                         {
-                            //声明集合，存放需要执行的sql语句
+                            DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("BankName='{0}' and BankID='{1}' and DealerName='{2}'", this.DDL_Bank.SelectedText.ToString(), this.DDL_Bank.SelectedValue.ToString(), this.DDL_Company_Name.SelectedValue.ToString()));
+                            //string[] DealerCount = this.DDL_Bank.SelectedValue.ToString().Split('_');   2014年5月14日
+                            string DealerID = dr[0].ItemArray[0].ToString();              //获取经销商id
+                            string BankID = dr[0].ItemArray[2].ToString();     //获取银行id
+                            string DealerName = DDL_Company_Name.SelectedText.ToString();       //获取经销商名称
+                            string BrandID = dr[0].ItemArray[4].ToString();             //获取品牌id
 
-
-                            sql = sql.Remove(sql.LastIndexOf("union all")); //移除最后一个union all
-                            list.Add(sql);
-                            int Number = new Citic.BLL.Car().SqlTran(list);
-                            if (Number > 0)
+                            string DraftNo = "";            //设置票号
+                            if (!ViewState.IsItemDirty("GD_ID"))
                             {
-                                FineUI.Alert.Show("添加成功！共添加" + dt.Rows.Count + "台车", FineUI.MessageBoxIcon.Information);
-                                GetSourceData().Clear();
-                                this.G_Car_Detail.DataSource = GetSourceData();
-                                this.G_Car_Detail.DataBind();
+                                DraftNo = DDL_Number_Order.SelectedText.ToString();      //获取汇票号
+                            }
+                            string BankName = this.DDL_Bank.SelectedText.ToString();     //获取银行名称
+                            string BrandName = dr[0].ItemArray[5].ToString();     //获取品牌
+                            string UserName = CurrentUser.TrueName;
+                            string UserId = CurrentUser.UserId.ToString();
+
+                            string tb_Name = "tb_Car_" + BankID + "_" + DealerID;      //数据库表名
+                            List<string> list = new List<string>();
+
+                            string sql = "insert into " + tb_Name + " (Vin,DraftNo,BankID,BankName,Statu,QualifiedNoDate,DealerID,DealerName,BrandID,BrandName,StorageID,StorageName,CarColor,CarModel,EngineNo,QualifiedNo,KeyCount,KeyNumber,CarCost,ReturnCost,Remarks,CreateID,CreateTime,IsDelete,CarClass,Displacement) ";  //添加sql语句
+                            for (int i = 0; i < G_Car_Detail.Rows.Count; i++)
+                            {
+                                //获取当前行数据集合
+                                string[] Values = G_Car_Detail.Rows[i].Values;
+                                bool bl = CarBll.Exists(Values[6].ToString().Trim(), tb_Name);//判断数据库是否已经存在当前车辆信息
+                                if (bl)
+                                {
+                                    ErrorTxt = "第" + (i + 1) + "行车架已经存在";
+                                    break;
+                                }
+                                else
+                                {
+                                    string QualifiedNoDate = Values[0].ToString().Trim(); //合格证发证日期
+                                    string CarClass = Values[2].ToString().Trim(); //类型
+                                    string CarModel = Values[1].ToString().Trim(); //型号
+                                    string Displacement = Values[3].ToString().Trim(); //排量
+                                    string CarColour = Values[4].ToString().Trim(); //颜色
+                                    string EngineNo = Values[5].ToString().Trim(); //发动机
+                                    string Vin = Values[6].ToString().Trim(); //车架
+                                    string QualifiedNo = Values[7].ToString().Trim(); //合格证
+                                    string KeyNumber = Values[8].ToString().Trim(); //钥匙号
+                                    string CarCost = Values[9].ToString().Trim();     //车辆金额
+                                    string Remark = Values[10].ToString().Trim();      //备注
+                                    sql += string.Format("select '{0}','{1}','{2}','{3}','3','{4}','{5}','{6}','{7}','{8}','-1','本库','{9}','{10}','{11}','{12}','0','{13}','{14}','0','{15}','{16}',GETDATE(),0,'{17}','{18}' union all ", Vin, DraftNo, BankID, BankName, QualifiedNoDate, DealerID, DealerName, BrandID, BrandName, CarColour, CarModel, EngineNo, QualifiedNo, KeyNumber, CarCost, Remark, UserId, CarClass, Displacement);
+                                    if (dr[0].ItemArray[7].ToString().Length != 0)
+                                    {
+                                        list.Add(string.Format(@"if exists(select * from GD_DispatchCarInfo  where DJ_NO='{0}') Begin update GD_DispatchCarInfo set DJ_NO='{1}' where DJ_NO='{2}' End else Begin  insert into GD_DispatchCarInfo (JXS_ID,DJ_NO,BF_ID,CreateTime,SEND_CAR_ID) values ('{3}','{4}',(select GD_ID from tb_Draft_List where DraftNo='{5}'),getdate(),'{6}') End", Vin, Vin, Vin, dr[0].ItemArray[7].ToString(), Vin, DraftNo, "AAA" + DateTime.Now.ToString("yyyyMMddmmssHHffff")));
+                                    }
+                                }
+                            }
+                            if (ErrorTxt.Length == 0)
+                            {
+                                //声明集合，存放需要执行的sql语句
+
+
+                                sql = sql.Remove(sql.LastIndexOf("union all")); //移除最后一个union all
+                                list.Add(sql);
+                                int Number = new Citic.BLL.Car().SqlTran(list);
+                                if (Number > 0)
+                                {
+                                    FineUI.Alert.Show("添加成功！共添加" + dt.Rows.Count + "台车", FineUI.MessageBoxIcon.Information);
+                                    GetSourceData().Clear();
+                                    this.G_Car_Detail.DataSource = GetSourceData();
+                                    this.G_Car_Detail.DataBind();
+                                }
+                                else
+                                {
+                                    GetSourceData().Clear();
+                                    FineUI.Alert.Show("添加失败！", FineUI.MessageBoxIcon.Error);
+                                }
                             }
                             else
                             {
-                                GetSourceData().Clear();
-                                FineUI.Alert.Show("添加失败！", FineUI.MessageBoxIcon.Error);
+                                FineUI.Alert.ShowInTop(ErrorTxt, FineUI.MessageBoxIcon.Error);
                             }
+
                         }
                         else
                         {
                             FineUI.Alert.ShowInTop(ErrorTxt, FineUI.MessageBoxIcon.Error);
                         }
-
                     }
                     else
                     {
                         FineUI.Alert.ShowInTop(ErrorTxt, FineUI.MessageBoxIcon.Error);
+
                     }
                 }
-                else
-                {
-                    FineUI.Alert.ShowInTop(ErrorTxt, FineUI.MessageBoxIcon.Error);
-
-                }
+            }
+            else
+            {
+                FineUI.Alert.ShowInTop("没有任何信息可以添加", FineUI.MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -455,62 +466,75 @@ namespace Citic_Web.Car
         {
             try
             {
-                if (this.DDL_Number_Order.SelectedValue != null && this.DDL_Number_Order.SelectedValue.ToString() != "-1")
+                ///为光大滚动换票
+                if (ViewState.IsItemDirty("GD_ID"))
                 {
-                    if (FileExcel.HasFile)  //判断文件是否存在
-                    {
-                        ViewState.Remove(Car_List);
-                        //判断获取文件后缀名是否包含Excel格式名
-                        if (FileExcel.ShortFileName.Split('.')[1].ToString() == "xlsx" || FileExcel.ShortFileName.Split('.')[1].ToString() == "xls")
-                        {
-                            string path = "~/UpExcel/" + DateTime.Now.ToString("yyyy-MM") + "/" + this.DDL_Company_Name.SelectedValue.ToString();    //创建文件
-                            DirectoryInfo di = new DirectoryInfo(Server.MapPath(path));
-                            if (!di.Exists)     //判断文件夹是否存在
-                                di.Create();    //创建文件夹
-                            //获取文件名称
-                            string FileName = DateTime.Now.ToString("yyyyMMdd_HHmmssffff_") + this.DDL_Company_Name.SelectedValue.ToString() + "_" + CurrentUser.TrueName + "." + FileExcel.ShortFileName.Split('.')[1].ToString();
-                            //获取创建文件路径+文件名称 2014年4月16日
-                            path = path + "/" + FileName;
-                            //将文件名称保存在服务器上
-                            FileExcel.SaveAs(Server.MapPath(path));
-
-
-                            DataTable dt = Common.ExcelToTable.ExcelToDataTable(Server.MapPath(path), "", true, 12, 7);
-                            dt.Columns[0].ColumnName = "TabId";           //序号
-                            dt.Columns[1].ColumnName = "IssueDate";       //合格证发证日期
-                            dt.Columns[2].ColumnName = "CarModel";       //车辆型号
-                            dt.Columns[3].ColumnName = "CarClass";        //车辆分类
-                            dt.Columns[4].ColumnName = "Displacement";    //排量
-                            dt.Columns[5].ColumnName = "CarColour";       //颜色
-                            dt.Columns[6].ColumnName = "EngineNo";        //发动机号
-                            dt.Columns[7].ColumnName = "Vin";             //车架号
-                            dt.Columns[8].ColumnName = "QualifiedNo";     //合格证号
-                            dt.Columns[9].ColumnName = "KeyNumber";       //钥匙号
-                            dt.Columns[10].ColumnName = "CarCost";         //车辆金额
-                            dt.Columns[11].ColumnName = "Remark";          //备注
-                            dt.Rows.RemoveAt(0);
-                            ViewState[Car_List] = dt;
-                            this.G_Car_Detail.DataSource = (DataTable)ViewState[Car_List];
-                            this.G_Car_Detail.DataBind();
-                            FileExcel.Reset();
-                        }
-                        else
-                        {
-                            FineUI.Alert.ShowInTop("文件格式不正确！", FineUI.MessageBoxIcon.Error);
-                            FileExcel.Reset();
-                        }
-                    }
+                    Bind_Car();
                 }
                 else
                 {
-                    FineUI.Alert.ShowInTop("请选择汇票！", FineUI.MessageBoxIcon.Error);
-                    FileExcel.Reset();
+                    if (this.DDL_Number_Order.SelectedValue != null && this.DDL_Number_Order.SelectedValue.ToString() != "-1")
+                    {
+                        Bind_Car();
+                    }
+                    else
+                    {
+                        FineUI.Alert.ShowInTop("请选择汇票！", FineUI.MessageBoxIcon.Error);
+                        FileExcel.Reset();
+                    }
                 }
             }
             catch (Exception)
             {
                 FineUI.Alert.ShowInTop("文件格式有误,请检查是否存在Excel公式计算或者将文件类容复制到新的文件中再次提交", FineUI.MessageBoxIcon.Error);
                 FileExcel.Reset();
+            }
+        }
+
+        private void Bind_Car()
+        {
+            if (FileExcel.HasFile)  //判断文件是否存在
+            {
+                ViewState.Remove(Car_List);
+                //判断获取文件后缀名是否包含Excel格式名
+                if (FileExcel.ShortFileName.Split('.')[1].ToString() == "xlsx" || FileExcel.ShortFileName.Split('.')[1].ToString() == "xls")
+                {
+                    string path = "~/UpExcel/" + DateTime.Now.ToString("yyyy-MM") + "/" + this.DDL_Company_Name.SelectedValue.ToString();    //创建文件
+                    DirectoryInfo di = new DirectoryInfo(Server.MapPath(path));
+                    if (!di.Exists)     //判断文件夹是否存在
+                        di.Create();    //创建文件夹
+                    //获取文件名称
+                    string FileName = DateTime.Now.ToString("yyyyMMdd_HHmmssffff_") + this.DDL_Company_Name.SelectedValue.ToString() + "_" + CurrentUser.TrueName + "." + FileExcel.ShortFileName.Split('.')[1].ToString();
+                    //获取创建文件路径+文件名称 2014年4月16日
+                    path = path + "/" + FileName;
+                    //将文件名称保存在服务器上
+                    FileExcel.SaveAs(Server.MapPath(path));
+
+
+                    DataTable dt = Common.ExcelToTable.ExcelToDataTable(Server.MapPath(path), "", true, 12, 7);
+                    dt.Columns[0].ColumnName = "TabId";           //序号
+                    dt.Columns[1].ColumnName = "IssueDate";       //合格证发证日期
+                    dt.Columns[2].ColumnName = "CarModel";       //车辆型号
+                    dt.Columns[3].ColumnName = "CarClass";        //车辆分类
+                    dt.Columns[4].ColumnName = "Displacement";    //排量
+                    dt.Columns[5].ColumnName = "CarColour";       //颜色
+                    dt.Columns[6].ColumnName = "EngineNo";        //发动机号
+                    dt.Columns[7].ColumnName = "Vin";             //车架号
+                    dt.Columns[8].ColumnName = "QualifiedNo";     //合格证号
+                    dt.Columns[9].ColumnName = "KeyNumber";       //钥匙号
+                    dt.Columns[10].ColumnName = "CarCost";         //车辆金额
+                    dt.Columns[11].ColumnName = "Remark";          //备注
+                    dt.Rows.RemoveAt(0);
+                    ViewState[Car_List] = dt;
+                    this.G_Car_Detail.DataSource = dt;
+                    this.G_Car_Detail.DataBind();
+                    FileExcel.Reset();
+                }
+                else
+                {
+                    FineUI.Alert.ShowInTop("文件格式不正确！", FineUI.MessageBoxIcon.Error);
+                    FileExcel.Reset();
+                }
             }
         }
         #endregion
@@ -705,12 +729,17 @@ namespace Citic_Web.Car
         /// </summary>
         private void AddSqlCar()
         {
+
             string DealerCount = DDL_Bank.SelectedValue.ToString();
             string DealerID = DealerCount.Split('_')[1].ToString();              //获取经销商id
             string BankID = DealerCount.Split('_')[0].ToString();     //获取银行id
             string DealerName = DDL_Company_Name.SelectedText.ToString();       //获取经销商名称
             string tb_Name = "tb_Car_" + BankID + "_" + DealerID;               //sql表名
             string DraftNo = DDL_Number_Order.SelectedText.ToString();      //获取汇票号
+            if (ViewState.IsItemDirty("GD_ID"))
+            {
+                DraftNo = "";
+            }
             string BankName = DealerCount.Split('_')[2].ToString();     //获取银行名称
             string BrandName = DealerCount.Split('_')[3].ToString();     //获取品牌
             string Date = DateTime.Now.ToString("yyyy-MM-dd");
@@ -755,14 +784,17 @@ namespace Citic_Web.Car
 
                     sql = sql.Remove(sql.LastIndexOf("union all")); //移除最后一个union all
                     list.Add(sql);
-                    DataTable dt = (DataTable)ViewState["DraftNoList"];
-                    DataRow[] dr = dt.Select("DraftNo='" + DraftNo + "'");
-                    string CarCount = (int.Parse(dr[0]["CarAllCount"].ToString()) + Count).ToString();   //原有总数+现有车辆总数
-                    string CarMoney = (Convert.ToDouble(TT_CarCountMoney.Text.ToString().Split('：')[1]) + Convert.ToDouble(dr[0]["CarAllMoney"])).ToString();
-                    //更新汇票信息表sql
-                    string sql1 = "update tb_Draft_List set CarAllCount='" + CarCount + "',CarAllMoney='" + CarMoney + "' where DraftNo='" + DraftNo + "' and BankID='" + BankID + "'";
-                    list.Add(sql1);
-                    int Number = new Citic.BLL.Car().SqlTran(list);
+                    if (!ViewState.IsItemDirty("GD_ID"))
+                    {
+                        DataTable dt = (DataTable)ViewState["DraftNoList"];
+                        DataRow[] dr = dt.Select("DraftNo='" + DraftNo + "'");
+                        string CarCount = (int.Parse(dr[0]["CarAllCount"].ToString()) + Count).ToString();   //原有总数+现有车辆总数
+                        string CarMoney = (Convert.ToDouble(TT_CarCountMoney.Text.ToString().Split('：')[1]) + Convert.ToDouble(dr[0]["CarAllMoney"])).ToString();
+                        //更新汇票信息表sql
+                        string sql1 = "update tb_Draft_List set CarAllCount='" + CarCount + "',CarAllMoney='" + CarMoney + "' where DraftNo='" + DraftNo + "' and BankID='" + BankID + "'";
+                        list.Add(sql1);
+                    }
+                    int Number = CarBll.SqlTran(list);
                     if (Number > 0)
                     {
                         FineUI.Alert.Show("添加成功！共添加" + Count + "台车", FineUI.MessageBoxIcon.Information);
@@ -1089,13 +1121,23 @@ namespace Citic_Web.Car
                 if (this.DDL_Bank.SelectedValue.ToString() != "-1")
                 {
                     DataRow[] dr = ((DataTable)ViewState["DealerName"]).Select(string.Format("BankName='{0}' and BankID='{1}' and DealerName='{2}'", this.DDL_Bank.SelectedText.ToString(), this.DDL_Bank.SelectedValue.ToString(), this.DDL_Company_Name.SelectedValue.ToString()));
-                    DataSet ds = new Draft().GetList("DealerID='" + dr[0].ItemArray[0].ToString() + "' and BankID='" + dr[0].ItemArray[2].ToString() + "' and DraftType=1 order by DraftNo desc");
-                    this.DDL_Number_Order.DataTextField = "DraftNo";
-                    this.DDL_Number_Order.DataValueField = "DraftNo";
-                    ViewState["DraftNoList"] = ds.Tables[0];        //将数据集合放入ViewState
-                    this.DDL_Number_Order.DataSource = (DataTable)ViewState["DraftNoList"];
-                    this.DDL_Number_Order.DataBind();
-                    this.DDL_Number_Order.Items.Insert(0, new FineUI.ListItem("——请选择汇票——", "-1"));
+
+                    if (dr[0].ItemArray[7].ToString().Length > 3)
+                    {
+                        Alert.ShowInTop("此经销商跟光大银行对接，录入在途车辆时不必选择票号，待入库时系统自动指定票号");
+                        ViewState.Add("GD_ID", dr[0].ItemArray);
+                    }
+                    else
+                    {
+
+                        DataSet ds = new Draft().GetList("DealerID='" + dr[0].ItemArray[0].ToString() + "' and BankID='" + dr[0].ItemArray[2].ToString() + "' and DraftType=1 order by DraftNo desc");
+                        this.DDL_Number_Order.DataTextField = "DraftNo";
+                        this.DDL_Number_Order.DataValueField = "DraftNo";
+                        ViewState["DraftNoList"] = ds.Tables[0];        //将数据集合放入ViewState
+                        this.DDL_Number_Order.DataSource = (DataTable)ViewState["DraftNoList"];
+                        this.DDL_Number_Order.DataBind();
+                        this.DDL_Number_Order.Items.Insert(0, new FineUI.ListItem("——请选择汇票——", "-1"));
+                    }
 
                 }
                 else

@@ -30,11 +30,11 @@ namespace Citic_Web.BankInterface
 
                 if (RoleId == 10)
                 {
-                    sql = string.Format("select * from ZX_SCF where [action]='DLCDIGSM' and ([Status]='1' or [Status]='2' or [Status]='3') and RequestDate between CONVERT(varchar(100), GETDATE()-30, 23) and CONVERT(varchar(100), GETDATE()+1, 23) and RequestID='{0}' and (RequestXml like '%<vin>{1}</vin>%' or RequestXml like '%<hgzNo>{2}</hgzNo>%') order by ResponseDate desc", CurrentUser.UserId, dj, pi);
+                    sql = string.Format("select * from ZX_SCF where [action]='DLCDIGSM' and ([Status]='1' or [Status]='2' or [Status]='3') and RequestDate between CONVERT(varchar(100), GETDATE()-7, 23) and CONVERT(varchar(100), GETDATE()+1, 23) and RequestID='{0}' and (RequestXml like '%<vin>{1}</vin>%' or RequestXml like '%<hgzNo>{2}</hgzNo>%') order by ResponseDate desc", CurrentUser.UserId, dj, pi);
                 }
                 else
                 {
-                    sql = string.Format("select * from ZX_SCF where [action]='DLCDIGSM' and ([Status]='1' or [Status]='2' or [Status]='3') and RequestDate between CONVERT(varchar(100), GETDATE()-30, 23) and CONVERT(varchar(100), GETDATE()+1, 23) and (RequestXml like '%<vin>{0}</vin>%' or RequestXml like '%<hgzNo>{1}</hgzNo>%') order by ResponseDate desc", dj, pi);
+                    sql = string.Format("select * from ZX_SCF where [action]='DLCDIGSM' and ([Status]='1' or [Status]='2' or [Status]='3') and RequestDate between CONVERT(varchar(100), GETDATE()-7, 23) and CONVERT(varchar(100), GETDATE()+1, 23) and (RequestXml like '%<vin>{0}</vin>%' or RequestXml like '%<hgzNo>{1}</hgzNo>%') order by ResponseDate desc", dj, pi);
                 }
                 DataTable dt = CarBll.GetList(sql).Tables[0];
                 DataTable newdt = new DataTable();

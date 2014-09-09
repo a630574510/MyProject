@@ -104,8 +104,8 @@
                 </Toolbars>
                 <Items>
                     <x:Grid ID="G_Car_Detail" runat="server" EnableCheckBoxSelect="true" EnableRowNumber="true"
-                        Title="车辆详细信息" EnableBackgroundColor="true" OnPreRowDataBound="RowCommand" AllowCellEditing="true"
-                        ClicksToEdit="1" DataKeyNames="CarCost" OnRowCommand="G_Car_Detail_RowCommand"
+                        Title="车辆详细信息" EnableBackgroundColor="true" AllowCellEditing="true"
+                        ClicksToEdit="1" DataKeyNames="CarCost" OnRowCommand="G_Car_Detail_RowCommand" 
                         EnableColumnLines="true" EmptyText="<span style='color:Red;font-size:21px'>提示：车架号和车辆金额必须填写</br>车架号只能输入大写英文字母和数字</br>车辆金额为数字类型，输入特殊字符自动变成0</br>当出现错误提示，请检查是否输入特殊字符</span>">
                         <Columns>
                             <x:RenderField HeaderText="合格证发证日期" DataField="IssueDate"
